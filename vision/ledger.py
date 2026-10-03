@@ -46,6 +46,10 @@ class LedgerConfig:
     reattach_appearance: float = 0.20
     reattach_margin: float = 0.08
     unknown_timeout: float = 0.5
+    # Normalized image polygon of the lane at carrying height. Objects whose
+    # center is outside it (e.g. a shopper in the next aisle) are tracked but
+    # can never become pending, purchased or a reason for review.
+    lane_polygon: tuple[tuple[float, float], ...] | None = None
 
 
 @dataclass
@@ -73,6 +77,14 @@ class PhysicalObject:
     review_reason: str | None = None
     ambiguous_identity: bool = False
     sequence: int = 0
+
+
+def inside_polygon(x: float, y: float, polygon) -> bool:
+    inside = False
+    for (x1, y1), (x2, y2) in zip(polygon, polygon[1:] + polygon[:1]):
+        if (y1 > y) != (y2 > y) and x < x1 + (y - y1) * (x2 - x1) / (y2 - y1):
+            inside = not inside
+    return inside
 
 
 def cosine_distance(a: Sequence[float], b: Sequence[float]) -> float:
@@ -114,7 +126,9 @@ class PhysicalLedger:
             obj.review_reason = reason
             self._emit(obj, "REVIEW_REQUIRED", timestamp, reason)
 
-    def _zone(self, y: float) -> str:
+    def _zone(self, x: float, y: float) -> str:
+        if self.config.lane_polygon and not inside_polygon(x, y, list(self.config.lane_polygon)):
+            return "OUTSIDE"
         if y >= self.config.approach_y + self.config.hysteresis:
             return "APPROACH"
         if y <= self.config.commit_y - self.config.hysteresis:
@@ -208,7 +222,7 @@ class PhysicalLedger:
         if obs.embedding:
             obj.embedding = obs.embedding
         self._recognize(obj, obs, timestamp)
-        observed_zone = self._zone(obs.center[1]/height)
+        observed_zone = self._zone(obs.center[0]/width, obs.center[1]/height)
         if observed_zone != obj.candidate_zone:
             obj.candidate_zone = observed_zone
             obj.candidate_since = timestamp
@@ -228,6 +242,9 @@ class PhysicalLedger:
                     obj.committed = True
                 elif not obj.membership:
                     self._review(obj, timestamp, "Product first observed beyond checkout boundary")
+            elif observed_zone == "OUTSIDE":
+                if not obj.membership and not obj.approach_observed and obj.state != "REMOVED":
+                    obj.state = "OUTSIDE"
             else:
                 if not obj.membership and obj.state != "REMOVED":
                     obj.state = "TRACKED"
@@ -323,7 +340,7 @@ class PhysicalLedger:
         # Pending evidence blocks cart preparation even before it is a hard
         # failure. Freezing a partly traversed lane must not omit a known item.
         pending = [obj for obj in self.objects.values()
-                   if not obj.membership and obj.state != "REMOVED" and
+                   if not obj.membership and obj.state not in ("REMOVED", "OUTSIDE") and
                    (obj.visible or obj.approach_observed)]
         review = bool(pending) or any(obj.review_reason for obj in self.objects.values())
         output = {"frame_id": frame_id, "timestamp": timestamp, "run_id": run_id,

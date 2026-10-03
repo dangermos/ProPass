@@ -1,0 +1,2016 @@
+{
+  "summary": {
+    "label": "b1-lane",
+    "runs": 70,
+    "passed": 50,
+    "pass_rate": 0.714,
+    "latency_ms_median": 8.4,
+    "domain": "Unity synthetic, offline-rendered seeded scenarios; RGB-only inference",
+    "runtime_ground_truth": false,
+    "config": {
+      "image_size": 640,
+      "detector_conf": 0.2,
+      "device": "auto",
+      "ledger": {
+        "approach_y": 0.65,
+        "commit_y": 0.4,
+        "hysteresis": 0.025,
+        "dwell_seconds": 0.12,
+        "minimum_views": 3,
+        "sku_threshold": 0.85,
+        "sku_margin": 0.2,
+        "reattach_seconds": 1.8,
+        "lane_polygon": [
+          [
+            0.29,
+            1.24
+          ],
+          [
+            0.71,
+            1.24
+          ],
+          [
+            0.551,
+            0.0
+          ],
+          [
+            0.449,
+            0.0
+          ]
+        ]
+      }
+    }
+  },
+  "scenarios": [
+    {
+      "scenario": "single",
+      "group": "classic",
+      "runs": 5,
+      "description": "One drill kit, one clean crossing",
+      "pass_rate": 1.0,
+      "exact_cart_rate": 1.0,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.0,
+      "detection_recall": 1.0,
+      "top_review_reasons": []
+    },
+    {
+      "scenario": "duplicate",
+      "group": "classic",
+      "runs": 5,
+      "description": "Two identical drill kits side by side",
+      "pass_rate": 1.0,
+      "exact_cart_rate": 1.0,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.0,
+      "detection_recall": 1.0,
+      "top_review_reasons": []
+    },
+    {
+      "scenario": "mixed",
+      "group": "classic",
+      "runs": 5,
+      "description": "Drill kit, measuring tape and work gloves",
+      "pass_rate": 1.0,
+      "exact_cart_rate": 1.0,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.0,
+      "detection_recall": 1.0,
+      "top_review_reasons": []
+    },
+    {
+      "scenario": "occlusion",
+      "group": "classic",
+      "runs": 5,
+      "description": "A hand hides the drill kit for 0.6 s",
+      "pass_rate": 1.0,
+      "exact_cart_rate": 1.0,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.0,
+      "detection_recall": 0.966,
+      "top_review_reasons": []
+    },
+    {
+      "scenario": "remove",
+      "group": "classic",
+      "runs": 5,
+      "description": "Driver kit carried in, then carried back out",
+      "pass_rate": 1.0,
+      "exact_cart_rate": 1.0,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.0,
+      "detection_recall": 1.0,
+      "top_review_reasons": []
+    },
+    {
+      "scenario": "unknown",
+      "group": "classic",
+      "runs": 5,
+      "description": "An unenrolled gray package",
+      "pass_rate": 1.0,
+      "exact_cart_rate": 1.0,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 1.0,
+      "detection_recall": 1.0,
+      "top_review_reasons": [
+        "Checkout crossing lacks accepted SKU evidence"
+      ]
+    },
+    {
+      "scenario": "hands",
+      "group": "messy",
+      "runs": 5,
+      "description": "Hands repeatedly cover the products while they are carried",
+      "pass_rate": 1.0,
+      "exact_cart_rate": 1.0,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches_per_run": 0.4,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.0,
+      "detection_recall": 1.0,
+      "top_review_reasons": []
+    },
+    {
+      "scenario": "shopper",
+      "group": "messy",
+      "runs": 5,
+      "description": "Another shopper walks across the lane in front of the camera",
+      "pass_rate": 0.6,
+      "exact_cart_rate": 1.0,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches_per_run": 9.8,
+      "phantom_objects_per_run": 1.2,
+      "review_rate": 0.4,
+      "detection_recall": 0.954,
+      "top_review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ]
+    },
+    {
+      "scenario": "flatbed",
+      "group": "messy",
+      "runs": 5,
+      "description": "A flatbed of lumber rolls between the camera and the products for several seconds",
+      "pass_rate": 0.0,
+      "exact_cart_rate": 0.0,
+      "false_adds": 0,
+      "missed_items": 6,
+      "id_switches_per_run": 1.2,
+      "phantom_objects_per_run": 0.2,
+      "review_rate": 1.0,
+      "detection_recall": 0.918,
+      "top_review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ]
+    },
+    {
+      "scenario": "edge",
+      "group": "messy",
+      "runs": 5,
+      "description": "Products enter from below the frame and hug the lane rail",
+      "pass_rate": 0.2,
+      "exact_cart_rate": 1.0,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches_per_run": 3.4,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.8,
+      "detection_recall": 0.899,
+      "top_review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ]
+    },
+    {
+      "scenario": "stacked",
+      "group": "messy",
+      "runs": 5,
+      "description": "One package carried on top of another",
+      "pass_rate": 0.0,
+      "exact_cart_rate": 0.2,
+      "false_adds": 3,
+      "missed_items": 4,
+      "id_switches_per_run": 38.6,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 1.0,
+      "detection_recall": 0.742,
+      "top_review_reasons": [
+        "Product first observed beyond checkout boundary",
+        "Entered merchandise disappeared before an observed checkout or reverse removal"
+      ]
+    },
+    {
+      "scenario": "distractors",
+      "group": "messy",
+      "runs": 5,
+      "description": "A phone, a coffee cup and a bag travel through the lane with the products",
+      "pass_rate": 0.6,
+      "exact_cart_rate": 1.0,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 1.0,
+      "review_rate": 0.4,
+      "detection_recall": 1.0,
+      "top_review_reasons": [
+        "Product first observed beyond checkout boundary",
+        "Entered merchandise disappeared before an observed checkout or reverse removal"
+      ]
+    },
+    {
+      "scenario": "bystander",
+      "group": "messy",
+      "runs": 5,
+      "description": "A shopper in the next aisle carries a product past the lane; it must not be charged",
+      "pass_rate": 0.8,
+      "exact_cart_rate": 1.0,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 1.8,
+      "review_rate": 0.2,
+      "detection_recall": 0.828,
+      "top_review_reasons": [
+        "Product first observed beyond checkout boundary"
+      ]
+    },
+    {
+      "scenario": "hesitate",
+      "group": "messy",
+      "runs": 5,
+      "description": "The customer pauses mid-lane, steps back, then either finishes or turns around",
+      "pass_rate": 0.8,
+      "exact_cart_rate": 1.0,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.2,
+      "detection_recall": 1.0,
+      "top_review_reasons": []
+    }
+  ],
+  "runs": [
+    {
+      "scenario": "bystander",
+      "seed": 0,
+      "run_id": "bystander-seed00",
+      "description": "A shopper in the next aisle carries a product past the lane; it must not be charged",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-002": 1
+      },
+      "predicted_cart": {
+        "PEX-002": 1
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 1,
+      "detection_recall": 0.89,
+      "review_reasons": [
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 9.36
+    },
+    {
+      "scenario": "bystander",
+      "seed": 1,
+      "run_id": "bystander-seed01",
+      "description": "A shopper in the next aisle carries a product past the lane; it must not be charged",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-003": 1
+      },
+      "predicted_cart": {
+        "PEX-003": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 1,
+      "detection_recall": 0.876,
+      "review_reasons": [],
+      "latency_ms_median": 9.61
+    },
+    {
+      "scenario": "bystander",
+      "seed": 2,
+      "run_id": "bystander-seed02",
+      "description": "A shopper in the next aisle carries a product past the lane; it must not be charged",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-003": 1
+      },
+      "predicted_cart": {
+        "PEX-003": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 3,
+      "detection_recall": 0.831,
+      "review_reasons": [],
+      "latency_ms_median": 9.56
+    },
+    {
+      "scenario": "bystander",
+      "seed": 3,
+      "run_id": "bystander-seed03",
+      "description": "A shopper in the next aisle carries a product past the lane; it must not be charged",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-004": 1
+      },
+      "predicted_cart": {
+        "PEX-004": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 1,
+      "detection_recall": 0.741,
+      "review_reasons": [],
+      "latency_ms_median": 8.77
+    },
+    {
+      "scenario": "bystander",
+      "seed": 4,
+      "run_id": "bystander-seed04",
+      "description": "A shopper in the next aisle carries a product past the lane; it must not be charged",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-005": 1
+      },
+      "predicted_cart": {
+        "PEX-005": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 3,
+      "detection_recall": 0.8,
+      "review_reasons": [],
+      "latency_ms_median": 9.27
+    },
+    {
+      "scenario": "distractors",
+      "seed": 0,
+      "run_id": "distractors-seed00",
+      "description": "A phone, a coffee cup and a bag travel through the lane with the products",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-002": 1
+      },
+      "predicted_cart": {
+        "PEX-002": 1
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 4,
+      "detection_recall": 1.0,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 8.63
+    },
+    {
+      "scenario": "distractors",
+      "seed": 1,
+      "run_id": "distractors-seed01",
+      "description": "A phone, a coffee cup and a bag travel through the lane with the products",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-002": 1
+      },
+      "predicted_cart": {
+        "PEX-002": 1
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 1,
+      "detection_recall": 1.0,
+      "review_reasons": [
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 8.1
+    },
+    {
+      "scenario": "distractors",
+      "seed": 2,
+      "run_id": "distractors-seed02",
+      "description": "A phone, a coffee cup and a bag travel through the lane with the products",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.18
+    },
+    {
+      "scenario": "distractors",
+      "seed": 3,
+      "run_id": "distractors-seed03",
+      "description": "A phone, a coffee cup and a bag travel through the lane with the products",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-005": 1,
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1,
+        "PEX-005": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.82
+    },
+    {
+      "scenario": "distractors",
+      "seed": 4,
+      "run_id": "distractors-seed04",
+      "description": "A phone, a coffee cup and a bag travel through the lane with the products",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-004": 1,
+        "PEX-005": 1
+      },
+      "predicted_cart": {
+        "PEX-005": 1,
+        "PEX-004": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.89
+    },
+    {
+      "scenario": "duplicate",
+      "seed": 0,
+      "run_id": "duplicate-seed00",
+      "description": "Two identical drill kits side by side",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 2
+      },
+      "predicted_cart": {
+        "PEX-001": 2
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.81
+    },
+    {
+      "scenario": "duplicate",
+      "seed": 1,
+      "run_id": "duplicate-seed01",
+      "description": "Two identical drill kits side by side",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 2
+      },
+      "predicted_cart": {
+        "PEX-001": 2
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.79
+    },
+    {
+      "scenario": "duplicate",
+      "seed": 2,
+      "run_id": "duplicate-seed02",
+      "description": "Two identical drill kits side by side",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 2
+      },
+      "predicted_cart": {
+        "PEX-001": 2
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.91
+    },
+    {
+      "scenario": "duplicate",
+      "seed": 3,
+      "run_id": "duplicate-seed03",
+      "description": "Two identical drill kits side by side",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 2
+      },
+      "predicted_cart": {
+        "PEX-001": 2
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.98
+    },
+    {
+      "scenario": "duplicate",
+      "seed": 4,
+      "run_id": "duplicate-seed04",
+      "description": "Two identical drill kits side by side",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 2
+      },
+      "predicted_cart": {
+        "PEX-001": 2
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.94
+    },
+    {
+      "scenario": "edge",
+      "seed": 0,
+      "run_id": "edge-seed00",
+      "description": "Products enter from below the frame and hug the lane rail",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1,
+        "PEX-004": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1,
+        "PEX-004": 1
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 5,
+      "phantom_objects": 0,
+      "detection_recall": 0.818,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 8.64
+    },
+    {
+      "scenario": "edge",
+      "seed": 1,
+      "run_id": "edge-seed01",
+      "description": "Products enter from below the frame and hug the lane rail",
+      "frames": 149,
+      "expected_cart": {
+        "PEX-005": 1,
+        "PEX-002": 1
+      },
+      "predicted_cart": {
+        "PEX-005": 1,
+        "PEX-002": 1
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 10,
+      "phantom_objects": 0,
+      "detection_recall": 0.747,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 8.36
+    },
+    {
+      "scenario": "edge",
+      "seed": 2,
+      "run_id": "edge-seed02",
+      "description": "Products enter from below the frame and hug the lane rail",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-004": 1
+      },
+      "predicted_cart": {
+        "PEX-004": 1
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 1,
+      "phantom_objects": 0,
+      "detection_recall": 0.975,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal"
+      ],
+      "latency_ms_median": 8.13
+    },
+    {
+      "scenario": "edge",
+      "seed": 3,
+      "run_id": "edge-seed03",
+      "description": "Products enter from below the frame and hug the lane rail",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-004": 1
+      },
+      "predicted_cart": {
+        "PEX-004": 1
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 1,
+      "phantom_objects": 0,
+      "detection_recall": 0.974,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal"
+      ],
+      "latency_ms_median": 8.23
+    },
+    {
+      "scenario": "edge",
+      "seed": 4,
+      "run_id": "edge-seed04",
+      "description": "Products enter from below the frame and hug the lane rail",
+      "frames": 147,
+      "expected_cart": {
+        "PEX-003": 1
+      },
+      "predicted_cart": {
+        "PEX-003": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 0.982,
+      "review_reasons": [],
+      "latency_ms_median": 7.99
+    },
+    {
+      "scenario": "flatbed",
+      "seed": 0,
+      "run_id": "flatbed-seed00",
+      "description": "A flatbed of lumber rolls between the camera and the products for several seconds",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-005": 1
+      },
+      "predicted_cart": {},
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": false,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 1,
+      "id_switches": 1,
+      "phantom_objects": 1,
+      "detection_recall": 0.834,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 8.16
+    },
+    {
+      "scenario": "flatbed",
+      "seed": 1,
+      "run_id": "flatbed-seed01",
+      "description": "A flatbed of lumber rolls between the camera and the products for several seconds",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-004": 1,
+        "PEX-005": 1
+      },
+      "predicted_cart": {
+        "PEX-005": 1
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": false,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 1,
+      "id_switches": 1,
+      "phantom_objects": 0,
+      "detection_recall": 0.955,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 8.88
+    },
+    {
+      "scenario": "flatbed",
+      "seed": 2,
+      "run_id": "flatbed-seed02",
+      "description": "A flatbed of lumber rolls between the camera and the products for several seconds",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-003": 1,
+        "PEX-004": 1
+      },
+      "predicted_cart": {
+        "PEX-004": 1
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": false,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 1,
+      "id_switches": 1,
+      "phantom_objects": 0,
+      "detection_recall": 0.945,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 8.84
+    },
+    {
+      "scenario": "flatbed",
+      "seed": 3,
+      "run_id": "flatbed-seed03",
+      "description": "A flatbed of lumber rolls between the camera and the products for several seconds",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-003": 1,
+        "PEX-002": 1
+      },
+      "predicted_cart": {
+        "PEX-002": 1
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": false,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 1,
+      "id_switches": 1,
+      "phantom_objects": 0,
+      "detection_recall": 0.948,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 8.44
+    },
+    {
+      "scenario": "flatbed",
+      "seed": 4,
+      "run_id": "flatbed-seed04",
+      "description": "A flatbed of lumber rolls between the camera and the products for several seconds",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-002": 1,
+        "PEX-001": 1,
+        "PEX-003": 1
+      },
+      "predicted_cart": {
+        "PEX-003": 1
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": false,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 2,
+      "id_switches": 2,
+      "phantom_objects": 0,
+      "detection_recall": 0.906,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 9.89
+    },
+    {
+      "scenario": "hands",
+      "seed": 0,
+      "run_id": "hands-seed00",
+      "description": "Hands repeatedly cover the products while they are carried",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-004": 1
+      },
+      "predicted_cart": {
+        "PEX-004": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.12
+    },
+    {
+      "scenario": "hands",
+      "seed": 1,
+      "run_id": "hands-seed01",
+      "description": "Hands repeatedly cover the products while they are carried",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-003": 1
+      },
+      "predicted_cart": {
+        "PEX-003": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.14
+    },
+    {
+      "scenario": "hands",
+      "seed": 2,
+      "run_id": "hands-seed02",
+      "description": "Hands repeatedly cover the products while they are carried",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-002": 1
+      },
+      "predicted_cart": {
+        "PEX-002": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.16
+    },
+    {
+      "scenario": "hands",
+      "seed": 3,
+      "run_id": "hands-seed03",
+      "description": "Hands repeatedly cover the products while they are carried",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-002": 1,
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1,
+        "PEX-002": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.43
+    },
+    {
+      "scenario": "hands",
+      "seed": 4,
+      "run_id": "hands-seed04",
+      "description": "Hands repeatedly cover the products while they are carried",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1,
+        "PEX-005": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1,
+        "PEX-005": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 2,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.57
+    },
+    {
+      "scenario": "hesitate",
+      "seed": 0,
+      "run_id": "hesitate-seed00",
+      "description": "The customer pauses mid-lane, steps back, then either finishes or turns around",
+      "frames": 160,
+      "expected_cart": {
+        "PEX-004": 1
+      },
+      "predicted_cart": {
+        "PEX-004": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 7.91
+    },
+    {
+      "scenario": "hesitate",
+      "seed": 1,
+      "run_id": "hesitate-seed01",
+      "description": "The customer pauses mid-lane, steps back, then either finishes or turns around",
+      "frames": 165,
+      "expected_cart": {
+        "PEX-005": 1
+      },
+      "predicted_cart": {
+        "PEX-005": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.2
+    },
+    {
+      "scenario": "hesitate",
+      "seed": 2,
+      "run_id": "hesitate-seed02",
+      "description": "The customer pauses mid-lane, steps back, then either finishes or turns around",
+      "frames": 177,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.68
+    },
+    {
+      "scenario": "hesitate",
+      "seed": 3,
+      "run_id": "hesitate-seed03",
+      "description": "The customer pauses mid-lane, steps back, then either finishes or turns around",
+      "frames": 169,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 9.38
+    },
+    {
+      "scenario": "hesitate",
+      "seed": 4,
+      "run_id": "hesitate-seed04",
+      "description": "The customer pauses mid-lane, steps back, then either finishes or turns around",
+      "frames": 176,
+      "expected_cart": {},
+      "predicted_cart": {},
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 10.44
+    },
+    {
+      "scenario": "mixed",
+      "seed": 0,
+      "run_id": "mixed-seed00",
+      "description": "Drill kit, measuring tape and work gloves",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1,
+        "PEX-003": 1,
+        "PEX-005": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1,
+        "PEX-005": 1,
+        "PEX-003": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 9.62
+    },
+    {
+      "scenario": "mixed",
+      "seed": 1,
+      "run_id": "mixed-seed01",
+      "description": "Drill kit, measuring tape and work gloves",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1,
+        "PEX-003": 1,
+        "PEX-005": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1,
+        "PEX-005": 1,
+        "PEX-003": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 10.03
+    },
+    {
+      "scenario": "mixed",
+      "seed": 2,
+      "run_id": "mixed-seed02",
+      "description": "Drill kit, measuring tape and work gloves",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1,
+        "PEX-003": 1,
+        "PEX-005": 1
+      },
+      "predicted_cart": {
+        "PEX-005": 1,
+        "PEX-001": 1,
+        "PEX-003": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 10.37
+    },
+    {
+      "scenario": "mixed",
+      "seed": 3,
+      "run_id": "mixed-seed03",
+      "description": "Drill kit, measuring tape and work gloves",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1,
+        "PEX-003": 1,
+        "PEX-005": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1,
+        "PEX-005": 1,
+        "PEX-003": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 9.51
+    },
+    {
+      "scenario": "mixed",
+      "seed": 4,
+      "run_id": "mixed-seed04",
+      "description": "Drill kit, measuring tape and work gloves",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1,
+        "PEX-003": 1,
+        "PEX-005": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1,
+        "PEX-005": 1,
+        "PEX-003": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 9.6
+    },
+    {
+      "scenario": "occlusion",
+      "seed": 0,
+      "run_id": "occlusion-seed00",
+      "description": "A hand hides the drill kit for 0.6 s",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 0.966,
+      "review_reasons": [],
+      "latency_ms_median": 8.09
+    },
+    {
+      "scenario": "occlusion",
+      "seed": 1,
+      "run_id": "occlusion-seed01",
+      "description": "A hand hides the drill kit for 0.6 s",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 0.966,
+      "review_reasons": [],
+      "latency_ms_median": 8.03
+    },
+    {
+      "scenario": "occlusion",
+      "seed": 2,
+      "run_id": "occlusion-seed02",
+      "description": "A hand hides the drill kit for 0.6 s",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 0.966,
+      "review_reasons": [],
+      "latency_ms_median": 8.81
+    },
+    {
+      "scenario": "occlusion",
+      "seed": 3,
+      "run_id": "occlusion-seed03",
+      "description": "A hand hides the drill kit for 0.6 s",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 0.966,
+      "review_reasons": [],
+      "latency_ms_median": 7.92
+    },
+    {
+      "scenario": "occlusion",
+      "seed": 4,
+      "run_id": "occlusion-seed04",
+      "description": "A hand hides the drill kit for 0.6 s",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 0.966,
+      "review_reasons": [],
+      "latency_ms_median": 7.96
+    },
+    {
+      "scenario": "remove",
+      "seed": 0,
+      "run_id": "remove-seed00",
+      "description": "Driver kit carried in, then carried back out",
+      "frames": 245,
+      "expected_cart": {},
+      "predicted_cart": {},
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 7.9
+    },
+    {
+      "scenario": "remove",
+      "seed": 1,
+      "run_id": "remove-seed01",
+      "description": "Driver kit carried in, then carried back out",
+      "frames": 245,
+      "expected_cart": {},
+      "predicted_cart": {},
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 7.86
+    },
+    {
+      "scenario": "remove",
+      "seed": 2,
+      "run_id": "remove-seed02",
+      "description": "Driver kit carried in, then carried back out",
+      "frames": 245,
+      "expected_cart": {},
+      "predicted_cart": {},
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 7.89
+    },
+    {
+      "scenario": "remove",
+      "seed": 3,
+      "run_id": "remove-seed03",
+      "description": "Driver kit carried in, then carried back out",
+      "frames": 245,
+      "expected_cart": {},
+      "predicted_cart": {},
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.01
+    },
+    {
+      "scenario": "remove",
+      "seed": 4,
+      "run_id": "remove-seed04",
+      "description": "Driver kit carried in, then carried back out",
+      "frames": 245,
+      "expected_cart": {},
+      "predicted_cart": {},
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.34
+    },
+    {
+      "scenario": "shopper",
+      "seed": 0,
+      "run_id": "shopper-seed00",
+      "description": "Another shopper walks across the lane in front of the camera",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1,
+        "PEX-002": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1,
+        "PEX-002": 1
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 26,
+      "phantom_objects": 1,
+      "detection_recall": 0.862,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 9.23
+    },
+    {
+      "scenario": "shopper",
+      "seed": 1,
+      "run_id": "shopper-seed01",
+      "description": "Another shopper walks across the lane in front of the camera",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-005": 1,
+        "PEX-004": 1
+      },
+      "predicted_cart": {
+        "PEX-004": 1,
+        "PEX-005": 1
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 23,
+      "phantom_objects": 2,
+      "detection_recall": 0.952,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 8.76
+    },
+    {
+      "scenario": "shopper",
+      "seed": 2,
+      "run_id": "shopper-seed02",
+      "description": "Another shopper walks across the lane in front of the camera",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-004": 1
+      },
+      "predicted_cart": {
+        "PEX-004": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 1,
+      "detection_recall": 0.986,
+      "review_reasons": [],
+      "latency_ms_median": 8.39
+    },
+    {
+      "scenario": "shopper",
+      "seed": 3,
+      "run_id": "shopper-seed03",
+      "description": "Another shopper walks across the lane in front of the camera",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-003": 1
+      },
+      "predicted_cart": {
+        "PEX-003": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 1,
+      "detection_recall": 0.986,
+      "review_reasons": [],
+      "latency_ms_median": 8.22
+    },
+    {
+      "scenario": "shopper",
+      "seed": 4,
+      "run_id": "shopper-seed04",
+      "description": "Another shopper walks across the lane in front of the camera",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-002": 1
+      },
+      "predicted_cart": {
+        "PEX-002": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 1,
+      "detection_recall": 0.986,
+      "review_reasons": [],
+      "latency_ms_median": 8.33
+    },
+    {
+      "scenario": "single",
+      "seed": 0,
+      "run_id": "single-seed00",
+      "description": "One drill kit, one clean crossing",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.22
+    },
+    {
+      "scenario": "single",
+      "seed": 1,
+      "run_id": "single-seed01",
+      "description": "One drill kit, one clean crossing",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.12
+    },
+    {
+      "scenario": "single",
+      "seed": 2,
+      "run_id": "single-seed02",
+      "description": "One drill kit, one clean crossing",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.13
+    },
+    {
+      "scenario": "single",
+      "seed": 3,
+      "run_id": "single-seed03",
+      "description": "One drill kit, one clean crossing",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.07
+    },
+    {
+      "scenario": "single",
+      "seed": 4,
+      "run_id": "single-seed04",
+      "description": "One drill kit, one clean crossing",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 8.19
+    },
+    {
+      "scenario": "stacked",
+      "seed": 0,
+      "run_id": "stacked-seed00",
+      "description": "One package carried on top of another",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-001": 1,
+        "PEX-005": 1
+      },
+      "predicted_cart": {
+        "PEX-005": 2
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": false,
+      "passed": false,
+      "false_adds": 1,
+      "missed_items": 1,
+      "id_switches": 50,
+      "phantom_objects": 0,
+      "detection_recall": 0.9,
+      "review_reasons": [
+        "Product first observed beyond checkout boundary",
+        "Unresolved product disappeared after a checkout crossing"
+      ],
+      "latency_ms_median": 9.14
+    },
+    {
+      "scenario": "stacked",
+      "seed": 1,
+      "run_id": "stacked-seed01",
+      "description": "One package carried on top of another",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-002": 1,
+        "PEX-003": 1
+      },
+      "predicted_cart": {
+        "PEX-003": 3
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": false,
+      "passed": false,
+      "false_adds": 2,
+      "missed_items": 1,
+      "id_switches": 40,
+      "phantom_objects": 0,
+      "detection_recall": 0.955,
+      "review_reasons": [
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 9.4
+    },
+    {
+      "scenario": "stacked",
+      "seed": 2,
+      "run_id": "stacked-seed02",
+      "description": "One package carried on top of another",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-003": 2
+      },
+      "predicted_cart": {
+        "PEX-003": 1
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": false,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 1,
+      "id_switches": 37,
+      "phantom_objects": 0,
+      "detection_recall": 0.617,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 8.26
+    },
+    {
+      "scenario": "stacked",
+      "seed": 3,
+      "run_id": "stacked-seed03",
+      "description": "One package carried on top of another",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-004": 2
+      },
+      "predicted_cart": {
+        "PEX-004": 2
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 57,
+      "phantom_objects": 0,
+      "detection_recall": 0.717,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 8.59
+    },
+    {
+      "scenario": "stacked",
+      "seed": 4,
+      "run_id": "stacked-seed04",
+      "description": "One package carried on top of another",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-005": 2
+      },
+      "predicted_cart": {
+        "PEX-005": 1
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": false,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 1,
+      "id_switches": 9,
+      "phantom_objects": 0,
+      "detection_recall": 0.521,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal",
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 8.2
+    },
+    {
+      "scenario": "unknown",
+      "seed": 0,
+      "run_id": "unknown-seed00",
+      "description": "An unenrolled gray package",
+      "frames": 145,
+      "expected_cart": {},
+      "predicted_cart": {},
+      "expected_review": true,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [
+        "Checkout crossing lacks accepted SKU evidence"
+      ],
+      "latency_ms_median": 8.33
+    },
+    {
+      "scenario": "unknown",
+      "seed": 1,
+      "run_id": "unknown-seed01",
+      "description": "An unenrolled gray package",
+      "frames": 145,
+      "expected_cart": {},
+      "predicted_cart": {},
+      "expected_review": true,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [
+        "Checkout crossing lacks accepted SKU evidence"
+      ],
+      "latency_ms_median": 8.43
+    },
+    {
+      "scenario": "unknown",
+      "seed": 2,
+      "run_id": "unknown-seed02",
+      "description": "An unenrolled gray package",
+      "frames": 145,
+      "expected_cart": {},
+      "predicted_cart": {},
+      "expected_review": true,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [
+        "Checkout crossing lacks accepted SKU evidence"
+      ],
+      "latency_ms_median": 8.25
+    },
+    {
+      "scenario": "unknown",
+      "seed": 3,
+      "run_id": "unknown-seed03",
+      "description": "An unenrolled gray package",
+      "frames": 145,
+      "expected_cart": {},
+      "predicted_cart": {},
+      "expected_review": true,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [
+        "Checkout crossing lacks accepted SKU evidence"
+      ],
+      "latency_ms_median": 8.2
+    },
+    {
+      "scenario": "unknown",
+      "seed": 4,
+      "run_id": "unknown-seed04",
+      "description": "An unenrolled gray package",
+      "frames": 145,
+      "expected_cart": {},
+      "predicted_cart": {},
+      "expected_review": true,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [
+        "Checkout crossing lacks accepted SKU evidence"
+      ],
+      "latency_ms_median": 8.58
+    }
+  ]
+}

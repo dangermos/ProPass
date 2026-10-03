@@ -231,3 +231,16 @@ def test_conflicting_sku_does_not_silently_change_existing_purchase():
     assert result["objects"][0]["sku"] == "PEX-001"
     assert result["metrics"]["cart_units"] == 1
     assert all(e["type"]!="SKU_RESOLVED" for e in events)
+
+
+def test_product_carried_outside_the_lane_is_never_charged_or_pending():
+    config = LedgerConfig(dwell_seconds=0.08, evidence_interval=0.08,
+                          lane_polygon=((0.2, 0.0), (0.6, 0.0), (0.6, 1.0), (0.2, 1.0)))
+    engine = PhysicalLedger(SKUS, config)
+    engine.reset("test-run")
+    result, events = cross(engine, x=850)   # next aisle, crosses both zone rows
+    assert result["metrics"]["cart_units"] == 0
+    assert not result["review_required"]
+    assert "ITEM_ADDED" not in {e["type"] for e in events}
+    inside, _ = cross(engine, start=20, track=2, x=400)
+    assert inside["metrics"]["cart_units"] == 1
