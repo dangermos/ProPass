@@ -1,7 +1,7 @@
 # 🗺️ Roadmap: tracking that holds up in messy lanes
 
 > [!NOTE]
-> **Status:** Phases A and B are ✅ done ([A results](#-phase-a-results), [B results](#-phase-b-results)). Next up is the title screen and assessment UI from Phase D, pulled forward at Danny's request, then Phase C. Each phase lists what changes, which *real models* are involved, and how success gets measured.
+> **Status:** Phases A and B are ✅ done ([A results](#-phase-a-results), [B results](#-phase-b-results)). Most of Phase D (title screen, Decisions and Benchmark pages) was pulled forward and is done. Phase C is next. Each phase lists what changes, which *real models* are involved, and how success gets measured.
 
 Today's lane is clean: boxes slide in a straight line, the only occluder is a slab that appears for 0.6 s, and nothing else ever enters the frame. Real checkout lanes are messy. The goal is a tracker that keeps an exact cart through **occlusion, partial views, distractors and multiple cameras**, and can prove it with numbers.
 
@@ -87,12 +87,16 @@ xychart-beta
 
 **Done when:** a long single-camera occlusion that fails in Phase B passes with two cameras, and the dashboard shows where coverage is thin.
 
-## 🅳 Phase D: explainable, polished dashboard
+## 🅳 Phase D: explainable, polished dashboard (mostly ✅)
 
-- 🧾 **"Why is this in my cart?"** Each line expands into that object's timeline (first seen, SKU votes, zone crossings, occlusions, which camera saw it) with thumbnail crops.
-- 🚦 **Review queue:** when checkout is blocked, show exactly which object and why, with the frames that caused it.
-- 📊 **Benchmark page:** Phase A's scores and trends, built from the JSON reports.
-- 🎥 **Demo recording:** a 60–90 s video of a messy scenario passing, for the portfolio.
+![Title screen](images/title-screen.jpg)
+
+- ✅ **Title screen:** pick any of the 14 scenarios from preview cards, each showing its held-out pass rate. Unity follows the pick.
+- ✅ **Decisions tab:** answers "why is this in my cart?" with every physical object's state, a plain-language reason, its events, and exactly what is blocking checkout.
+- ✅ **Models tab:** detector, classifier and tracker results, read live from the training reports.
+- ✅ **Benchmark tab:** pass rates against the baseline, with **Run live** on every scenario.
+- ⏳ Thumbnail crops and per-camera evidence in the Decisions timeline (after Phase C).
+- ⏳ **Demo recording:** a 60–90 s video of a messy scenario passing, for the portfolio.
 
 ## 📏 Ground rules that don't change
 

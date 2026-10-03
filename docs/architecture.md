@@ -28,8 +28,9 @@ flowchart LR
         V1 --> V3 --> V4
     end
     subgraph WEB["🖥️ Dashboard · React"]
-        W1[Camera canvas + overlays]
-        W2[Cart, events, scenarios,<br/>review + confirm]
+        W0[Title screen<br/>scenario picker]
+        W1[Live lane · Decisions ·<br/>Models · Benchmark tabs]
+        W2[Cart, review + confirm]
     end
     S2 -- "JPEG + frame_id/time/run_id" --> A1
     A3 <--> VIS

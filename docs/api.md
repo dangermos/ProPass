@@ -13,6 +13,7 @@ The FastAPI server runs on **http://127.0.0.1:8000**. Interactive docs, generate
 | 🔴 | `WS` | `/api/ws` | 🖥️ Dashboard | Snapshot pushed after every processed frame and every action |
 | 🖼️ | `GET` | `/api/frame` | 🖥️ Dashboard | The processed JPEG that matches the latest snapshot |
 | 📋 | `GET` | `/api/catalog` | 🖥️ Dashboard | Products, prices, currency |
+| 📊 | `GET` | `/api/reports` | 🖥️ Dashboard | Measured results for the Models and Benchmark tabs (manifest, static, live and benchmark reports, config) |
 | 🎬 | `POST` | `/api/scenario` | 🖥️ Dashboard | Start a new run of a scenario |
 | 👤 | `POST` | `/api/session` | 🖥️ Dashboard | Switch the simulated customer |
 | 🔄 | `POST` | `/api/cart/reset` | 🖥️ Dashboard | Restart the current scenario with a new run |

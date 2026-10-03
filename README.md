@@ -12,7 +12,7 @@
 ![Tests](https://img.shields.io/badge/tests-38%20passing-2EA043)
 ![Benchmark](https://img.shields.io/badge/benchmark-67%2F70%20held--out-2EA043)
 
-![ProPass dashboard tracking a drill kit across the checkout lane](docs/images/dashboard.jpg)
+![ProPass title screen: pick one of 14 scenarios, each with its benchmark pass rate](docs/images/title-screen.jpg)
 
 ![Pipeline: Unity lane → FastAPI queue → detect and classify → physical ledger → cart and dashboard](docs/images/pipeline.svg)
 
@@ -31,8 +31,8 @@ bash scripts/start.sh          # API on :8000, dashboard on :5173
 ```
 
 1. In Unity Hub, add the `unity/` folder as a project, open `Assets/ProPass/Scenes/Checkout.unity`, and press **Play**.
-2. Open **http://127.0.0.1:5173**, pick a scenario such as **Identical products**, and watch the boxes cross the lane.
-3. Click **Review checkout**, then **Confirm simulated checkout**.
+2. Open **http://127.0.0.1:5173** and pick a scenario on the title screen, such as **Identical products**. Unity switches to it.
+3. Watch the **Live lane** tab, see why each item is (or isn't) in the cart on **Decisions**, then click **Review checkout** and **Confirm demo checkout**.
 
 The trained weights (`models/detector.pt`, `models/classifier.pt`) aren't in git. Copy them in, or retrain them with [docs/training.md](docs/training.md). Full setup and troubleshooting are in [docs/getting-started.md](docs/getting-started.md).
 
@@ -56,6 +56,7 @@ Every scenario above passes all of its seeds in the [benchmark](docs/benchmark.m
 | Doc | Read it to… |
 |---|---|
 | 🚀 [Getting started](docs/getting-started.md) | Install, run the demo, and fix common problems |
+| 🖥️ [Dashboard tour](docs/getting-started.md#️-dashboard-tour) | Use the title screen and the Live lane, Decisions, Models and Benchmark tabs |
 | 🔁 [Unity → web pipeline](docs/pipeline.md) | Follow a frame from Unity's camera to the cart on screen |
 | 🏗️ [Architecture](docs/architecture.md) | Understand the components, the checkout state machine and the design decisions |
 | 👁️ [Vision and tracking](docs/vision.md) | See how detection, classification, tracking and zone events work, and tune them |
@@ -71,7 +72,7 @@ Every scenario above passes all of its seeds in the [benchmark](docs/benchmark.m
 ```text
 api/          FastAPI app: frame ingress, cart/session persistence, confirmation
 vision/       Learned RGB inference, SKU evidence, physical-object ledger, config.json
-web/          React + TypeScript dashboard (Vite)
+web/          React + TypeScript dashboard: title screen + Live/Decisions/Models/Benchmark tabs
 unity/        The Unity 6.6 project; our code and scene live in unity/Assets/ProPass
 training/     Dataset prep, model training, static and replay evaluation
 models/       Checkpoints (git-ignored), hash manifest, evaluation reports

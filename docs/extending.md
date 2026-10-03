@@ -45,7 +45,7 @@ Scenarios are **deterministic plans**: every actor's position is a function of `
 | [ProPassScenario.cs](../unity/Assets/ProPass/Runtime/ProPassScenario.cs) | Add the name to `Messy` (or `Classic`), then add a `case` in `Build` that adds actors: `Walk(...)` products, `Hand`, `Shopper`, `Flatbed` or `Prop` actors, with waypoints, `follow` offsets and visibility windows |
 | [ProPassScenarioRunner.cs](../unity/Assets/ProPass/Runtime/ProPassScenarioRunner.cs) | Only if you need a new kind of actor geometry |
 | [api/store.py](../api/store.py) | Add the name to `SCENARIOS` |
-| [web/src/App.tsx](../web/src/App.tsx) | Add an entry to `scenarioOptions` |
+| [web/src/scenarios.ts](../web/src/scenarios.ts) | Add an entry (name, one-line detail, what it tests). Drop a 480×270 preview at `web/public/scenarios/<id>.jpg` |
 | [training/benchmark.py](../training/benchmark.py) | Add the name to `CLASSIC` or `MESSY` so it's grouped in reports |
 
 Then re-record and re-score the benchmark ([training.md](training.md#-scenario-benchmark)). The expected cart is derived automatically from world-space motion, so there's nothing to hand-label.

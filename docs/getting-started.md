@@ -69,9 +69,9 @@ Keep that terminal open, and press Ctrl+C to stop both services. Logs go to `art
 ## 5️⃣ Run a scenario
 
 1. In Unity, open **Checkout.unity** and press **▶ Play**. Make sure the Editor's Pause button is off.
-2. In the dashboard, pick a scenario. **Identical products** is the best first demo.
-3. Watch the boxes, track IDs and SKUs appear. Items join the cart when they cross the teal **COMMITTED** line.
-4. After about 15 seconds, click **Review checkout**, then **Confirm simulated checkout**.
+2. Open the dashboard. The **title screen** lists all 14 scenarios, each with a preview and its benchmark pass rate. **Identical products** is the best first demo.
+3. Click a card. Unity switches to that scenario within about 0.35 s, and the dashboard opens the **Live lane** tab.
+4. Items join the cart when they cross the teal **COMMITTED** line inside the lane outline. After about 15 seconds, click **Review checkout**, then **Confirm demo checkout**.
 
 | Scenario | Expected after ~15 s |
 |---|---|
@@ -81,6 +81,22 @@ Keep that terminal open, and press Ctrl+C to stop both services. Logs go to `art
 | Temporary occlusion | 1 × drill kit after a brief disappearance |
 | Change of mind | Driver kit added, then removed on the way back (~29 s) |
 | Unknown product | Gray package tracked, checkout blocked for review |
+| Messy lanes (8) | Products vary by run. The **Decisions** tab explains every outcome. |
+
+## 🖥️ Dashboard tour
+
+![Title screen](images/title-screen.jpg)
+
+| Tab | What it's for |
+|---|---|
+| 🎥 **Live lane** | The processed camera frame with the lane outline, zone lines, boxes, track IDs and SKUs, plus the cart, the event timeline and the checkout buttons |
+| 🧾 **Decisions** | One card per physical object, with its state and a plain-language reason ("crossed into COMMIT with PEX-001 accepted at 97%"), its events, and exactly what is blocking checkout |
+| 🧠 **Models** | Detector, classifier and tracker settings and measured results, read live from `models/*.json` |
+| 📊 **Benchmark** | Pass rate per scenario against the Phase A baseline. **Run live** starts that scenario in Unity. |
+
+![Models tab](images/models-tab.jpg)
+
+The ◀ **Scenarios** button (or the **P** logo) goes back to the title screen. The URL hash (`#/lab/decisions`, for example) keeps your place on refresh.
 
 ## 🩺 Troubleshooting
 
