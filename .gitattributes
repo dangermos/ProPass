@@ -172,3 +172,4 @@ LightingData.asset     binary
 
 # Keep documentation images as plain files so GitHub previews them directly
 docs/** -filter -diff -merge
+web/public/** -filter -diff -merge
