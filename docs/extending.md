@@ -10,10 +10,10 @@ mindmap
       Unity prefab
       re-export + retrain
     🎬 New scenario
-      ProPassSimulation.cs
+      ProPassScenario.cs
       store.py SCENARIOS
       App.tsx
-      verify_live.py
+      re-record benchmark
     📷 New camera / angle
       Unity camera
       config.json zones
@@ -38,13 +38,17 @@ mindmap
 
 ## 🎬 Add a scenario
 
+Scenarios are **deterministic plans**: every actor's position is a function of `(scenario, seed, time)`. Live Play mode and the benchmark recorder run the same plan.
+
 | File | Change |
 |---|---|
-| [ProPassSimulation.cs](../unity/Assets/ProPass/Runtime/ProPassSimulation.cs) | In `ResetScenario`, spawn the products. In `UpdateObjects`, script their motion and any occluder. |
+| [ProPassScenario.cs](../unity/Assets/ProPass/Runtime/ProPassScenario.cs) | Add the name to `Messy` (or `Classic`), then add a `case` in `Build` that adds actors: `Walk(...)` products, `Hand`, `Shopper`, `Flatbed` or `Prop` actors, with waypoints, `follow` offsets and visibility windows |
+| [ProPassScenarioRunner.cs](../unity/Assets/ProPass/Runtime/ProPassScenarioRunner.cs) | Only if you need a new kind of actor geometry |
 | [api/store.py](../api/store.py) | Add the name to `SCENARIOS` |
 | [web/src/App.tsx](../web/src/App.tsx) | Add an entry to `scenarioOptions` |
-| [scripts/verify_live.py](../scripts/verify_live.py) | Add the expected cart, duration and whether review is expected |
-| [tests/](../tests) | If the scenario exercises new ledger logic, add a ledger test with synthetic observations |
+| [training/benchmark.py](../training/benchmark.py) | Add the name to `CLASSIC` or `MESSY` so it's grouped in reports |
+
+Then re-record and re-score the benchmark ([training.md](training.md#-scenario-benchmark)). The expected cart is derived automatically from world-space motion, so there's nothing to hand-label.
 
 > [!TIP]
 > Script **evidence**, not outcomes. A scenario should move objects and occluders around. It should never tell the API what's in the cart.

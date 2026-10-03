@@ -9,7 +9,8 @@
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/UI-React%20%2B%20Vite-61DAFB?logo=react&logoColor=black)
 ![Unity 6](https://img.shields.io/badge/Sim-Unity%206.6%20URP-000000?logo=unity&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-31%20passing-2EA043)
+![Tests](https://img.shields.io/badge/tests-34%20passing-2EA043)
+![Benchmark](https://img.shields.io/badge/benchmark-46%2F70%20runs-D29922)
 
 ![ProPass dashboard tracking a drill kit across the checkout lane](docs/images/dashboard.jpg)
 
@@ -46,6 +47,10 @@ The trained weights (`models/detector.pt`, `models/classifier.pt`) aren't in git
 | ↩️ **Change of mind** | Added on the forward crossing, removed on the observed reverse crossing | unit tests |
 | ❓ **Unknown product** | Gray unenrolled package is tracked, and checkout is blocked for review | unit tests |
 
+Every scenario above passes all 5 seeds in the [benchmark](docs/benchmark.md). Eight more **messy scenarios** (busy hands, a crossing shopper, a lumber flatbed, partial views at the frame edge, stacked boxes, distractors, a shopper in the next aisle, and hesitation) currently pass **16 of 40** runs. That's the baseline the [roadmap](docs/roadmap.md) works against.
+
+![Eight messy benchmark scenarios rendered by Unity](docs/images/messy-scenarios.jpg)
+
 ## 🧭 Documentation map
 
 | Doc | Read it to… |
@@ -55,6 +60,7 @@ The trained weights (`models/detector.pt`, `models/classifier.pt`) aren't in git
 | 🏗️ [Architecture](docs/architecture.md) | Understand the components, the checkout state machine and the design decisions |
 | 👁️ [Vision and tracking](docs/vision.md) | See how detection, classification, tracking and zone events work, and tune them |
 | 🧪 [Training and results](docs/training.md) | Export data from Unity, retrain both models, and read the measured results |
+| 📊 [Benchmark](docs/benchmark.md) | See the per-scenario scores on 70 seeded runs (exact cart, ID switches, false adds) |
 | 🔌 [API reference](docs/api.md) | Look up endpoints, payloads and the snapshot shape |
 | 🧩 [Extending ProPass](docs/extending.md) | Add a product, scenario, camera or model |
 | 🗺️ [Roadmap](docs/roadmap.md) | See what's next: messy lanes, learned re-ID, multi-camera coverage |
@@ -78,7 +84,7 @@ catalog.json  The five fictional products, prices and class indices
 ## ✅ Checks
 
 ```bash
-.venv/bin/python -m pytest tests -q        # 31 tests: ledger, engine, checkout races
+.venv/bin/python -m pytest tests -q        # 34 tests: ledger, engine, checkout races, scoring
 (cd web && npm run build)                  # type-check and bundle the dashboard
 .venv/bin/python scripts/verify_live.py    # needs Unity in Play mode + the API
 ```

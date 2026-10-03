@@ -115,6 +115,8 @@ artifacts/replays/<scenario>/<run_id>/000001.json  ← ground truth: sku, physic
 
 [training/replay.py](../training/replay.py) re-runs the vision engine over the JPEGs **without** the API, and reads the JSON only afterwards to score the cart. That gives repeatable temporal evaluation without having Unity open. See [training.md](training.md#-temporal-replay-evaluation).
 
+For larger, exactly repeatable test sets, use the **benchmark recorder** instead. It renders seeded scenarios offline, frame by frame, without Play mode. See [training.md → Scenario benchmark](training.md#-scenario-benchmark).
+
 ## 🔌 Feeding the pipeline from something other than Unity
 
 The API doesn't care where the pixels come from. Any client can drive it:

@@ -123,6 +123,34 @@ Source: [evaluation-temporal-initial-single.json](../models/evaluation-temporal-
 
 Source: [models/evaluation-live.json](../models/evaluation-live.json).
 
+## 🎯 Scenario benchmark
+
+The live and replay checks above cover a handful of runs. The benchmark scores **14 scenarios × 5 seeds** at once, and gives every metric a source.
+
+![Messy scenarios](images/messy-scenarios.jpg)
+
+**1. Record** (Unity renders every run offline at 8 fps, with no Play mode and no API):
+
+- From the menu: **ProPass → Record benchmark suite**, then choose `propass/artifacts/benchmark`.
+- Or with the Unity CLI against the open Editor:
+  ```bash
+  unity command eval --code 'return ProPass.Editor.ProPassBenchmarkRecorder.RecordDeferred("/abs/path/propass/artifacts/benchmark", 5);'
+  ```
+- Or headless, with the project closed:
+  ```bash
+  Unity -batchmode -quit -projectPath unity -executeMethod ProPass.Editor.ProPassBenchmarkRecorder.RunFromCommandLine -benchmarkOut "$PWD/artifacts/benchmark" -benchmarkSeeds 5
+  ```
+
+Each run folder holds JPEG frames, per-frame ground truth (SKU, physical ID, projected box, world position) and `run.json` with the expected cart. The expected cart comes from **world-space motion**: a product counts when it's carried inside the lane from behind the orange marker to past the teal one. The same `(scenario, seed)` always renders the same run.
+
+**2. Score:**
+
+```bash
+.venv/bin/python -m training.benchmark --root artifacts/benchmark --label baseline --docs
+```
+
+This writes `models/benchmark-<label>.json`. With `--docs`, it also regenerates [benchmark.md](benchmark.md) and its chart. Current result: **46 / 70** runs pass. All 30 classic runs pass, and 16 of the 40 messy runs pass. The [roadmap](roadmap.md) explains each failure.
+
 ## ⚠️ What these numbers don't prove
 
 - The five packages are visually distinct colored boxes. Look-alike SKUs haven't been tested.

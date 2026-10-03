@@ -1,7 +1,7 @@
 # 🗺️ Roadmap: tracking that holds up in messy lanes
 
 > [!NOTE]
-> **Status: proposed.** Nothing on this page is built yet. Each phase lists what changes, which *real models* are involved, and how success gets measured.
+> **Status:** Phase A is ✅ done ([results below](#-phase-a-results)). Phases B–D are next. Each phase lists what changes, which *real models* are involved, and how success gets measured.
 
 Today's lane is clean: boxes slide in a straight line, the only occluder is a slab that appears for 0.6 s, and nothing else ever enters the frame. Real checkout lanes are messy. The goal is a tracker that keeps an exact cart through **occlusion, partial views, distractors and multiple cameras**, and can prove it with numbers.
 
@@ -14,21 +14,32 @@ flowchart LR
     classDef d fill:#e0fbf6,stroke:#38d6bf,color:#00382f
 ```
 
-## 🅰️ Phase A: messy lanes and a scored benchmark *(do this first)*
+## 🅰️ Phase A: messy lanes and a scored benchmark ✅
 
-You can't improve what you can't measure, so the first step is making the simulation hard and scoring it automatically.
+You can't improve what you can't measure, so the first step was making the simulation hard and scoring it automatically.
 
-**Unity: randomized, realistic scenarios** (`ProPassSimulation.cs` and new scenario scripts)
-- 🧍 **Occluders that behave like people:** an animated customer whose arms and body pass in front of items, a second shopper crossing the lane, and a cart or basket blocking the view for several seconds.
-- 📦 **Partial views:** items half out of frame, stacked or overlapping boxes, items carried at different heights and rotations.
-- 🪀 **Distractors:** non-merchandise objects (phone, bag, coffee cup, the customer's own tool), shelf products in the background, a person walking *past* the lane with a product that must **not** be added.
-- 🎲 **Natural motion:** curved paths, pauses, hesitations, back-and-forth, plus walking-speed variation.
-- 🎨 **Domain randomization:** lighting, floor and package textures, camera shake, motion blur, sensor noise, JPEG artifacts.
+![Messy scenarios](images/messy-scenarios.jpg)
 
-**Benchmark harness** (`training/benchmark.py`)
-- Runs N seeds × every scenario through the recorded-replay path, with no Unity needed after recording.
-- Reports **exact-cart rate, false adds, false removes, ID switches, review rate and latency** per scenario, and writes a JSON + Markdown table into `models/`.
-- **Done when:** the current system has a baseline score on every scenario. Some of those scores will be bad, and that's the point.
+**What was built**
+- 🎲 **Seeded scenario plans** ([ProPassScenario.cs](../unity/Assets/ProPass/Runtime/ProPassScenario.cs)). Every actor's motion is a function of `(scenario, seed, time)`, shared by live Play mode and offline recording. Lighting, light color, camera shake and JPEG quality are randomized per seed.
+- 🧍 **Eight messy scenarios:** busy hands, a crossing shopper, a lumber flatbed (long full occlusion), entering from the frame edge along the rail, stacked boxes, distractors (phone, cup, bag), a shopper in the next aisle carrying a product, and hesitation with a step back.
+- 🎥 **Offline recorder** ([ProPassBenchmarkRecorder.cs](../unity/Assets/ProPass/Editor/ProPassBenchmarkRecorder.cs)). It renders scenarios × seeds at 8 fps and runs from the menu, the Unity CLI or batch mode.
+- 📊 **Scorer** ([training/benchmark.py](../training/benchmark.py)). It measures exact cart, false adds, misses, ID switches, phantom objects, review rate and detection recall, and regenerates [benchmark.md](benchmark.md).
+
+### 📉 Phase A results
+
+The baseline passes **46 / 70** runs: all 30 classic runs, but only 16 of 40 messy ones. The full table is in [benchmark.md](benchmark.md).
+
+| Scenario | Pass | What breaks | Fix planned in |
+|---|:-:|---|---|
+| 🪵 flatbed | 🔴 0% | A full occlusion longer than the 1.8 s re-attach window: the item is "lost before checkout" and never added (6 items missed) | B: re-ID embedding + occluder-aware re-attach, C: second camera |
+| 📦 stacked | 🔴 0% | Two touching boxes get one merged or alternating identity (39 ID switches per run). The top box takes the bottom box's SKU. | B: segmentation masks + re-ID |
+| 🚶 bystander | 🔴 0% | Zones are full-width image rows, so a product carried in the **next aisle** crosses them and gets charged or blocks checkout | C: world-space lane zones via ground-plane mapping |
+| ↘️ edge | 🔴 20% | Products entering from the frame edge first appear mid-lane, which counts as "first observed beyond boundary", and partial views fragment tracks | B: visible-fraction weighting, C: calibrated zones |
+| 🧍 shopper | 🟡 60% | The passing person splits tracks (10 ID switches per run). Untracked phantom objects also appear (1.2 per run), likely the person or track fragments | B: person-class detector + BoT-SORT with re-ID |
+| 📱 distractors | 🟡 60% | Props are likely detected as merchandise (1 phantom object per run, with no tracking errors on real items), and that blocks checkout | B: hard-negative training data |
+| ⏸️ hesitate | 🟢 80% | Mostly works. One run blocked after the step back | B: Kalman motion model |
+| ✋ hands | 🟢 100% | Partial hand occlusion is already handled by short-gap re-attachment | — |
 
 ## 🅱️ Phase B: real learned models for identity and occlusion
 
@@ -40,7 +51,7 @@ You can't improve what you can't measure, so the first step is making the simula
 | 🧩 **Visible-fraction estimate** | YOLO26n-**seg** (instance masks) | Weights SKU and ReID evidence by how much of the box is actually visible, so partial views stop polluting votes. |
 | 📈 **Motion model** | Per-object Kalman filter in the ledger | Smoother prediction through occlusion than today's 0.4 s linear extrapolation |
 
-**Done when:** Phase A's benchmark improves on occlusion, identical-product and distractor scenarios with no regression elsewhere. Every number gets reported next to the baseline.
+**Done when:** the Phase A benchmark improves on occlusion, identical-product and distractor scenarios with no regression elsewhere. Every number gets reported next to the baseline.
 
 ## 🅲 Phase C: multiple cameras and a coverage map
 
