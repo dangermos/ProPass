@@ -30,8 +30,9 @@ namespace ProPass.Editor
             }
             string output = Arg("-benchmarkOut", null) ?? throw new ArgumentException("-benchmarkOut is required");
             int seeds = int.Parse(Arg("-benchmarkSeeds", "4"), CultureInfo.InvariantCulture);
+            int seedStart = int.Parse(Arg("-benchmarkSeedStart", "0"), CultureInfo.InvariantCulture);
             var scenarios = Arg("-benchmarkScenarios", null)?.Split(',') ?? ProPassScenarios.All.ToArray();
-            try { Record(output, seeds, scenarios); EditorApplication.Exit(0); }
+            try { Record(output, seeds, scenarios, seedStart); EditorApplication.Exit(0); }
             catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
         }
 
@@ -44,14 +45,15 @@ namespace ProPass.Editor
 
         // For the Unity CLI's `eval`, which times out on long main-thread calls: returns at once,
         // records on the next editor tick and logs "ProPass benchmark complete" when done.
-        public static string RecordDeferred(string output, int seeds, string scenarioList = null)
+        public static string RecordDeferred(string output, int seeds, string scenarioList = null, int seedStart = 0)
         {
             var scenarios = string.IsNullOrEmpty(scenarioList) ? ProPassScenarios.All.ToArray() : scenarioList.Split(',');
-            EditorApplication.delayCall += () => Record(output, seeds, scenarios);
+            EditorApplication.delayCall += () => Record(output, seeds, scenarios, seedStart);
             return "scheduled";
         }
 
-        public static void Record(string output, int seeds, IEnumerable<string> scenarios)
+        // Seeds 0-4 are the development set used while tuning; record seeds 5+ as a held-out test set.
+        public static void Record(string output, int seeds, IEnumerable<string> scenarios, int seedStart = 0)
         {
             if (EditorApplication.isPlaying) throw new InvalidOperationException("Stop Play mode before recording the benchmark.");
             if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().path != ScenePath)
@@ -73,7 +75,7 @@ namespace ProPass.Editor
             try
             {
                 foreach (var scenario in scenarios)
-                for (int seed = 0; seed < seeds; seed++)
+                for (int seed = seedStart; seed < seedStart + seeds; seed++)
                 {
                     var plan = ProPassScenarios.Build(scenario, seed);
                     string runId = $"{scenario}-seed{seed:D2}";
