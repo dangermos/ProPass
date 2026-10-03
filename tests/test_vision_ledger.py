@@ -85,7 +85,11 @@ def test_entered_product_lost_before_commit_requires_completeness_review():
     engine = ledger()
     for number,y in enumerate([800,800,600,500]):
         frame(engine,number,[obs(1,y)])
-    result = frame(engine,24,[])
+    # While it could still be hidden behind an occluder, checkout is blocked as pending.
+    hidden = frame(engine,24,[])
+    assert hidden["review_required"] is True and hidden["objects"][0]["review_reason"] is None
+    # After the occlusion window it becomes an explicit completeness review.
+    result = frame(engine,70,[])
     assert result["metrics"]["cart_units"] == 0
     assert result["review_required"] is True
     assert "disappeared before" in result["objects"][0]["review_reason"]
@@ -244,3 +248,17 @@ def test_product_carried_outside_the_lane_is_never_charged_or_pending():
     assert "ITEM_ADDED" not in {e["type"] for e in events}
     inside, _ = cross(engine, start=20, track=2, x=400)
     assert inside["metrics"]["cart_units"] == 1
+
+
+def test_long_occlusion_reattaches_when_reappearance_fits_motion():
+    engine = ledger()
+    for number,y in enumerate([800,780,760,740,720,700,680,660,640,620]):
+        frame(engine,number,[obs(1,y)])
+    # Hidden for 3.5 s (longer than the short re-attach window), then seen further along.
+    events = []
+    for number,y in enumerate([450,430,410,390,370,350,330,310],start=45):
+        events += frame(engine,number,[obs(7,y)])["events"]
+    result = frame(engine,60,[obs(7,300)])
+    assert len(result["objects"]) == 1
+    assert result["metrics"]["cart_units"] == 1
+    assert not result["review_required"]

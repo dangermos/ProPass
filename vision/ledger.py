@@ -50,6 +50,15 @@ class LedgerConfig:
     # center is outside it (e.g. a shopper in the next aisle) are tracked but
     # can never become pending, purchased or a reason for review.
     lane_polygon: tuple[tuple[float, float], ...] | None = None
+    # Longer gaps (a flatbed or shopper hiding an item) may still re-attach to
+    # a lost object when the reappearance fits its motion. The position gate
+    # widens by occlusion_gate_growth (normalized image units) per extra second.
+    occlusion_seconds: float = 6.0
+    occlusion_gate_growth: float = 0.05
+    # A track that reappears half-hidden may fail the gates on its first frame.
+    # For this long after it starts, a young object can still be merged back
+    # into the lost object it turns out to be.
+    late_merge_seconds: float = 1.5
 
 
 @dataclass
@@ -77,6 +86,11 @@ class PhysicalObject:
     review_reason: str | None = None
     ambiguous_identity: bool = False
     sequence: int = 0
+    # Appearance memory from clear views only, so a crop taken while something
+    # slides in front of the box doesn't become the object's identity.
+    gallery: deque = field(default_factory=lambda: deque(maxlen=8))
+    reference_area: float = 0.0
+    last_gallery: float = -1e9
 
 
 def inside_polygon(x: float, y: float, polygon) -> bool:
@@ -85,6 +99,16 @@ def inside_polygon(x: float, y: float, polygon) -> bool:
         if (y1 > y) != (y2 > y) and x < x1 + (y - y1) * (x2 - x1) / (y2 - y1):
             inside = not inside
     return inside
+
+
+def segment_distance(point, start, end, width, height) -> float:
+    """Normalized distance from point to the segment start→end."""
+    px, py = point[0]/width, point[1]/height
+    ax, ay, bx, by = start[0]/width, start[1]/height, end[0]/width, end[1]/height
+    dx, dy = bx-ax, by-ay
+    length = dx*dx + dy*dy
+    u = 0.0 if length == 0 else max(0.0, min(1.0, ((px-ax)*dx + (py-ay)*dy) / length))
+    return hypot(px-(ax+u*dx), py-(ay+u*dy))
 
 
 def cosine_distance(a: Sequence[float], b: Sequence[float]) -> float:
@@ -138,23 +162,25 @@ class PhysicalLedger:
     def _match_cost(self, obj: PhysicalObject, obs: Observation, timestamp: float,
                     width: int, height: int) -> float | None:
         gap = timestamp - obj.last_seen
-        if not (0 < gap <= self.config.reattach_seconds):
+        if not (0 < gap <= self.config.occlusion_seconds):
             return None
+        long_gap = gap > self.config.reattach_seconds
         # Extrapolate only a short distance; handheld merchandise is not rigidly
         # moving, and a long motion prediction should not become false evidence.
-        predicted = (obj.previous_center[0] + obj.velocity[0] * min(gap, 0.4),
-                     obj.previous_center[1] + obj.velocity[1] * min(gap, 0.4))
-        predicted_distance = hypot((obs.center[0]-predicted[0])/width,
-                                   (obs.center[1]-predicted[1])/height)
-        stationary_distance = hypot((obs.center[0]-obj.previous_center[0])/width,
-                                    (obs.center[1]-obj.previous_center[1])/height)
-        # A held object can stop abruptly during an occlusion; require it near
-        # either its short motion prediction or its last observed location.
-        distance = min(predicted_distance, stationary_distance)
-        appearance = cosine_distance(obj.embedding, obs.embedding)
-        if distance > self.config.reattach_distance or appearance > self.config.reattach_appearance:
+        horizon = gap if long_gap else min(gap, 0.4)
+        predicted = (obj.previous_center[0] + obj.velocity[0] * horizon,
+                     obj.previous_center[1] + obj.velocity[1] * horizon)
+        # A held object can slow down or stop while hidden, so it may be anywhere
+        # between its last observed location and its motion prediction.
+        distance = segment_distance(obs.center, obj.previous_center, predicted, width, height)
+        appearance = min((cosine_distance(e, obs.embedding) for e, _ in obj.gallery),
+                         default=cosine_distance(obj.embedding, obs.embedding))
+        gate = self.config.reattach_distance
+        if long_gap:
+            gate += self.config.occlusion_gate_growth * (gap - self.config.reattach_seconds)
+        if distance > gate or appearance > self.config.reattach_appearance:
             return None
-        old_area = max(1.0, (obj.bbox[2]-obj.bbox[0])*(obj.bbox[3]-obj.bbox[1]))
+        old_area = max(1.0, obj.gallery[-1][1] if obj.gallery else (obj.bbox[2]-obj.bbox[0])*(obj.bbox[3]-obj.bbox[1]))
         new_area = max(1.0, (obs.bbox[2]-obs.bbox[0])*(obs.bbox[3]-obs.bbox[1]))
         if not 0.45 <= new_area/old_area <= 2.2:
             return None
@@ -212,8 +238,10 @@ class PhysicalLedger:
                 width: int, height: int):
         dt = timestamp - obj.last_seen
         if dt > 0:
-            obj.velocity = ((obs.center[0]-obj.previous_center[0])/dt,
-                            (obs.center[1]-obj.previous_center[1])/dt)
+            # Smoothed so a long-gap prediction isn't driven by one noisy frame.
+            raw = ((obs.center[0]-obj.previous_center[0])/dt,
+                   (obs.center[1]-obj.previous_center[1])/dt)
+            obj.velocity = (0.6*obj.velocity[0] + 0.4*raw[0], 0.6*obj.velocity[1] + 0.4*raw[1])
         obj.previous_center = obs.center
         obj.last_seen = timestamp
         obj.visible = True
@@ -221,6 +249,14 @@ class PhysicalLedger:
         obj.bbox = obs.bbox
         if obs.embedding:
             obj.embedding = obs.embedding
+        area = (obs.bbox[2]-obs.bbox[0])*(obs.bbox[3]-obs.bbox[1])
+        # Decaying peak area: tolerates shrinking with distance, flags sudden occlusion.
+        obj.reference_area = max(area, obj.reference_area*0.97)
+        if (obs.embedding and not obs.unknown and obs.quality >= self.config.minimum_quality
+                and area >= 0.75*obj.reference_area
+                and timestamp - obj.last_gallery >= self.config.evidence_interval):
+            obj.gallery.append((obs.embedding, area))
+            obj.last_gallery = timestamp
         self._recognize(obj, obs, timestamp)
         observed_zone = self._zone(obs.center[0]/width, obs.center[1]/height)
         if observed_zone != obj.candidate_zone:
@@ -323,6 +359,7 @@ class PhysicalLedger:
                                      "Multiple lost identical products match a reappearing observation")
             assigned[obs.track_id] = obj
             claimed.add(obj.object_id)
+        self._late_merge(observations, assigned, claimed, timestamp, width, height)
         detections = []
         for obs in observations:
             obj = assigned[obs.track_id]
@@ -334,7 +371,7 @@ class PhysicalLedger:
                 self._review(obj, timestamp, "Unresolved product disappeared after a checkout crossing")
             if (not obj.visible and obj.approach_observed and not obj.committed and
                     not obj.membership and obj.state != "REMOVED" and
-                    timestamp-obj.last_seen > self.config.reattach_seconds):
+                    timestamp-obj.last_seen > self.config.occlusion_seconds):
                 self._review(obj, timestamp,
                              "Entered merchandise disappeared before an observed checkout or reverse removal")
         # Pending evidence blocks cart preparation even before it is a hard
@@ -356,6 +393,27 @@ class PhysicalLedger:
         self.last_timestamp = timestamp
         self._last_output = output
         return output
+
+    def _late_merge(self, observations, assigned, claimed, timestamp, width, height):
+        for obs in observations:
+            young = assigned[obs.track_id]
+            if (timestamp - young.first_seen > self.config.late_merge_seconds or young.membership
+                    or young.committed or young.ambiguous_identity):
+                continue
+            candidates = sorted(
+                (cost, oid) for oid, lost in self.objects.items()
+                if oid not in claimed and oid != young.object_id and lost.last_seen < young.first_seen
+                for cost in [self._match_cost(lost, obs, timestamp, width, height)] if cost is not None)
+            if not candidates or (len(candidates) > 1 and
+                                  candidates[1][0] - candidates[0][0] < self.config.reattach_margin):
+                continue
+            lost = self.objects[candidates[0][1]]
+            # The young fragment was the lost object all along: drop it, keep the original identity.
+            del self.objects[young.object_id]
+            claimed.discard(young.object_id)
+            self.track_to_object[obs.track_id] = lost.object_id
+            claimed.add(lost.object_id)
+            assigned[obs.track_id] = lost
 
     @staticmethod
     def _serialize(obj: PhysicalObject):
