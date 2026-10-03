@@ -245,8 +245,8 @@
       "run_id"
     ],
     "runtime_ground_truth": false,
-    "tracker": "Ultralytics ByteTrack explicitly selected",
-    "object_identity": "canonical ledger with one-to-one short-gap appearance/motion reconciliation",
+    "tracker": "Ultralytics BoT-SORT on merchandise boxes (config: tracker)",
+    "object_identity": "canonical ledger: one-to-one re-attachment gated by motion path, clear-view appearance gallery and SKU; up to 6 s for occlusions; lane polygon",
     "sku_identity": "five trained fictional SKU classes plus synthetic outlier-exposure reject output",
     "zone_configuration": {
       "image_size": 640,
@@ -267,7 +267,7 @@
       "vision/engine.py": "3f2277e8f74f9000b48ffb76b102c16c4e7e8b1592086ab13301cb53124c07f0",
       "vision/ledger.py": "19ce8c4d3e6fa7bd9960b658f5a69362303e42948a597df216b8a98806fe9340"
     },
-    "evaluation_status": "static metrics measured; six fresh temporal runs pending",
+    "evaluation_status": "static, live (6 classic scenarios) and scenario benchmark (70 held-out runs) measured",
     "known_limitations": [
       "single-customer staged synthetic lane",
       "visually distinct fictional packaging",

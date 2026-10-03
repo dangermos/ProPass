@@ -1,5 +1,6 @@
 """Local simulation API. Pixel-only input; no simulator labels enter inference."""
 import asyncio
+import json
 from contextlib import asynccontextmanager
 import os
 from pathlib import Path
@@ -165,6 +166,20 @@ def create_app(database_url=None, vision_factory: Callable | None = None):
     @app.get("/api/catalog")
     async def catalog():
         return {"currency": runtime.store.currency, "products": list(runtime.store.products.values()), "demo": True}
+
+    @app.get("/api/reports")
+    async def reports():
+        """Measured results for the dashboard's Models and Benchmark tabs (read-only files)."""
+        def load(name):
+            path = ROOT / "models" / name
+            return json.loads(path.read_text()) if path.exists() else None
+        def scenarios(report):
+            return report and {"summary": report["summary"], "scenarios": report["scenarios"]}
+        return {"manifest": load("manifest.json"), "static": load("evaluation-static-test.json"),
+                "live": load("evaluation-live.json"),
+                "benchmark": scenarios(load("benchmark-final-test.json")),
+                "benchmark_reference": scenarios(load("benchmark-baseline-test.json")),
+                "config": json.loads((ROOT / "vision" / "config.json").read_text())}
 
     @app.get("/api/simulator/control")
     async def control():

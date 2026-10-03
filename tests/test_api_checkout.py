@@ -229,3 +229,10 @@ def test_api_uncertain_recognition_cannot_prepare(tmp_path):
         post_frame(client, run)
         wait_frame(client, 1)
         assert client.post("/api/cart/prepare").status_code == 409
+
+
+def test_reports_endpoint_serves_measured_results_read_only(tmp_path):
+    with TestClient(create_app(f"sqlite:///{tmp_path/'r.db'}", vision_factory=lambda: None)) as client:
+        body = client.get("/api/reports").json()
+    assert set(body) == {"manifest", "static", "live", "benchmark", "benchmark_reference", "config"}
+    assert "ledger" in body["config"]
