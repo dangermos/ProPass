@@ -107,7 +107,7 @@ namespace ProPass
         // The six original demo scenarios keep fixed products so the live checks stay stable.
         public static readonly string[] Classic = { "single", "duplicate", "mixed", "occlusion", "remove", "unknown" };
         // Messy scenarios randomize products, motion, occluders and rendering by seed.
-        public static readonly string[] Messy = { "hands", "shopper", "flatbed", "edge", "stacked", "distractors", "bystander", "hesitate" };
+        public static readonly string[] Messy = { "hands", "shopper", "flatbed", "edge", "stacked", "distractors", "bystander", "hesitate", "parked" };
 
         public static IEnumerable<string> All { get { foreach (var s in Classic) yield return s; foreach (var s in Messy) yield return s; } }
 
@@ -205,6 +205,23 @@ namespace ProPass
                         if (lead < 0) lead = p;
                     }
                     float from = start + walkTime * R(.25f, .5f), hold = R(1.5f, 3f), side = Pick(2) == 0 ? -1f : 1f;
+                    plan.Add(new ActorPlan { kind = ActorKind.Flatbed, follow = lead, tint = new Color(.82f, .68f, .46f) }
+                        .At(0, side * 6f, -CarryY, -1.3f).At(from - 1.5f, side * 6f, -CarryY, -1.3f)
+                        .At(from, 0f, -CarryY, -1.3f).At(from + hold, 0f, -CarryY, -1.3f).At(from + hold + 1.5f, -side * 6f, -CarryY, -1.3f));
+                    break;
+                }
+                case "parked":
+                {
+                    plan.description = "A flatbed stays between the lane camera and the products for most of the crossing";
+                    var products = Distinct(1 + Pick(2));
+                    int lead = -1;
+                    for (int i = 0; i < products.Length; i++)
+                    {
+                        int p = plan.Add(Walk(products[i], products.Length == 1 ? R(-.3f, .3f) : (i == 0 ? -.5f : .5f), start, walkTime));
+                        if (lead < 0) lead = p;
+                    }
+                    // Hidden from the lane camera for longer than the single-camera occlusion window.
+                    float from = start + walkTime * R(.15f, .3f), hold = R(7f, 9f), side = Pick(2) == 0 ? -1f : 1f;
                     plan.Add(new ActorPlan { kind = ActorKind.Flatbed, follow = lead, tint = new Color(.82f, .68f, .46f) }
                         .At(0, side * 6f, -CarryY, -1.3f).At(from - 1.5f, side * 6f, -CarryY, -1.3f)
                         .At(from, 0f, -CarryY, -1.3f).At(from + hold, 0f, -CarryY, -1.3f).At(from + hold + 1.5f, -side * 6f, -CarryY, -1.3f));

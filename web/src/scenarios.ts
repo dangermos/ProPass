@@ -16,6 +16,7 @@ export const scenarios:ScenarioInfo[] = [
   {id:'distractors',name:'Distractors',detail:'A phone, cup and bag come along',tests:'False positives',group:'messy'},
   {id:'bystander',name:'Next-aisle shopper',detail:'Carries a product past the lane',tests:'Lane awareness',group:'messy'},
   {id:'hesitate',name:'Hesitation',detail:'Pause, step back, then decide',tests:'Reversible events',group:'messy'},
+  {id:'parked',name:'Parked flatbed',detail:'Hidden from the lane camera for 7–9 s',tests:'Second camera',group:'messy'},
 ];
 
 export const scenarioName = (id?:string) => scenarios.find(s => s.id === id)?.name ?? id ?? '—';

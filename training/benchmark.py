@@ -17,7 +17,7 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 CLASSIC = ["single", "duplicate", "mixed", "occlusion", "remove", "unknown"]
-MESSY = ["hands", "shopper", "flatbed", "edge", "stacked", "distractors", "bystander", "hesitate"]
+MESSY = ["hands", "shopper", "flatbed", "edge", "stacked", "distractors", "bystander", "hesitate", "parked"]
 
 
 def iou(a, b):
@@ -44,21 +44,25 @@ def match(truth, detections, threshold=0.3):
 def score_run(engine, run_dir):
     import cv2
     info = json.loads((run_dir / "run.json").read_text())
-    files = sorted(run_dir.glob("*.jpg"))
+    # 000001.jpg is the lane camera; 000001.<camera>.jpg are the other cameras.
+    files = sorted(p for p in run_dir.glob("*.jpg") if "." not in p.stem)
     engine.reset(info["run_id"])
     output, times = None, []
     tracks = defaultdict(list)          # physical_id -> canonical object_id per matched frame
     matched_objects, seen_frames, detected_frames = set(), Counter(), Counter()
     for path in files:
         record = json.loads(path.with_suffix(".json").read_text())
-        image = cv2.imread(str(path))
+        images = {camera: cv2.imread(str(path if camera == "lane" else path.with_suffix(f".{camera}.jpg")))
+                  for camera in engine.camera_ids}
+        images = {camera: image for camera, image in images.items() if image is not None}
         started = time.perf_counter()
-        output = engine.process_frame(image, record["frame_id"], record["timestamp"], info["run_id"])
+        output = engine.process_frames(images, record["frame_id"], record["timestamp"], info["run_id"])
         times.append((time.perf_counter() - started) * 1000)
         truth = [t for t in record["ground_truth"] if len(t.get("bbox", [])) == 4]
         for t in truth:
             seen_frames[t["physical_id"]] += 1
-        for t, d in match(truth, output["detections"]):
+        # Ground-truth boxes are in the lane camera's image, so identity is scored there.
+        for t, d in match(truth, [d for d in output["detections"] if d.get("camera", "lane") == "lane"]):
             tracks[t["physical_id"]].append(d["object_id"])
             matched_objects.add(d["object_id"])
             detected_frames[t["physical_id"]] += 1
@@ -190,9 +194,13 @@ def main():
     parser.add_argument("--config", type=Path, default=ROOT / "vision" / "config.json")
     parser.add_argument("--output", type=Path, default=None, help="default: models/benchmark-<label>.json")
     parser.add_argument("--docs", action="store_true", help="also write docs/benchmark.md and its chart")
+    parser.add_argument("--cameras", help="comma-separated camera ids (default: from the config)")
+    parser.add_argument("--image-mode", action="store_true", help="ignore calibration: lane camera, image-space zones")
     parser.add_argument("--compare", type=Path, help="earlier benchmark JSON to show alongside (docs only)")
     args = parser.parse_args()
-    engine = VisionEngine(ROOT / "catalog.json", ROOT / "models", args.config)
+    cameras = ["lane"] if args.image_mode else args.cameras.split(",") if args.cameras else None
+    engine = VisionEngine(ROOT / "catalog.json", ROOT / "models", args.config, cameras,
+                          world_mode=False if args.image_mode else None)
     if not engine.status()["ready"]:
         raise SystemExit(engine.status()["error"])
     run_dirs = sorted(p.parent for p in args.root.glob("*/*/run.json"))
@@ -213,7 +221,8 @@ def main():
                "pass_rate": round(sum(r["passed"] for r in runs) / len(runs), 3),
                "latency_ms_median": round(statistics.median(latencies), 1) if latencies else None,
                "domain": "Unity synthetic, offline-rendered seeded scenarios; RGB-only inference",
-               "runtime_ground_truth": False, "config": json.loads(args.config.read_text())}
+               "runtime_ground_truth": False, "cameras": engine.camera_ids,
+               "world_mode": engine.calibration is not None, "config": json.loads(args.config.read_text())}
     output = args.output or ROOT / "models" / f"benchmark-{args.label}.json"
     output.write_text(json.dumps({"summary": summary, "scenarios": rows, "runs": runs}, indent=2))
     print(json.dumps(summary, indent=2))

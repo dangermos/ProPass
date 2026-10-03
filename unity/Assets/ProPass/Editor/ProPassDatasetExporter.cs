@@ -12,6 +12,7 @@ namespace ProPass.Editor
     //   Detection labels (YOLO): 0 merchandise · 1 person (shoppers, customer, hands) · 2 cart (flatbed)
     //   Hard negatives: phones, cups and bags appear unlabeled, so they are learned as background.
     //   Crops: one folder per SKU for the classifier, including partially occluded views.
+    // Half the scenes are rendered from the overhead camera, half from the lane camera.
     // Labels come from one mask render per instance, so a half-hidden box gets a half-size box.
     public static class ProPassDatasetExporter
     {
@@ -22,7 +23,10 @@ namespace ProPass.Editor
         public static string LastError { get; private set; }
         public static string OutputRoot { get; private set; }
         static ProPassSimulation simulation;
-        static Camera camera;
+        static Camera camera;      // the lane camera saved in the scene
+        static Camera overhead;
+        static Camera active;      // the camera this scene is rendered from
+        static Vector3 overheadPosition;
         static Light light;
         static RenderTexture target;
         static Texture2D pixels;
@@ -48,6 +52,7 @@ namespace ProPass.Editor
             if(simulation.occluder!=null) simulation.occluder.gameObject.SetActive(false);
             camera=simulation.checkoutCamera;
             light=UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None).FirstOrDefault(l=>l.type==LightType.Directional);
+            overhead=ProPassCameras.Ensure(camera)[1];overheadPosition=overhead.transform.position;
             originalCameraPosition=camera.transform.position;originalCameraRotation=camera.transform.rotation;originalFov=camera.fieldOfView;
             originalLightIntensity=light!=null?light.intensity:1;originalLightColor=light!=null?light.color:Color.white;
             originalCustomerPosition=simulation.customer!=null?simulation.customer.position:Vector3.zero;
@@ -131,9 +136,19 @@ namespace ProPass.Editor
                 Place(factory.Prop(prop,color),anchor+new Vector3(R(-.8f,.8f),prop=="bag"?R(-.4f,-.2f):R(-.05f,.2f),R(-.4f,.4f)),R(0,360));
             }
 
-            camera.transform.position=originalCameraPosition+new Vector3(R(-.18f,.18f),R(-.25f,.25f),R(-.25f,.25f));
-            camera.transform.LookAt(new Vector3(R(-.12f,.12f),.75f,R(.1f,.4f)));
-            camera.fieldOfView=originalFov+R(-2f,2f);
+            // Half the scenes are seen from the overhead camera, so both models learn both views.
+            active=Chance(.5)?overhead:camera;
+            if(active==overhead)
+            {
+                overhead.transform.position=overheadPosition+new Vector3(R(-.2f,.2f),R(-.25f,.25f),R(-.2f,.2f));
+                overhead.fieldOfView=50f+R(-2f,2f);
+            }
+            else
+            {
+                camera.transform.position=originalCameraPosition+new Vector3(R(-.18f,.18f),R(-.25f,.25f),R(-.25f,.25f));
+                camera.transform.LookAt(new Vector3(R(-.12f,.12f),.75f,R(.1f,.4f)));
+                camera.fieldOfView=originalFov+R(-2f,2f);
+            }
             if(light!=null){light.intensity=R(1.15f,2.6f);light.color=Color.Lerp(Color.white,new Color(1f,.86f,.7f),R(0,.6f));}
             Render();
             var rgb=pixels.GetPixels32();
@@ -142,10 +157,10 @@ namespace ProPass.Editor
 
             var renderers=UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None);
             var originalMaterials=renderers.Select(r=>r.sharedMaterials).ToArray();
-            Color originalBackground=camera.backgroundColor;
+            Color originalBackground=active.backgroundColor;
             try
             {
-                camera.backgroundColor=Color.black;
+                active.backgroundColor=Color.black;
                 var bounds=new BoundsPixels[instances.Count];
                 for(int k=0;k<instances.Count;k++)
                 {
@@ -180,11 +195,11 @@ namespace ProPass.Editor
                     }
                 }
                 File.WriteAllLines(Path.Combine(OutputRoot,"detection","labels",split,stem+".txt"),labels);
-                File.WriteAllText(Path.Combine(OutputRoot,"manifests",split,stem+".json"),JsonUtility.ToJson(new SceneAnnotation{seed=seed,split=split,objects=annotations.ToArray(),others=others.ToArray()}));
+                File.WriteAllText(Path.Combine(OutputRoot,"manifests",split,stem+".json"),JsonUtility.ToJson(new SceneAnnotation{seed=seed,split=split,camera=active==overhead?"overhead":"lane",objects=annotations.ToArray(),others=others.ToArray()}));
             }
             finally
             {
-                camera.backgroundColor=originalBackground;
+                active.backgroundColor=originalBackground;
                 for(int i=0;i<renderers.Length;i++)if(renderers[i]!=null)renderers[i].sharedMaterials=originalMaterials[i];
                 foreach(var go in current)UnityEngine.Object.DestroyImmediate(go);current.Clear();
             }
@@ -211,9 +226,9 @@ namespace ProPass.Editor
 
         static void Render()
         {
-            var originalTarget=camera.targetTexture;var originalActive=RenderTexture.active;
-            try{camera.targetTexture=target;camera.Render();RenderTexture.active=target;pixels.ReadPixels(new Rect(0,0,960,540),0,0);pixels.Apply(false);}
-            finally{camera.targetTexture=originalTarget;RenderTexture.active=originalActive;}
+            var originalTarget=active.targetTexture;var originalActive=RenderTexture.active;
+            try{active.targetTexture=target;active.Render();RenderTexture.active=target;pixels.ReadPixels(new Rect(0,0,960,540),0,0);pixels.Apply(false);}
+            finally{active.targetTexture=originalTarget;RenderTexture.active=originalActive;}
         }
 
         static void Finish()
@@ -227,6 +242,7 @@ namespace ProPass.Editor
             if(white!=null)UnityEngine.Object.DestroyImmediate(white);
             if(black!=null)UnityEngine.Object.DestroyImmediate(black);
             factory?.Dispose();factory=null;
+            ProPassCameras.Release();
             if(!string.IsNullOrEmpty(OutputRoot))File.WriteAllText(Path.Combine(OutputRoot,"export-progress.json"),JsonUtility.ToJson(new Progress{completed=Completed,total=Requested,running=false,error=LastError}));
             Debug.Log("ProPass export completed: "+Completed+"/"+Requested);
         }
@@ -238,7 +254,7 @@ namespace ProPass.Editor
         }
         [Serializable]class Annotation{public string sku,physical_id;public int class_index;public int[] bbox;public int visible_pixels;}
         [Serializable]class Other{public string label;public int[] bbox;public int visible_pixels;}
-        [Serializable]class SceneAnnotation{public int seed;public string split;public Annotation[] objects;public Other[] others;}
+        [Serializable]class SceneAnnotation{public int seed;public string split,camera;public Annotation[] objects;public Other[] others;}
         [Serializable]class Progress{public int completed,total;public bool running;public string error;}
     }
 }

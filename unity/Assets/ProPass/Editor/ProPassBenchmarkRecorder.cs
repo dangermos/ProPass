@@ -64,9 +64,11 @@ namespace ProPass.Editor
             }
             var simulation = UnityEngine.Object.FindFirstObjectByType<ProPassSimulation>() ?? throw new InvalidOperationException("Checkout scene has no ProPassSimulation");
             var camera = simulation.checkoutCamera;
+            var cameras = ProPassCameras.Ensure(camera);
             var light = UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None).FirstOrDefault(l => l.type == LightType.Directional);
             if (simulation.occluder != null) simulation.occluder.gameObject.SetActive(false);
             int width = simulation.captureWidth, height = simulation.captureHeight;
+            ProPassCameras.UseCaptureAspect(cameras, width, height);
             var target = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32) { antiAliasing = 1 };
             var pixels = new Texture2D(width, height, TextureFormat.RGB24, false);
             var customerStart = simulation.customer != null ? simulation.customer.position : Vector3.zero;
@@ -92,6 +94,12 @@ namespace ProPass.Editor
                             Render(camera, target, pixels, width, height);
                             string stem = (++frameId).ToString("D6");
                             File.WriteAllBytes(Path.Combine(directory, stem + ".jpg"), pixels.EncodeToJPG(plan.jpegQuality));
+                            // Extra cameras share the frame number: 000001.jpg is the lane camera, 000001.overhead.jpg the overhead one.
+                            for (int c = 1; c < cameras.Length; c++)
+                            {
+                                Render(cameras[c], target, pixels, width, height);
+                                File.WriteAllBytes(Path.Combine(directory, stem + "." + ProPassCameras.Ids[c] + ".jpg"), pixels.EncodeToJPG(plan.jpegQuality));
+                            }
                             var truth = new List<TruthProduct>();
                             for (int i = 0; i < runner.Products.Count; i++)
                             {
@@ -125,6 +133,7 @@ namespace ProPass.Editor
             finally
             {
                 if (simulation.customer != null) simulation.customer.position = customerStart;
+                ProPassCameras.Release(camera);
                 target.Release(); UnityEngine.Object.DestroyImmediate(target); UnityEngine.Object.DestroyImmediate(pixels);
             }
             Debug.Log($"ProPass benchmark complete: {runs} runs, {frames} frames -> {output}");

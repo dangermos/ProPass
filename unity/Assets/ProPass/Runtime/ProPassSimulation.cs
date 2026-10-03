@@ -32,12 +32,10 @@ namespace ProPass
         public int failedFrames;
         public string connectionStatus = "Waiting for local API";
         public float scenarioTime;
-        public string replayDirectory = "";
-        public int replayFrames;
-        public int maximumReplayFrames = 260;
 
         ProPassScenarioRunner runner;
         Light keyLight;
+        Camera[] cameras;
         RenderTexture captureTarget;
         Texture2D capturePixels;
         long frameId;
@@ -51,6 +49,7 @@ namespace ProPass
             capturePixels = new Texture2D(captureWidth, captureHeight, TextureFormat.RGB24, false);
             foreach (var l in FindObjectsByType<Light>(FindObjectsSortMode.None)) if (l.type == LightType.Directional) keyLight = l;
             if (occluder != null) occluder.gameObject.SetActive(false);
+            cameras = ProPassCameras.Ensure(checkoutCamera);
             ResetScenario("single", Guid.NewGuid().ToString("N"));
             StartCoroutine(PollControl());
             StartCoroutine(CaptureLoop());
@@ -63,7 +62,6 @@ namespace ProPass
             runId = nextRun;
             scenarioTime = 0f;
             frameId = 0;
-            replayFrames = 0;
             paused = false;
             // Each run gets its own seed, so messy scenarios vary between runs but replay exactly.
             var plan = ProPassScenarios.Build(nextScenario, (nextRun ?? "").GetStableHash() % 100000);
@@ -112,60 +110,48 @@ namespace ProPass
             }
         }
 
-        IEnumerator SendFrame()
+        byte[] Capture(Camera source)
         {
-            captureBusy = true;
-            var originalTarget = checkoutCamera.targetTexture;
+            var originalTarget = source.targetTexture;
             var originalActive = RenderTexture.active;
-            byte[] jpeg;
             try
             {
-                checkoutCamera.targetTexture = captureTarget;
-                checkoutCamera.Render();
+                source.targetTexture = captureTarget;
+                source.Render();
                 RenderTexture.active = captureTarget;
                 capturePixels.ReadPixels(new Rect(0, 0, captureWidth, captureHeight), 0, 0);
                 capturePixels.Apply(false);
-                jpeg = capturePixels.EncodeToJPG(85);
+                return capturePixels.EncodeToJPG(85);
             }
             finally
             {
-                checkoutCamera.targetTexture = originalTarget;
+                source.targetTexture = originalTarget;
                 RenderTexture.active = originalActive;
             }
+        }
+
+        IEnumerator SendFrame()
+        {
+            captureBusy = true;
+            // Every camera is captured at the same instant and shares one frame_id.
+            // Only JPEG pixels and source-frame timing are sent to the checkout API.
+            var jpegs = new byte[cameras.Length][];
+            for (int i = 0; i < cameras.Length; i++) jpegs[i] = Capture(cameras[i]);
             long currentFrame = ++frameId;
-            // Recording annotations are offline evaluator data. Only JPEG pixels
-            // and source-frame timing are sent to the checkout API below.
-            if (!string.IsNullOrEmpty(replayDirectory) && replayFrames < maximumReplayFrames)
-            {
-                string directory = Path.Combine(replayDirectory, scenario, runId);
-                Directory.CreateDirectory(directory);
-                string stem = currentFrame.ToString("D6");
-                File.WriteAllBytes(Path.Combine(directory, stem + ".jpg"), jpeg);
-                var truth = new List<ReplayProduct>();
-                foreach (var product in runner.Products)
-                    if (product != null)
-                    {
-                        var label = product.GetComponent<ProPassProduct>();
-                        var point = checkoutCamera.WorldToViewportPoint(product.transform.position);
-                        truth.Add(new ReplayProduct { sku = label.sku, physical_id = label.physicalId,
-                            image_x = point.x, image_y = 1f-point.y });
-                    }
-                File.WriteAllText(Path.Combine(directory, stem + ".json"), JsonUtility.ToJson(new ReplayFrame {
-                    frame_id = currentFrame, timestamp = scenarioTime, run_id = runId,
-                    scenario = scenario, ground_truth = truth.ToArray() }));
-                replayFrames++;
-            }
-            string url = serverUrl + "/api/frames?frame_id=" + currentFrame + "&timestamp=" +
+            string query = "/api/frames?frame_id=" + currentFrame + "&timestamp=" +
                 scenarioTime.ToString("F4", CultureInfo.InvariantCulture) + "&run_id=" + UnityWebRequest.EscapeURL(runId);
-            using (var request = new UnityWebRequest(url, "POST"))
+            for (int i = 0; i < cameras.Length; i++)
             {
-                request.uploadHandler = new UploadHandlerRaw(jpeg);
-                request.downloadHandler = new DownloadHandlerBuffer();
-                request.SetRequestHeader("Content-Type", "image/jpeg");
-                request.timeout = 3;
-                yield return request.SendWebRequest();
-                if (request.result == UnityWebRequest.Result.Success) sentFrames++;
-                else { failedFrames++; connectionStatus = "API connection pending"; }
+                using (var request = new UnityWebRequest(serverUrl + query + "&camera_id=" + ProPassCameras.Ids[i], "POST"))
+                {
+                    request.uploadHandler = new UploadHandlerRaw(jpegs[i]);
+                    request.downloadHandler = new DownloadHandlerBuffer();
+                    request.SetRequestHeader("Content-Type", "image/jpeg");
+                    request.timeout = 3;
+                    yield return request.SendWebRequest();
+                    if (request.result == UnityWebRequest.Result.Success) sentFrames++;
+                    else { failedFrames++; connectionStatus = "API connection pending"; }
+                }
             }
             captureBusy = false;
         }
@@ -173,21 +159,9 @@ namespace ProPass
         void OnDestroy()
         {
             runner?.Dispose();
+            ProPassCameras.Release();
             if (captureTarget != null) { captureTarget.Release(); Destroy(captureTarget); }
             if (capturePixels != null) Destroy(capturePixels);
-        }
-
-        [Serializable] class ReplayFrame
-        {
-            public long frame_id;
-            public float timestamp;
-            public string run_id, scenario;
-            public ReplayProduct[] ground_truth;
-        }
-        [Serializable] class ReplayProduct
-        {
-            public string sku, physical_id;
-            public float image_x, image_y;
         }
     }
 }

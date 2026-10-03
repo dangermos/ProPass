@@ -22,6 +22,11 @@ class Observation:
     embedding: tuple[float, ...] = ()
     quality: float = 1.0
     unknown: bool = False
+    # Set by the multi-camera engine, where bbox is a point on the lane map rather
+    # than an image box. None means "derive it from bbox and the image size".
+    full_view: bool | None = None       # seen clear of the image border by some camera
+    at_entry_edge: bool | None = None   # at the entry edge of camera coverage
+    sized: bool = True                  # bbox area is a meaningful apparent size
 
     @property
     def center(self):
@@ -93,6 +98,7 @@ class PhysicalObject:
     reference_area: float = 0.0
     last_gallery: float = -1e9
     full_view_seen: bool = False      # ever seen without touching the image border
+    at_entry_edge: bool = False
     accepted_confidence: float | None = None   # averaged SKU probability when the SKU was accepted
 
 
@@ -197,7 +203,7 @@ class PhysicalLedger:
             appearance = min(appearance, 1.0)
         old_area = max(1.0, obj.gallery[-1][1] if obj.gallery else (obj.bbox[2]-obj.bbox[0])*(obj.bbox[3]-obj.bbox[1]))
         new_area = max(1.0, (obs.bbox[2]-obs.bbox[0])*(obs.bbox[3]-obs.bbox[1]))
-        if not 0.45 <= new_area/old_area <= 2.2:
+        if obs.sized and not 0.45 <= new_area/old_area <= 2.2:
             return None
         if obj.sku and obs.probabilities:
             index = self.skus.index(obj.sku)
@@ -265,8 +271,11 @@ class PhysicalLedger:
         obj.bbox = obs.bbox
         if obs.embedding:
             obj.embedding = obs.embedding
-        if obs.bbox[0] > 3 and obs.bbox[1] > 3 and obs.bbox[2] < width-3 and obs.bbox[3] < height-3:
+        full_view = obs.full_view if obs.full_view is not None else (
+            obs.bbox[0] > 3 and obs.bbox[1] > 3 and obs.bbox[2] < width-3 and obs.bbox[3] < height-3)
+        if full_view:
             obj.full_view_seen = True
+        obj.at_entry_edge = obs.at_entry_edge if obs.at_entry_edge is not None else obs.bbox[3] >= height-3
         area = (obs.bbox[2]-obs.bbox[0])*(obs.bbox[3]-obs.bbox[1])
         # Decaying peak area: tolerates shrinking with distance, flags sudden occlusion.
         obj.reference_area = max(area, obj.reference_area*0.97)
@@ -389,7 +398,7 @@ class PhysicalLedger:
                 if obj.sku is None and not obj.full_view_seen and lost_for > self.config.reattach_seconds:
                     # Only ever seen cut off by the frame edge, then superseded: a fragment.
                     obj.state = "FRAGMENT"
-                elif obj.zone == "APPROACH" and obj.bbox[3] >= height-3 and lost_for > 0.5:
+                elif obj.zone == "APPROACH" and obj.at_entry_edge and lost_for > 0.5:
                     # Left back out through the entry edge of the frame.
                     obj.state = "LEFT"
             if obj.state in ("FRAGMENT", "LEFT"):

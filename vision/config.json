@@ -30,5 +30,17 @@
       ]
     ]
   },
-  "tracker": "botsort.yaml"
+  "tracker": "botsort.yaml",
+  "cameras": [
+    "lane",
+    "overhead"
+  ],
+  "fuse_radius_m": 0.45,
+  "world_ledger": {
+    "reattach_distance": 0.06,
+    "reattach_margin": 0.03,
+    "occlusion_gate_growth": 0.02,
+    "hysteresis": 0.015,
+    "lane_margin": 0.01
+  }
 }
