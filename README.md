@@ -29,7 +29,7 @@ python3 -m venv .venv
 bash scripts/start.sh          # API on :8000, dashboard on :5173
 ```
 
-1. In Unity, open `Assets/ProPass/Scenes/Checkout.unity` and press **Play**.
+1. In Unity Hub, add the `unity/` folder as a project, open `Assets/ProPass/Scenes/Checkout.unity`, and press **Play**.
 2. Open **http://127.0.0.1:5173**, pick a scenario such as **Identical products**, and watch the boxes cross the lane.
 3. Click **Review checkout**, then **Confirm simulated checkout**.
 
@@ -65,7 +65,7 @@ The trained weights (`models/detector.pt`, `models/classifier.pt`) aren't in git
 api/          FastAPI app: frame ingress, cart/session persistence, confirmation
 vision/       Learned RGB inference, SKU evidence, physical-object ledger, config.json
 web/          React + TypeScript dashboard (Vite)
-unity/        Unity assets (scripts, scene, prefabs, materials) for Assets/ProPass
+unity/        The Unity 6.6 project; our code and scene live in unity/Assets/ProPass
 training/     Dataset prep, model training, static and replay evaluation
 models/       Checkpoints (git-ignored), hash manifest, evaluation reports
 scripts/      start.sh launcher and the live end-to-end check

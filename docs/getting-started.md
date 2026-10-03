@@ -42,20 +42,15 @@ models/classifier.pt   ← fine-tuned EfficientNet-B0 + calibration
 
 Either copy them from a machine that already has them (check the SHA-256 against [models/manifest.json](../models/manifest.json)), or reproduce them with [training.md](training.md). Without them the API still starts, but `/api/health` reports `awaiting_checkpoints`. It never fakes predictions.
 
-## 3️⃣ Set up the Unity project
+## 3️⃣ Open the Unity project
 
-The Unity assets live in this repo at `unity/Assets/ProPass`, including the scripts, scene, prefabs, materials and `.meta` files. The Unity project only needs to **link** to that folder, so there's a single copy to edit:
+The whole Unity project lives in this repo under [`unity/`](../unity), including `Assets/`, `Packages/` and `ProjectSettings/`. Unity regenerates `Library/` and the other caches on first open, and they're git-ignored.
 
-```bash
-# Create an empty Unity 6.6 URP project first (Unity Hub → New project → Universal 3D), then:
-ln -s "$PWD/unity/Assets/ProPass"      ~/ProPass/Assets/ProPass
-ln -s "$PWD/unity/Assets/ProPass.meta" ~/ProPass/Assets/ProPass.meta
-```
+1. In **Unity Hub**, choose **Add → Add project from disk** and select the repo's `unity/` folder.
+2. Open it with **6000.6.4f1**. The first import takes a few minutes.
+3. Open `Assets/ProPass/Scenes/Checkout.unity`.
 
-Open the project in Unity and let the scripts compile. The scene is at `Assets/ProPass/Scenes/Checkout.unity`. If it's ever missing or broken, regenerate it from the menu with **ProPass → Build checkout scene**.
-
-> [!NOTE]
-> On this development machine, the Unity project is `~/ProPass`.
+If the scene is ever missing or broken, regenerate it from the menu with **ProPass → Build checkout scene**.
 
 ## 4️⃣ Start the API and dashboard
 
