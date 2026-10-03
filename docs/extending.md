@@ -58,7 +58,7 @@ The zone lines are **normalized image y-coordinates**, so they depend on the cam
 3. Update `approach_y` and `commit_y` in [vision/config.json](../vision/config.json). The dashboard's overlay lines in `VideoCanvas` ([App.tsx](../web/src/App.tsx)) are hard-coded to 0.40 and 0.65 today, so update them to match.
 4. If the viewpoint changes a lot, re-export and retrain the detector so it sees the new perspective.
 
-A **second camera** currently needs a second ledger, because each `VisionEngine` holds one lane's state. You'd also need a rule for fusing the two cameras' events. That's design work and is covered in the tracking roadmap.
+A **second camera** currently needs a second ledger, because each `VisionEngine` holds one lane's state. You'd also need a rule for fusing the two cameras' events. That's design work and is covered in the [roadmap](roadmap.md#-phase-c-multiple-cameras-and-a-coverage-map).
 
 ## 🧠 Swap in a different model
 

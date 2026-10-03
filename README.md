@@ -57,6 +57,7 @@ The trained weights (`models/detector.pt`, `models/classifier.pt`) aren't in git
 | 🧪 [Training and results](docs/training.md) | Export data from Unity, retrain both models, and read the measured results |
 | 🔌 [API reference](docs/api.md) | Look up endpoints, payloads and the snapshot shape |
 | 🧩 [Extending ProPass](docs/extending.md) | Add a product, scenario, camera or model |
+| 🗺️ [Roadmap](docs/roadmap.md) | See what's next: messy lanes, learned re-ID, multi-camera coverage |
 | 📚 [Research](docs/research/README.md) | Read the original technical report and research notes |
 
 ## 🗂️ Project layout
