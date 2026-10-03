@@ -1,6 +1,6 @@
 {
   "summary": {
-    "label": "baseline-test",
+    "label": "Phase A baseline \u00b7 same held-out seeds",
     "runs": 70,
     "passed": 48,
     "pass_rate": 0.686,

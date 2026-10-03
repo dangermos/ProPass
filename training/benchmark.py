@@ -108,13 +108,16 @@ def summarize(runs):
     return rows
 
 
-def chart_svg(rows, title):
-    """Horizontal pass-rate bars, one per scenario, readable on light and dark GitHub themes."""
-    bar_w, left, row_h, top = 520, 150, 30, 64
+def chart_svg(rows, title, reference=None):
+    """Horizontal pass-rate bars, one per scenario, readable on light and dark GitHub themes.
+    With a reference run, a thin gray bar under each scenario shows its earlier score."""
+    reference = reference or {}
+    bar_w, left, row_h, top = 520, 150, 34 if reference else 30, 64
     height = top + row_h * len(rows) + 40
     color = lambda v: "#2ea043" if v >= .8 else "#d29922" if v >= .5 else "#f85149"
-    out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 {height}" font-family="Segoe UI, Helvetica, Arial, sans-serif">',
-           f'<rect width="760" height="{height}" rx="16" fill="#0d1420"/>',
+    total_w = 840 if reference else 760
+    out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {total_w} {height}" font-family="Segoe UI, Helvetica, Arial, sans-serif">',
+           f'<rect width="{total_w}" height="{height}" rx="16" fill="#0d1420"/>',
            f'<text x="24" y="36" fill="#ffffff" font-size="18" font-weight="700">{title}</text>',
            '<text x="24" y="54" fill="#8fa3bf" font-size="12">Share of runs with the exact cart and the correct review decision</text>']
     for i, r in enumerate(rows):
@@ -126,13 +129,20 @@ def chart_svg(rows, title):
                 f'<rect x="{left}" y="{y + 3}" width="{bar_w}" height="18" rx="5" fill="#1b2638"/>',
                 f'<rect x="{left}" y="{y + 3}" width="{w:.0f}" height="18" rx="5" fill="{color(r["pass_rate"])}"/>',
                 f'<text x="{left + bar_w + 12}" y="{y + 16}" fill="#ffffff" font-size="13" font-weight="600">{r["pass_rate"] * 100:.0f}%</text>']
+        if r["scenario"] in reference:
+            before = reference[r["scenario"]]
+            out += [f'<rect x="{left}" y="{y + 24}" width="{max(2, bar_w * before):.0f}" height="5" rx="2" fill="#5b6b82"/>',
+                    f'<text x="{left + bar_w + 56}" y="{y + 16}" fill="#8fa3bf" font-size="12">was {before * 100:.0f}%</text>']
     y = top + row_h * len(rows) + 22
     out += [f'<circle cx="30" cy="{y - 4}" r="4" fill="#ffbb71"/><text x="42" y="{y}" fill="#8fa3bf" font-size="12">classic scenario</text>',
-            f'<circle cx="170" cy="{y - 4}" r="4" fill="#bd9aff"/><text x="182" y="{y}" fill="#8fa3bf" font-size="12">messy scenario</text>', '</svg>']
+            f'<circle cx="170" cy="{y - 4}" r="4" fill="#bd9aff"/><text x="182" y="{y}" fill="#8fa3bf" font-size="12">messy scenario</text>']
+    if reference:
+        out.append(f'<rect x="300" y="{y - 7}" width="24" height="5" rx="2" fill="#5b6b82"/><text x="332" y="{y}" fill="#8fa3bf" font-size="12">reference run</text>')
+    out.append('</svg>')
     return "\n".join(out)
 
 
-def markdown(summary, rows, chart_path):
+def markdown(summary, rows, chart_path, reference=None, reference_label=None):
     dot = lambda v: "🟢" if v >= .8 else "🟡" if v >= .5 else "🔴"
     lines = [
         "# 📊 Benchmark", "",
@@ -143,12 +153,17 @@ def markdown(summary, rows, chart_path):
         "A run **passes** when the final cart is exactly right *and* checkout is blocked only when it should be "
         "(the unknown package). Every run is synthetic and was rendered offline by Unity from a fixed seed, so it can be "
         "reproduced exactly. See [training.md](training.md#-scenario-benchmark) for how to record and score runs.", "",
+        *([f"Compared with **{reference_label}** on the same recordings: "
+           f"{reference['summary']['passed']} → {summary['passed']} runs passed. The gray bars and *was* column show the reference.", ""]
+          if reference else []),
         "| | Scenario | Pass | Exact cart | False adds | Missed | ID switches / run | Phantom objects / run | Blocked for review | Detection recall |",
         "|:-:|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|",
     ]
+    before = {r["scenario"]: r["pass_rate"] for r in reference["scenarios"]} if reference else {}
     for r in rows:
+        was = f" <sub>was {before[r['scenario']] * 100:.0f}%</sub>" if r["scenario"] in before else ""
         lines.append(f"| {dot(r['pass_rate'])} | **{r['scenario']}**<br><sub>{r['description']}</sub> | "
-                     f"{r['pass_rate'] * 100:.0f}% | {r['exact_cart_rate'] * 100:.0f}% | {r['false_adds']} | {r['missed_items']} | "
+                     f"{r['pass_rate'] * 100:.0f}%{was} | {r['exact_cart_rate'] * 100:.0f}% | {r['false_adds']} | {r['missed_items']} | "
                      f"{r['id_switches_per_run']} | {r['phantom_objects_per_run']} | {r['review_rate'] * 100:.0f}% | {r['detection_recall'] * 100:.0f}% |")
     lines += ["", "## 🔎 Why runs fail", "",
               "The most common review reasons the ledger reported, per scenario:", ""]
@@ -175,6 +190,7 @@ def main():
     parser.add_argument("--config", type=Path, default=ROOT / "vision" / "config.json")
     parser.add_argument("--output", type=Path, default=None, help="default: models/benchmark-<label>.json")
     parser.add_argument("--docs", action="store_true", help="also write docs/benchmark.md and its chart")
+    parser.add_argument("--compare", type=Path, help="earlier benchmark JSON to show alongside (docs only)")
     args = parser.parse_args()
     engine = VisionEngine(ROOT / "catalog.json", ROOT / "models", args.config)
     if not engine.status()["ready"]:
@@ -202,8 +218,11 @@ def main():
     output.write_text(json.dumps({"summary": summary, "scenarios": rows, "runs": runs}, indent=2))
     print(json.dumps(summary, indent=2))
     if args.docs:
-        (ROOT / "docs" / "images" / "benchmark.svg").write_text(chart_svg(rows, f"Benchmark · {args.label}"))
-        (ROOT / "docs" / "benchmark.md").write_text(markdown(summary, rows, "images/benchmark.svg"))
+        reference = json.loads(args.compare.read_text()) if args.compare else None
+        ref_rates = {r["scenario"]: r["pass_rate"] for r in reference["scenarios"]} if reference else None
+        ref_label = reference["summary"]["label"] if reference else None
+        (ROOT / "docs" / "images" / "benchmark.svg").write_text(chart_svg(rows, f"Benchmark · {args.label}", ref_rates))
+        (ROOT / "docs" / "benchmark.md").write_text(markdown(summary, rows, "images/benchmark.svg", reference, ref_label))
         print("Wrote docs/benchmark.md and docs/images/benchmark.svg")
 
 
