@@ -29,7 +29,7 @@ class ConfirmationRequest(BaseModel):
 
 def default_vision_factory():
     from vision.engine import VisionEngine
-    return VisionEngine(str(ROOT / "catalog.json"), str(ROOT / "models"))
+    return VisionEngine(str(ROOT / "catalog.json"), str(ROOT / "models"), str(ROOT / "vision" / "config.json"))
 
 
 class Runtime:
