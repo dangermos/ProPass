@@ -69,7 +69,7 @@ A **second camera** currently needs a second ledger, because each `VisionEngine`
 The API only depends on the [`VisionEngine` interface](api.md#-vision-package-interface).
 
 - **A different detector** (another YOLO size, RT-DETR, and so on): change the loading and `self.detector.track(...)` in [vision/engine.py](../vision/engine.py). Keep the output `Observation`s the same.
-- **A different tracker:** swap `tracker="bytetrack.yaml"` for `botsort.yaml` (BoT-SORT with optional ReID) or plug in your own. The ledger already tolerates ID switches.
+- **A different tracker:** set `"tracker"` in [vision/config.json](../vision/config.json) (`botsort.yaml` is the default, `bytetrack.yaml` is faster), or plug in your own. The ledger already tolerates ID switches.
 - **A different classifier** (for example, a stronger embedding backbone): replace the EfficientNet block, but keep returning per-SKU probabilities, an L2-normalized embedding and an `unknown` flag.
 - Record the new checkpoint in [models/manifest.json](../models/manifest.json), and re-run `training.evaluate` and `training.replay` so results stay comparable.
 

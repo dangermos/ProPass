@@ -23,42 +23,51 @@ flowchart LR
 
 ## 📦 1. Export a dataset from Unity
 
-Each randomized scene varies camera pose, package placement and rotation, lighting, customer position and occlusion. An extra render pass draws each object in a flat mask color, so the boxes are **tight to visible pixels**, and a half-hidden box gets a half-size label.
+Each randomized scene varies camera pose, lighting and its color, and package placement, rotation and scale. Scenes are deliberately cluttered with the same actors the messy scenarios use:
+
+| In the scene | Label | Why |
+|---|---|---|
+| 📦 Products, including stacked pairs, rail-edge and half-out-of-frame placements | `0 merchandise` + an SKU crop | What the system must find and recognize |
+| 🧍 The customer, other shoppers, loose hands and arms | `1 person` | So people stop being mistaken for products |
+| 🪵 Lumber flatbeds | `2 cart` | So large occluders stop being mistaken for products |
+| 📱☕👜 Phones, cups, bags | *unlabeled* | **Hard negatives:** learned as background |
+
+Labels come from **one mask render per instance**, with everything else drawn black, so boxes are tight to the *visible* pixels and a half-hidden box gets a half-size label.
 
 Stop Play mode, open the Checkout scene, and run this Editor C# (through Unity CLI or an Editor script), using your absolute path:
 
 ```csharp
-ProPass.Editor.ProPassDatasetExporter.Begin("/absolute/path/propass/training/data", 450, 90, 60);
+ProPass.Editor.ProPassDatasetExporter.Begin("/absolute/path/propass/training/data", 900, 150, 150);
 ```
 
-Wait for `ProPassDatasetExporter.Running == false`, then check that `LastError` is empty. You'll get:
+With the Unity CLI against the open Editor, wrap it in `unity command eval --code '...; return "ok";'`. It runs in the background, writing `export-progress.json`, and takes about a minute. Wait for `ProPassDatasetExporter.Running == false`, then check that `LastError` is empty. You'll get:
 
 ```text
 training/data/
   detection/images/{train,val,test}/scene_00001.jpg
-  detection/labels/{train,val,test}/scene_00001.txt   ← YOLO, one class: merchandise
+  detection/labels/{train,val,test}/scene_00001.txt   ← YOLO: 0 merchandise · 1 person · 2 cart
   detection/dataset.yaml
   crops/{train,val,test}/{PEX-001…PEX-005, ZZZ-UNKNOWN}/
   manifests/{train,val,test}/scene_00001.json          ← per-object SKU + physical ID
 ```
 
-The splits are **whole scenes with disjoint random-seed ranges** (450 / 90 / 60), so nearby frames from one recording never land in both train and test.
+The splits are **whole scenes with disjoint random-seed ranges** (900 / 150 / 150), so nearby frames from one recording never land in both train and test. The scenario benchmark uses entirely separate seeds and its own recordings.
 
 ## 🏋️ 2. Train
 
 ```bash
 .venv/bin/python -m training.extract_outliers
-.venv/bin/python -m training.train detector   --epochs 35 --batch 8  --imgsz 640 --device 0
-.venv/bin/python -m training.train classifier --epochs 12 --head-epochs 4 --batch 24 --device cuda:0
+.venv/bin/python -m training.train detector   --epochs 60 --batch 16 --imgsz 640 --device 0
+.venv/bin/python -m training.train classifier --epochs 12 --head-epochs 4 --batch 32 --device cuda:0
 ```
 
 | | 🔵 Detector | 🟣 Classifier |
 |---|---|---|
 | Start | COCO-pretrained `yolo26n.pt` | ImageNet EfficientNet-B0 (torchvision) |
-| Task | 1 class: merchandise | 5 SKUs + 1 reject (training-only gray package) |
+| Task | 3 classes: merchandise, person, cart (only merchandise is tracked) | 5 SKUs + 1 reject (training-only gray package) |
 | Recipe | 640 px, AdamW lr 1e-3, mild geometry and lighting augmentation, **no horizontal flip** (it would mirror packaging text), patience 10 | 4 epochs head-only, then 8 epochs fine-tuning the last two feature stages with BatchNorm frozen |
-| Calibration | Operating confidence 0.20 | Temperature (0.5) and per-class prototype distance (0.428), chosen on **validation only** |
-| Time on RTX 4070 Super | ~71 s | ~25 s |
+| Calibration | Operating confidence 0.20 | Temperature (0.67) and per-class prototype distance (0.45), chosen on **validation only** |
+| Time on RTX 4070 Super | ~190 s | ~1 min |
 | Output | `models/detector.pt` | `models/classifier.pt` (also holds SKU order, prototypes and calibration) |
 
 Each run records its checkpoint SHA-256, settings and metrics in [models/manifest.json](../models/manifest.json). AMP is on when CUDA is available. Restart the API after replacing weights.
@@ -68,19 +77,21 @@ Each run records its checkpoint SHA-256, settings and metrics in [models/manifes
 
 ## 📊 3. Results
 
-### Static held-out test (60 scenes, 143 packages)
+### Static held-out test (150 cluttered scenes, 387 packages)
 
-| Metric | Result |
-|---|---:|
-| 🎯 Detector mAP50 | **0.995** |
-| 🎯 Detector mAP50–95 | **0.868** |
-| 📦 Packages found (IoU ≥ 0.5, conf ≥ 0.20) | **143 / 143** |
-| 🏷️ SKU top-1 on real detector crops | 139 / 140 |
-| ✅ Accepted SKU predictions that were correct | **135 / 135** |
-| 🤚 Known products abstained (sent to review) | 5 / 140 |
-| ❓ Unknown gray package rejected | **3 / 3** |
-| 👻 False boxes in empty scenes | 0 / 2 |
-| ⚡ Detector + classifier latency (GPU) | 9.8 ms median · 12.8 ms p95 |
+| Metric | v2 (current) | v1 (clean scenes) |
+|---|---:|---:|
+| 🎯 Detector mAP50–95, merchandise class | **0.843** | 0.868 |
+| 🎯 Detector mAP50–95, all classes | 0.877 | — |
+| 📦 Packages found (IoU ≥ 0.5, conf ≥ 0.20) | **380 / 387** | 143 / 143 |
+| 🏷️ SKU top-1 on real detector crops | 359 / 372 | 139 / 140 |
+| ✅ Accepted SKU predictions that were correct | **301 / 301** | 135 / 135 |
+| 🤚 Known products abstained (sent to review) | 71 / 372 | 5 / 140 |
+| ❓ Unknown gray package rejected | **8 / 8** | 3 / 3 |
+| 👻 Empty scenes with a false box | 1 / 7 | 0 / 2 |
+| ⚡ Detector + classifier latency (GPU) | 8.6 ms median · 10.3 ms p95 | 9.8 · 12.8 ms |
+
+The v2 test set is much harder: people, hands, flatbeds, distractors, stacked and half-visible boxes. The two columns aren't directly comparable, but they show the intended behavior. **Every SKU the classifier accepts is still correct.** When a crop is half-hidden it abstains (about 1 in 5 crops), and the tracker waits for a clearer view. The v1 checkpoints and report are kept in `models/v1/`.
 
 The full per-scene record is in [models/evaluation-static-test.json](../models/evaluation-static-test.json).
 
@@ -152,7 +163,7 @@ Each run folder holds JPEG frames, per-frame ground truth (SKU, physical ID, pro
 .venv/bin/python -m training.benchmark --root artifacts/benchmark --label baseline --docs
 ```
 
-This writes `models/benchmark-<label>.json`. With `--docs`, it also regenerates [benchmark.md](benchmark.md) and its chart. Current result: **46 / 70** runs pass. All 30 classic runs pass, and 16 of the 40 messy runs pass. The [roadmap](roadmap.md) explains each failure.
+This writes `models/benchmark-<label>.json`. With `--docs`, it also regenerates [benchmark.md](benchmark.md) and its chart. Current result on held-out seeds 5–9: **67 / 70** (Phase A baseline: 48 / 70 on the same recordings). Tune on seeds 0–4 and report on 5+. The [roadmap](roadmap.md#-phase-b-results) shows what each change contributed.
 
 ## ⚠️ What these numbers don't prove
 

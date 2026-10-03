@@ -9,8 +9,8 @@
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/UI-React%20%2B%20Vite-61DAFB?logo=react&logoColor=black)
 ![Unity 6](https://img.shields.io/badge/Sim-Unity%206.6%20URP-000000?logo=unity&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-34%20passing-2EA043)
-![Benchmark](https://img.shields.io/badge/benchmark-46%2F70%20runs-D29922)
+![Tests](https://img.shields.io/badge/tests-38%20passing-2EA043)
+![Benchmark](https://img.shields.io/badge/benchmark-67%2F70%20held--out-2EA043)
 
 ![ProPass dashboard tracking a drill kit across the checkout lane](docs/images/dashboard.jpg)
 
@@ -47,7 +47,7 @@ The trained weights (`models/detector.pt`, `models/classifier.pt`) aren't in git
 | ↩️ **Change of mind** | Added on the forward crossing, removed on the observed reverse crossing | ✅ live |
 | ❓ **Unknown product** | Gray unenrolled package is tracked, and checkout is blocked for review | ✅ live |
 
-Every scenario above passes all 5 seeds in the [benchmark](docs/benchmark.md). Eight more **messy scenarios** (busy hands, a crossing shopper, a lumber flatbed, partial views at the frame edge, stacked boxes, distractors, a shopper in the next aisle, and hesitation) currently pass **16 of 40** runs. That's the baseline the [roadmap](docs/roadmap.md) works against.
+Every scenario above passes all of its seeds in the [benchmark](docs/benchmark.md). Eight more **messy scenarios** stress the tracker: busy hands, a crossing shopper, a lumber flatbed, partial views at the frame edge, stacked boxes, distractors, a shopper in the next aisle, and hesitation. On held-out seeds, the system now passes **37 of 40** messy runs, up from 18 at the Phase A baseline (67 / 70 overall).
 
 ![Eight messy benchmark scenarios rendered by Unity](docs/images/messy-scenarios.jpg)
 
@@ -84,7 +84,7 @@ catalog.json  The five fictional products, prices and class indices
 ## ✅ Checks
 
 ```bash
-.venv/bin/python -m pytest tests -q        # 34 tests: ledger, engine, checkout races, scoring
+.venv/bin/python -m pytest tests -q        # 38 tests: ledger, engine, checkout races, scoring
 (cd web && npm run build)                  # type-check and bundle the dashboard
 .venv/bin/python scripts/verify_live.py    # needs Unity in Play mode + the API
 ```

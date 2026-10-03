@@ -7,10 +7,12 @@ web/dist/
 web/*.tsbuildinfo
 artifacts/
 training/data/
+training/data-*/
 training/runs/
 training/.ultralytics/
-models/*.pt
-models/baseline/*.pt
+models/**/*.pt
+# Ultralytics downloads yolo26n.pt here for its AMP check
+weights/
 models/pretrained/
 .env
 

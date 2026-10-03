@@ -20,8 +20,8 @@ flowchart LR
     end
     subgraph VIS["👁️ Vision · PyTorch"]
         direction TB
-        V1[YOLO26n detector<br/>class: merchandise]
-        V2[ByteTrack<br/>short-lived track IDs]
+        V1[YOLO26n detector<br/>merchandise · person · cart]
+        V2[BoT-SORT<br/>short-lived track IDs]
         V3[EfficientNet-B0<br/>SKU + reject]
         V4[Physical ledger<br/>identity, zones, events]
         V1 --> V2 --> V4
@@ -58,8 +58,9 @@ How a frame moves through these parts is covered in [pipeline.md](pipeline.md). 
 
 | Decision | Why |
 |---|---|
-| **The detector learns one class, "merchandise"** | SKU and identity are separate questions. A two-box test only works if "what is it" stays independent of "which physical box is it". |
-| **Canonical object IDs instead of tracker IDs** | ByteTrack IDs break whenever something is occluded. The ledger re-attaches fragments using motion, appearance and SKU gates, so the cart counts **physical units**, not detections. |
+| **The detector finds "merchandise", not SKUs** | SKU and identity are separate questions. A two-box test only works if "what is it" stays independent of "which physical box is it". The detector also learns *person* and *cart*, so shoppers, hands and flatbeds stop being mistaken for products. |
+| **Lane-aware zones** | Zones are bounded by a lane polygon, so a product carried in the next aisle is tracked but never charged. |
+| **Canonical object IDs instead of tracker IDs** | Tracker IDs break whenever something is occluded. The ledger re-attaches fragments using motion, appearance and SKU gates, so the cart counts **physical units**, not detections. |
 | **The cart changes only on observed zone crossings** | Seeing an item doesn't mean buying it. An item is added only when it's observed moving APPROACH → COMMIT, and removed only when it's observed going back. A lost track never removes anything. |
 | **Uncertainty blocks checkout instead of guessing** | Unknown products, ambiguous re-identification, or an item still mid-lane all trigger review. A wrong receipt costs more than a pause. |
 | **Bounded queue that drops the oldest frame** | A live demo should stay current. The drops are counted and shown. |

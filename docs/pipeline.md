@@ -46,7 +46,7 @@ sequenceDiagram
     F-->>U: {accepted: true}
     Q->>W: Next frame
     W->>V: process_frame(image)
-    V->>V: YOLO26n detect + ByteTrack IDs
+    V->>V: YOLO26n detect + BoT-SORT IDs
     V->>V: EfficientNet-B0 SKU per crop
     V->>L: Observations
     L-->>V: Objects, zone events, review flags

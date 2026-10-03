@@ -1,7 +1,7 @@
 # 🗺️ Roadmap: tracking that holds up in messy lanes
 
 > [!NOTE]
-> **Status:** Phase A is ✅ done ([results below](#-phase-a-results)). Phases B–D are next. Each phase lists what changes, which *real models* are involved, and how success gets measured.
+> **Status:** Phases A and B are ✅ done ([A results](#-phase-a-results), [B results](#-phase-b-results)). Next up is the title screen and assessment UI from Phase D, pulled forward at Danny's request, then Phase C. Each phase lists what changes, which *real models* are involved, and how success gets measured.
 
 Today's lane is clean: boxes slide in a straight line, the only occluder is a slab that appears for 0.6 s, and nothing else ever enters the frame. Real checkout lanes are messy. The goal is a tracker that keeps an exact cart through **occlusion, partial views, distractors and multiple cameras**, and can prove it with numbers.
 
@@ -44,17 +44,37 @@ The baseline passes **46 / 70** runs: all 30 classic runs, but only 16 of 40 mes
 | ⏸️ hesitate | 🟢 80% | Mostly works. One run blocked after the step back | B: Kalman motion model |
 | ✋ hands | 🟢 100% | Partial hand occlusion is already handled by short-gap re-attachment | — |
 
-## 🅱️ Phase B: real learned models for identity and occlusion
+## 🅱️ Phase B: real learned models for identity and occlusion ✅
 
-| Upgrade | Model | Why |
-|---|---|---|
-| 🧬 **Re-identification embedding** | Small CNN or ViT head trained with **metric learning** (triplet / ArcFace) on Unity crops labeled by `physical_id` | Tells *which* box this is, not just *what* SKU. Unity gives perfect identity labels for free. This is the biggest win for identical products after occlusion. |
-| 🧭 **Tracker** | **BoT-SORT** with the ReID embedding (replacing ByteTrack) | Appearance-aware association plus camera-motion compensation. Fewer ID switches. |
-| 🙋 **Occluder-aware detector** | YOLO26 fine-tuned on **merchandise + person + hand** classes | The ledger can tell "hidden behind a hand" from "gone" and extend the re-attach window only when an occluder covers the last position. |
-| 🧩 **Visible-fraction estimate** | YOLO26n-**seg** (instance masks) | Weights SKU and ReID evidence by how much of the box is actually visible, so partial views stop polluting votes. |
-| 📈 **Motion model** | Per-object Kalman filter in the ledger | Smoother prediction through occlusion than today's 0.4 s linear extrapolation |
+Each change was measured on the development seeds (0–4). The final system was then scored once on **fresh held-out seeds (5–9)**, alongside the untouched Phase A code and models.
 
-**Done when:** the Phase A benchmark improves on occlusion, identical-product and distractor scenarios with no regression elsewhere. Every number gets reported next to the baseline.
+```mermaid
+xychart-beta
+    title "Runs passed out of 70 (development seeds)"
+    x-axis ["Baseline", "Lane", "Occlusion", "Edges", "Models", "Long gap", "Scenario fix", "BoT-SORT", "Lane edge"]
+    y-axis "Runs passed" 40 --> 70
+    bar [46, 50, 56, 58, 59, 61, 63, 64, 66]
+```
+
+### 📈 Phase B results
+
+| Step | What changed | Dev runs | Biggest effect |
+|---|---|:-:|---|
+| Baseline | Phase A code and models | 46 | — |
+| 🛣️ Lane-aware zones | A lane polygon. Products outside it are tracked but never charged. | 50 | bystander 0 → 80% |
+| 🪵 Occlusion-aware re-attachment | 6 s re-attach window gated by the motion path, late merge of reappearing fragments, clear-view appearance gallery | 56 | flatbed 0 → 100% |
+| ✂️ Edge fragments and exits | Half-visible edge fragments and items leaving through the entry edge stop blocking checkout | 58 | edge 20 → 40%, hesitate 100% |
+| 🧠 **Retrained models** | Detector learns **merchandise, person and cart** from 1,200 cluttered scenes with hard negatives. Classifier retrained on occluded and partial crops. | 59 | stacked ID switches **39 → 1.6 per run**, distractors 100% |
+| ⏳ Long-gap appearance | Half-visible items emerging from occlusion can re-attach on motion and SKU, without a matching crop | 61 | flatbed back to 80% with the new embedding |
+| 🐞 Scenario fix | Two shopper seeds had intersecting boxes (a bug in the test, not the tracker), so they were re-recorded | 63 | shopper 100% |
+| 🧭 **BoT-SORT** | Replaced ByteTrack (camera-motion compensation) | 64 | fewer ID switches, +4 ms per frame |
+| 🛣️ Lane edge hysteresis | Tighter lane, plus a margin to re-enter it | 66 | bystander 100% |
+
+**Held-out seeds 5–9 (never used for tuning): 48 → 67 of 70 runs.** The messy scenarios went from 18 to **37 of 40**, and every classic scenario still passes. Details are in [benchmark.md](benchmark.md).
+
+**Still failing:** stacked *identical* boxes (60%), because two copies of the same box pressed together look like one tall box, and one edge run.
+
+**What changed from the original plan.** A separate learned re-identification network wasn't built. Identical products in the simulation are pixel-identical, so an appearance model *can't* tell two copies apart, and different SKUs are already separated by the classifier. Identity comes from motion plus a clear-view appearance gallery. Segmentation and a Kalman filter weren't needed for these scenarios. The detector's person and cart detections teach it what *isn't* merchandise, but they aren't yet passed to the ledger as explicit occluders. That's a natural next step if longer occlusions show up.
 
 ## 🅲 Phase C: multiple cameras and a coverage map
 
