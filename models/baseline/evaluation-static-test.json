@@ -1,0 +1,1886 @@
+{
+  "split": "test",
+  "domain": "Unity synthetic held-out randomized scenes",
+  "runtime_ground_truth": false,
+  "operating_threshold": 0.2,
+  "totals": {
+    "images": 60,
+    "gt_merchandise": 143,
+    "predicted_merchandise": 143,
+    "matched_iou50": 143,
+    "known_gt_crops": 140,
+    "known_gt_top1_correct": 139,
+    "known_gt_accepted": 138,
+    "known_gt_accepted_correct": 137,
+    "unknown_gt_crops": 3,
+    "unknown_gt_rejected": 1,
+    "known_detected_crops": 140,
+    "known_detected_top1_correct": 139,
+    "known_detected_accepted": 138,
+    "known_detected_accepted_correct": 137,
+    "unknown_detected_crops": 3,
+    "unknown_detected_rejected": 2,
+    "empty_scenes": 2,
+    "empty_scenes_with_false_detections": 0
+  },
+  "latency_ms": {
+    "warmup_excluded": true,
+    "median": 8.183038000424858,
+    "p95": 12.512467400256345
+  },
+  "limitations": [
+    "Five visually distinct fictional packages; no real camera transfer tested",
+    "Unknown package sample is small; rejection is not general open-world detection",
+    "Static scenes do not establish temporal exact-cart accuracy"
+  ],
+  "scenes": [
+    {
+      "scene": "scene_00000",
+      "matches": [],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00001",
+      "matches": [
+        {
+          "iou": 0.9754452996468452,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9999992847442627,
+            "distance": 0.16240084171295166,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9618696068498617,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9998483657836914,
+            "distance": 0.21394407749176025,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9535235515511901,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9946572184562683,
+            "distance": 0.20636188983917236,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8682636324223556,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9518260955810547,
+            "distance": 0.4530078172683716,
+            "accepted": false
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00002",
+      "matches": [
+        {
+          "iou": 0.933731322802659,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.999984860420227,
+            "distance": 0.16317498683929443,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9314825029906527,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9793769121170044,
+            "distance": 0.20197224617004395,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8824363664696298,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.999998927116394,
+            "distance": 0.23756945133209229,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.850085711601706,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9954244494438171,
+            "distance": 0.28854966163635254,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00003",
+      "matches": [
+        {
+          "iou": 0.9533149567074852,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9999048709869385,
+            "distance": 0.18682050704956055,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00004",
+      "matches": [
+        {
+          "iou": 0.9415446138546595,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9999561309814453,
+            "distance": 0.1809212565422058,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9269178874368682,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9983161687850952,
+            "distance": 0.2360382080078125,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00005",
+      "matches": [
+        {
+          "iou": 0.9689286607574545,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9999780654907227,
+            "distance": 0.16881513595581055,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.960063584464395,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.995520830154419,
+            "distance": 0.35817253589630127,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00006",
+      "matches": [
+        {
+          "iou": 0.9228027681388841,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9998041987419128,
+            "distance": 0.23649173974990845,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9206005564212293,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9998773336410522,
+            "distance": 0.2213483452796936,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8863471429834154,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9972754120826721,
+            "distance": 0.20325243473052979,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00007",
+      "matches": [
+        {
+          "iou": 0.9509442476176064,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9999933242797852,
+            "distance": 0.1414499282836914,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9479084323236957,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9997281432151794,
+            "distance": 0.200725257396698,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9387355599504928,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9999934434890747,
+            "distance": 0.15239673852920532,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9244096355522831,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9981491565704346,
+            "distance": 0.2519528269767761,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00008",
+      "matches": [
+        {
+          "iou": 0.9746989554981338,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9998337030410767,
+            "distance": 0.21782779693603516,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9577699171075652,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9999630451202393,
+            "distance": 0.12568581104278564,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9483010885324067,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9999790191650391,
+            "distance": 0.15623152256011963,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.93048374561207,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9897109866142273,
+            "distance": 0.17628329992294312,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00009",
+      "matches": [
+        {
+          "iou": 0.9459407398538028,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9999996423721313,
+            "distance": 0.16130268573760986,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00010",
+      "matches": [
+        {
+          "iou": 0.9296900592279124,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9948397278785706,
+            "distance": 0.43136078119277954,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00011",
+      "matches": [
+        {
+          "iou": 0.9565049450111428,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9999508857727051,
+            "distance": 0.29298388957977295,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9326102854661865,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9998455047607422,
+            "distance": 0.24507689476013184,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00012",
+      "matches": [
+        {
+          "iou": 0.9570686996635231,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9997957348823547,
+            "distance": 0.3739229440689087,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9378460357433458,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9999306201934814,
+            "distance": 0.20119714736938477,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.7692161273995513,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9997590184211731,
+            "distance": 0.3457130193710327,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00013",
+      "matches": [
+        {
+          "iou": 0.9457812003787651,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9999567270278931,
+            "distance": 0.28182339668273926,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9233216135255768,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9885482788085938,
+            "distance": 0.22483336925506592,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9134665246624291,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.976243793964386,
+            "distance": 0.28200042247772217,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00014",
+      "matches": [
+        {
+          "iou": 0.9677367989079718,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9999960660934448,
+            "distance": 0.1819109320640564,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9514554312617163,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.999998927116394,
+            "distance": 0.14949631690979004,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9512316446908821,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9999827146530151,
+            "distance": 0.15873044729232788,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8560881855982271,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9999548196792603,
+            "distance": 0.31411921977996826,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00015",
+      "matches": [
+        {
+          "iou": 0.9756957850185949,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9999974966049194,
+            "distance": 0.14502954483032227,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00016",
+      "matches": [
+        {
+          "iou": 0.9477802908345814,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9998595714569092,
+            "distance": 0.17925608158111572,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00017",
+      "matches": [
+        {
+          "iou": 0.9095514336862368,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9869468212127686,
+            "distance": 0.2898734211921692,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8575210280540733,
+          "gt_sku": "UNKNOWN",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9412294626235962,
+            "distance": 0.4752036929130554,
+            "accepted": false
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00018",
+      "matches": [
+        {
+          "iou": 0.9755856836392895,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9998084902763367,
+            "distance": 0.21505993604660034,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9548185948022625,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9999316930770874,
+            "distance": 0.12837308645248413,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9377116362673671,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9999973773956299,
+            "distance": 0.25048118829727173,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00019",
+      "matches": [
+        {
+          "iou": 0.9378967303088332,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.995482325553894,
+            "distance": 0.21932125091552734,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9338088249102063,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9964300990104675,
+            "distance": 0.18493831157684326,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8551548257948169,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9993694424629211,
+            "distance": 0.24878257513046265,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00020",
+      "matches": [
+        {
+          "iou": 0.974250284789444,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9999957084655762,
+            "distance": 0.38067638874053955,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9396618072011051,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9944709539413452,
+            "distance": 0.2833477258682251,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9239774789621302,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9998667240142822,
+            "distance": 0.21826434135437012,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9127652862955351,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9999947547912598,
+            "distance": 0.21417677402496338,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00021",
+      "matches": [
+        {
+          "iou": 0.93340620892652,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9999908208847046,
+            "distance": 0.31625252962112427,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00022",
+      "matches": [
+        {
+          "iou": 0.9184427150493961,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9960561990737915,
+            "distance": 0.2731757164001465,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00023",
+      "matches": [
+        {
+          "iou": 0.9564539743483589,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9999676942825317,
+            "distance": 0.18141621351242065,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9322183587002841,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9998779296875,
+            "distance": 0.1979270577430725,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00024",
+      "matches": [
+        {
+          "iou": 0.9746678016053758,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.999771773815155,
+            "distance": 0.25534212589263916,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9513095513786233,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9998593330383301,
+            "distance": 0.14654356241226196,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00025",
+      "matches": [
+        {
+          "iou": 0.962581768456122,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9986253976821899,
+            "distance": 0.2612342834472656,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.882146260845778,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.999993085861206,
+            "distance": 0.1985434889793396,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8185300175713406,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9999356269836426,
+            "distance": 0.38936740159988403,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00026",
+      "matches": [
+        {
+          "iou": 0.9470186770871974,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9998084902763367,
+            "distance": 0.2625136971473694,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9212589899329858,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9999841451644897,
+            "distance": 0.16253423690795898,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9208463811988218,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9998968839645386,
+            "distance": 0.3470405340194702,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9019414747701965,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.99983811378479,
+            "distance": 0.26605385541915894,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00027",
+      "matches": [
+        {
+          "iou": 0.9635532321123768,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.999985933303833,
+            "distance": 0.16286754608154297,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9347185708016649,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9999245405197144,
+            "distance": 0.1850963830947876,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9062312272018228,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9999450445175171,
+            "distance": 0.21604329347610474,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8972800037110223,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9999278783798218,
+            "distance": 0.2272571325302124,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00028",
+      "matches": [
+        {
+          "iou": 0.916070049488917,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9997761845588684,
+            "distance": 0.21693146228790283,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00029",
+      "matches": [
+        {
+          "iou": 0.9451948420826721,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9999969005584717,
+            "distance": 0.16797292232513428,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9192133879522268,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9999154806137085,
+            "distance": 0.28953415155410767,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00030",
+      "matches": [],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00031",
+      "matches": [
+        {
+          "iou": 0.9705653653714816,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9999911785125732,
+            "distance": 0.18194496631622314,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9603881687608709,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.999957799911499,
+            "distance": 0.1932479739189148,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8873682676734657,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9869864583015442,
+            "distance": 0.4391082525253296,
+            "accepted": false
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00032",
+      "matches": [
+        {
+          "iou": 0.9076646606889412,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9999756813049316,
+            "distance": 0.21557003259658813,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00033",
+      "matches": [
+        {
+          "iou": 0.891110416700764,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9999970197677612,
+            "distance": 0.20101428031921387,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00034",
+      "matches": [
+        {
+          "iou": 0.9645061842973892,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9999551773071289,
+            "distance": 0.18315887451171875,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9301004530467899,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9998258948326111,
+            "distance": 0.2301771640777588,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8976973559611957,
+          "gt_sku": "UNKNOWN",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9595691561698914,
+            "distance": 0.4370671510696411,
+            "accepted": false
+          }
+        },
+        {
+          "iou": 0.8972313828379302,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.999993085861206,
+            "distance": 0.28327369689941406,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00035",
+      "matches": [
+        {
+          "iou": 0.951033617102296,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.998522937297821,
+            "distance": 0.2849552631378174,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.941877428074228,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9999879598617554,
+            "distance": 0.2242954969406128,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.932067372819637,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9987255930900574,
+            "distance": 0.16030746698379517,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.7370793669201805,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9905416369438171,
+            "distance": 0.39610350131988525,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00036",
+      "matches": [
+        {
+          "iou": 0.9393135983211839,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9999884366989136,
+            "distance": 0.15501654148101807,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9175600245727055,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9999740123748779,
+            "distance": 0.18738514184951782,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8755555858545809,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9762780666351318,
+            "distance": 0.2744159698486328,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00037",
+      "matches": [
+        {
+          "iou": 0.9331935290843535,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9999434947967529,
+            "distance": 0.2292470932006836,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.864655093561879,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9999985694885254,
+            "distance": 0.19540750980377197,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00038",
+      "matches": [
+        {
+          "iou": 0.9296004962075595,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9999867677688599,
+            "distance": 0.24351108074188232,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9228483911362614,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9999884366989136,
+            "distance": 0.14256417751312256,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00039",
+      "matches": [
+        {
+          "iou": 0.9591033236757879,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.999984622001648,
+            "distance": 0.12879538536071777,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00040",
+      "matches": [
+        {
+          "iou": 0.9132837460185373,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9999939203262329,
+            "distance": 0.23114013671875,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9095014012966239,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9977728724479675,
+            "distance": 0.19645226001739502,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8763809969256583,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9968980550765991,
+            "distance": 0.1833241581916809,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8415622245604655,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9998607635498047,
+            "distance": 0.30439114570617676,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00041",
+      "matches": [
+        {
+          "iou": 0.9391480029130579,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9998985528945923,
+            "distance": 0.23937898874282837,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8821182708738197,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9999392032623291,
+            "distance": 0.22753822803497314,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8689854849344575,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9999995231628418,
+            "distance": 0.1548597812652588,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8408357648064549,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9996488094329834,
+            "distance": 0.40444087982177734,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00042",
+      "matches": [
+        {
+          "iou": 0.9367832020037165,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9999991655349731,
+            "distance": 0.16438478231430054,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9265363297347454,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9999854564666748,
+            "distance": 0.16523456573486328,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.883612708522392,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9999569654464722,
+            "distance": 0.18623054027557373,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00043",
+      "matches": [
+        {
+          "iou": 0.9303381170745452,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9999302625656128,
+            "distance": 0.1763455867767334,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8822688537960252,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9999990463256836,
+            "distance": 0.21538162231445312,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00044",
+      "matches": [
+        {
+          "iou": 0.94435995975355,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9998575448989868,
+            "distance": 0.20422452688217163,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.848694137294963,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9994693398475647,
+            "distance": 0.2980060577392578,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00045",
+      "matches": [
+        {
+          "iou": 0.956220859803716,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9926260113716125,
+            "distance": 0.2465665340423584,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00046",
+      "matches": [
+        {
+          "iou": 0.9774196442946889,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9996340274810791,
+            "distance": 0.2065640687942505,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00047",
+      "matches": [
+        {
+          "iou": 0.958270233753448,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9987460374832153,
+            "distance": 0.16584336757659912,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9569376906725126,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9541717767715454,
+            "distance": 0.3277137279510498,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9188560903649337,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9996993541717529,
+            "distance": 0.18099522590637207,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9028081491127145,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9999340772628784,
+            "distance": 0.18785905838012695,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00048",
+      "matches": [
+        {
+          "iou": 0.9622334769794568,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.8926592469215393,
+            "distance": 0.13637834787368774,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9054393924876873,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9669128656387329,
+            "distance": 0.22091633081436157,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8036961975514124,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9974223375320435,
+            "distance": 0.29634809494018555,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00049",
+      "matches": [
+        {
+          "iou": 0.9547931711614596,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9998410940170288,
+            "distance": 0.1477200984954834,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.906794087280879,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9830310344696045,
+            "distance": 0.3085334300994873,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.7861565048098434,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.8735164999961853,
+            "distance": 0.3869023323059082,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00050",
+      "matches": [
+        {
+          "iou": 0.9805188301000611,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9999970197677612,
+            "distance": 0.17197000980377197,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8810548294037797,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9999562501907349,
+            "distance": 0.23175930976867676,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00051",
+      "matches": [
+        {
+          "iou": 0.9048169786615889,
+          "gt_sku": "UNKNOWN",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9918456673622131,
+            "distance": 0.20317959785461426,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00052",
+      "matches": [
+        {
+          "iou": 0.9503437219464211,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9999963045120239,
+            "distance": 0.18204659223556519,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00053",
+      "matches": [
+        {
+          "iou": 0.954885795859955,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9999129772186279,
+            "distance": 0.1809828281402588,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.944377916100752,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9999927282333374,
+            "distance": 0.29742431640625,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9146711962415819,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9995599389076233,
+            "distance": 0.30333590507507324,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9117513545123538,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9990915060043335,
+            "distance": 0.17647945880889893,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00054",
+      "matches": [
+        {
+          "iou": 0.9716469005302545,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9998249411582947,
+            "distance": 0.15037620067596436,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9607165504225494,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9999358654022217,
+            "distance": 0.2618001699447632,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9213329624599288,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9999788999557495,
+            "distance": 0.17831259965896606,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00055",
+      "matches": [
+        {
+          "iou": 0.926789878963521,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9982084035873413,
+            "distance": 0.3323681950569153,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9092102051182054,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9981898665428162,
+            "distance": 0.24149662256240845,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8841041348714758,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9999798536300659,
+            "distance": 0.2575715184211731,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00056",
+      "matches": [
+        {
+          "iou": 0.9152200286867611,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9999988079071045,
+            "distance": 0.17234909534454346,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8790511319427978,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9993807077407837,
+            "distance": 0.42151111364364624,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00057",
+      "matches": [
+        {
+          "iou": 0.9642850116548757,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9987480640411377,
+            "distance": 0.22966265678405762,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8828360018453003,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.9999979734420776,
+            "distance": 0.1798713207244873,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00058",
+      "matches": [
+        {
+          "iou": 0.8559084158350025,
+          "gt_sku": "PEX-004",
+          "prediction": {
+            "sku": "PEX-004",
+            "confidence": 0.9998282194137573,
+            "distance": 0.2623860836029053,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    },
+    {
+      "scene": "scene_00059",
+      "matches": [
+        {
+          "iou": 0.9730162969403474,
+          "gt_sku": "PEX-001",
+          "prediction": {
+            "sku": "PEX-001",
+            "confidence": 0.9999967813491821,
+            "distance": 0.1499485969543457,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.9513077522371224,
+          "gt_sku": "PEX-003",
+          "prediction": {
+            "sku": "PEX-003",
+            "confidence": 0.999984622001648,
+            "distance": 0.17063438892364502,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8955730264717251,
+          "gt_sku": "PEX-002",
+          "prediction": {
+            "sku": "PEX-002",
+            "confidence": 0.9999740123748779,
+            "distance": 0.20944249629974365,
+            "accepted": true
+          }
+        },
+        {
+          "iou": 0.8897081065944453,
+          "gt_sku": "PEX-005",
+          "prediction": {
+            "sku": "PEX-005",
+            "confidence": 0.9956211447715759,
+            "distance": 0.25844520330429077,
+            "accepted": true
+          }
+        }
+      ],
+      "missed": 0,
+      "false_detections": 0
+    }
+  ]
+}

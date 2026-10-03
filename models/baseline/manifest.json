@@ -1,0 +1,214 @@
+{
+  "classifier": {
+    "checkpoint": "torchvision EfficientNet_B0_Weights.IMAGENET1K_V1",
+    "seconds": 25.489925384521484,
+    "sha256": "630d41292d7946c9ab33bea4db8047d37f3b0b0149625704a6c4f2a365306031",
+    "epochs": 12,
+    "head_epochs": 4,
+    "batch": 24,
+    "device": "cuda:0",
+    "crop_size": 224,
+    "temperature": 0.5,
+    "maximum_prototype_distance": 0.43306084275245665,
+    "dataset_sizes": {
+      "train": 1055,
+      "val": 211,
+      "test": 139
+    },
+    "val": {
+      "correct": 211,
+      "total": 211,
+      "accuracy": 1.0,
+      "loss": 0.1286198594276374
+    },
+    "test": {
+      "correct": 139,
+      "total": 139,
+      "accuracy": 1.0,
+      "loss": 0.13437636518221108
+    },
+    "test_confusion": [
+      [
+        29,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        26,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        26,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        30,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        28
+      ]
+    ],
+    "test_accepted": 137,
+    "test_accepted_correct": 137,
+    "unknown_rejection": "Validation-calibrated feature distance plus confidence; unknown performance must be measured separately",
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 1.126710544434769,
+        "val": {
+          "correct": 192,
+          "total": 211,
+          "accuracy": 0.909952606635071,
+          "loss": 0.7435707548783289
+        }
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.5849239040042552,
+        "val": {
+          "correct": 202,
+          "total": 211,
+          "accuracy": 0.957345971563981,
+          "loss": 0.47558655303801406
+        }
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.43075401133270624,
+        "val": {
+          "correct": 205,
+          "total": 211,
+          "accuracy": 0.9715639810426541,
+          "loss": 0.37265581542281745
+        }
+      },
+      {
+        "epoch": 4,
+        "train_loss": 0.34449135624401944,
+        "val": {
+          "correct": 204,
+          "total": 211,
+          "accuracy": 0.966824644549763,
+          "loss": 0.3145653804614081
+        }
+      },
+      {
+        "epoch": 5,
+        "train_loss": 0.2652817482349432,
+        "val": {
+          "correct": 207,
+          "total": 211,
+          "accuracy": 0.981042654028436,
+          "loss": 0.18595487875113556
+        }
+      },
+      {
+        "epoch": 6,
+        "train_loss": 0.19907509201510823,
+        "val": {
+          "correct": 209,
+          "total": 211,
+          "accuracy": 0.990521327014218,
+          "loss": 0.15741343972807248
+        }
+      },
+      {
+        "epoch": 7,
+        "train_loss": 0.18088152886001985,
+        "val": {
+          "correct": 210,
+          "total": 211,
+          "accuracy": 0.995260663507109,
+          "loss": 0.14404343788940194
+        }
+      },
+      {
+        "epoch": 8,
+        "train_loss": 0.16103734584498744,
+        "val": {
+          "correct": 211,
+          "total": 211,
+          "accuracy": 1.0,
+          "loss": 0.13469853015590053
+        }
+      },
+      {
+        "epoch": 9,
+        "train_loss": 0.1525699064559281,
+        "val": {
+          "correct": 211,
+          "total": 211,
+          "accuracy": 1.0,
+          "loss": 0.13095295513975677
+        }
+      },
+      {
+        "epoch": 10,
+        "train_loss": 0.1377471019871427,
+        "val": {
+          "correct": 211,
+          "total": 211,
+          "accuracy": 1.0,
+          "loss": 0.13064259361316807
+        }
+      },
+      {
+        "epoch": 11,
+        "train_loss": 0.13862012847904912,
+        "val": {
+          "correct": 211,
+          "total": 211,
+          "accuracy": 1.0,
+          "loss": 0.1286198594276374
+        }
+      },
+      {
+        "epoch": 12,
+        "train_loss": 0.13275470857936625,
+        "val": {
+          "correct": 211,
+          "total": 211,
+          "accuracy": 1.0,
+          "loss": 0.1301672368959228
+        }
+      }
+    ],
+    "dataset": "Unity synthetic crop splits; no real-camera transfer claim"
+  },
+  "detector": {
+    "checkpoint": "YOLO26n COCO pretrained",
+    "architecture": "one-class merchandise",
+    "seconds": 71.475088596344,
+    "sha256": "d01aaa497fd251b1d6618f3e293ca613f5783c41a235714db463399ed4330142",
+    "epochs_requested": 35,
+    "batch": 8,
+    "image_size": 640,
+    "device": "0",
+    "test": {
+      "map50": 0.995,
+      "map50_95": 0.8680754582260306,
+      "precision": 0.9993306691562921,
+      "recall": 1.0
+    },
+    "dataset": "Unity synthetic scene splits; no real-camera transfer claim",
+    "train_images": 450,
+    "val_images": 90,
+    "test_images": 60
+  }
+}

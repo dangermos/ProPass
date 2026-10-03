@@ -1,0 +1,585 @@
+{
+  "domain": "Recorded Unity RGB checkout sequences",
+  "runtime_ground_truth": false,
+  "runs": 3,
+  "exact_cart_runs": 3,
+  "passed_runs": 3,
+  "config": {
+    "image_size": 640,
+    "detector_conf": 0.2,
+    "device": "auto",
+    "ledger": {
+      "approach_y": 0.65,
+      "commit_y": 0.4,
+      "hysteresis": 0.025,
+      "dwell_seconds": 0.12,
+      "minimum_views": 3,
+      "sku_threshold": 0.85,
+      "sku_margin": 0.2,
+      "reattach_seconds": 1.8
+    }
+  },
+  "limitations": [
+    "Scripted single-customer synthetic scene; no real-camera transfer tested",
+    "Results describe these recorded runs, not population-level performance"
+  ],
+  "results": [
+    {
+      "scenario": "single",
+      "run_id": "0fcbb7ff-54e7-489e-874a-500bbb479564",
+      "frames": 260,
+      "source_duration_seconds": 36.359649270772934,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "maximum_cart_units": 1,
+      "maximum_canonical_objects": 1,
+      "event_counts": {
+        "TRACK_CREATED": 1,
+        "SKU_RESOLVED": 1,
+        "ITEM_ADDED": 1
+      },
+      "duplicate_event_ids": 0,
+      "latency_ms": {
+        "median": 9.577230999639141,
+        "p95": 11.424598600115132
+      },
+      "final_objects": [
+        {
+          "bbox": [
+            463.8597412109375,
+            150.21380615234375,
+            496.5372314453125,
+            180.4746551513672
+          ],
+          "track_id": 1,
+          "object_id": "0fcbb7ff-obj-0001",
+          "sku": "PEX-001",
+          "confidence": 0.9993771910667419,
+          "state": "ADDED",
+          "zone": "COMMIT",
+          "visible": true,
+          "membership": true,
+          "review_reason": null
+        }
+      ],
+      "trace": [
+        {
+          "frame_id": 1,
+          "timestamp": 0.14381065964698792,
+          "detections": [
+            {
+              "bbox": [
+                452.35357666015625,
+                412.6781005859375,
+                509.1907958984375,
+                465.2459716796875
+              ],
+              "track_id": 1,
+              "object_id": "0fcbb7ff-obj-0001",
+              "sku": null,
+              "confidence": 0.9965741634368896,
+              "state": "TRACKED",
+              "zone": "MIDDLE",
+              "visible": true,
+              "membership": false,
+              "review_reason": null,
+              "detector_confidence": 0.9366684556007385
+            }
+          ],
+          "events": [
+            {
+              "event_id": "f0a5d3de-a1fe-56ca-ad37-1c7352ab0a03",
+              "object_id": "0fcbb7ff-obj-0001",
+              "sku": null,
+              "type": "TRACK_CREATED",
+              "timestamp": 0.14381065964698792
+            }
+          ],
+          "review_required": false
+        },
+        {
+          "frame_id": 2,
+          "timestamp": 0.2805123031139374,
+          "detections": [
+            {
+              "bbox": [
+                452.35357666015625,
+                412.6781005859375,
+                509.1907958984375,
+                465.2459716796875
+              ],
+              "track_id": 1,
+              "object_id": "0fcbb7ff-obj-0001",
+              "sku": null,
+              "confidence": 0.9965741634368896,
+              "state": "ENTERING",
+              "zone": "APPROACH",
+              "visible": true,
+              "membership": false,
+              "review_reason": null,
+              "detector_confidence": 0.9366684556007385
+            }
+          ],
+          "events": [],
+          "review_required": false
+        },
+        {
+          "frame_id": 3,
+          "timestamp": 0.44936299324035645,
+          "detections": [
+            {
+              "bbox": [
+                452.35357666015625,
+                412.6781005859375,
+                509.1907958984375,
+                465.2459716796875
+              ],
+              "track_id": 1,
+              "object_id": "0fcbb7ff-obj-0001",
+              "sku": "PEX-001",
+              "confidence": 0.9965741634368896,
+              "state": "ENTERING",
+              "zone": "APPROACH",
+              "visible": true,
+              "membership": false,
+              "review_reason": null,
+              "detector_confidence": 0.9366684556007385
+            }
+          ],
+          "events": [
+            {
+              "event_id": "45ad6d92-c777-5f37-be2e-5427b310ed89",
+              "object_id": "0fcbb7ff-obj-0001",
+              "sku": "PEX-001",
+              "type": "SKU_RESOLVED",
+              "timestamp": 0.44936299324035645
+            }
+          ],
+          "review_required": false
+        },
+        {
+          "frame_id": 78,
+          "timestamp": 11.07762336730957,
+          "detections": [
+            {
+              "bbox": [
+                462.5775451660156,
+                183.4307403564453,
+                498.40777587890625,
+                216.8966522216797
+              ],
+              "track_id": 1,
+              "object_id": "0fcbb7ff-obj-0001",
+              "sku": "PEX-001",
+              "confidence": 0.9981975182890892,
+              "state": "ADDED",
+              "zone": "COMMIT",
+              "visible": true,
+              "membership": true,
+              "review_reason": null,
+              "detector_confidence": 0.953882098197937
+            }
+          ],
+          "events": [
+            {
+              "event_id": "e7d7812d-1bb2-570d-8de6-6c117be0abee",
+              "object_id": "0fcbb7ff-obj-0001",
+              "sku": "PEX-001",
+              "type": "ITEM_ADDED",
+              "timestamp": 11.07762336730957
+            }
+          ],
+          "review_required": false
+        }
+      ]
+    },
+    {
+      "scenario": "single",
+      "run_id": "3faf669730be4c97a4f36a88bd68a067",
+      "frames": 260,
+      "source_duration_seconds": 35.95009994506836,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "maximum_cart_units": 1,
+      "maximum_canonical_objects": 1,
+      "event_counts": {
+        "TRACK_CREATED": 1,
+        "SKU_RESOLVED": 1,
+        "ITEM_ADDED": 1
+      },
+      "duplicate_event_ids": 0,
+      "latency_ms": {
+        "median": 9.455502000491833,
+        "p95": 11.65065919949484
+      },
+      "final_objects": [
+        {
+          "bbox": [
+            463.8597717285156,
+            150.21380615234375,
+            496.5372009277344,
+            180.4746551513672
+          ],
+          "track_id": 1,
+          "object_id": "3faf6697-obj-0001",
+          "sku": "PEX-001",
+          "confidence": 0.9993771910667419,
+          "state": "ADDED",
+          "zone": "COMMIT",
+          "visible": true,
+          "membership": true,
+          "review_reason": null
+        }
+      ],
+      "trace": [
+        {
+          "frame_id": 1,
+          "timestamp": 0.0,
+          "detections": [
+            {
+              "bbox": [
+                452.35357666015625,
+                412.6781005859375,
+                509.1907958984375,
+                465.2459716796875
+              ],
+              "track_id": 1,
+              "object_id": "3faf6697-obj-0001",
+              "sku": null,
+              "confidence": 0.9965741634368896,
+              "state": "TRACKED",
+              "zone": "MIDDLE",
+              "visible": true,
+              "membership": false,
+              "review_reason": null,
+              "detector_confidence": 0.9366684556007385
+            }
+          ],
+          "events": [
+            {
+              "event_id": "1cac631a-d752-55d4-9315-1e818df92208",
+              "object_id": "3faf6697-obj-0001",
+              "sku": null,
+              "type": "TRACK_CREATED",
+              "timestamp": 0.0
+            }
+          ],
+          "review_required": false
+        },
+        {
+          "frame_id": 2,
+          "timestamp": 0.0,
+          "detections": [
+            {
+              "bbox": [
+                452.35357666015625,
+                412.6781005859375,
+                509.1907958984375,
+                465.2459716796875
+              ],
+              "track_id": 1,
+              "object_id": "3faf6697-obj-0001",
+              "sku": null,
+              "confidence": 0.9965741634368896,
+              "state": "TRACKED",
+              "zone": "MIDDLE",
+              "visible": true,
+              "membership": false,
+              "review_reason": null,
+              "detector_confidence": 0.9366684556007385
+            }
+          ],
+          "events": [],
+          "review_required": false
+        },
+        {
+          "frame_id": 3,
+          "timestamp": 0.15756219625473022,
+          "detections": [
+            {
+              "bbox": [
+                452.35357666015625,
+                412.6781005859375,
+                509.1907958984375,
+                465.2459716796875
+              ],
+              "track_id": 1,
+              "object_id": "3faf6697-obj-0001",
+              "sku": null,
+              "confidence": 0.9965741634368896,
+              "state": "ENTERING",
+              "zone": "APPROACH",
+              "visible": true,
+              "membership": false,
+              "review_reason": null,
+              "detector_confidence": 0.9366684556007385
+            }
+          ],
+          "events": [],
+          "review_required": false
+        },
+        {
+          "frame_id": 4,
+          "timestamp": 0.3070794343948364,
+          "detections": [
+            {
+              "bbox": [
+                452.35357666015625,
+                412.6781005859375,
+                509.1907958984375,
+                465.2459716796875
+              ],
+              "track_id": 1,
+              "object_id": "3faf6697-obj-0001",
+              "sku": "PEX-001",
+              "confidence": 0.9965741634368896,
+              "state": "ENTERING",
+              "zone": "APPROACH",
+              "visible": true,
+              "membership": false,
+              "review_reason": null,
+              "detector_confidence": 0.9366684556007385
+            }
+          ],
+          "events": [
+            {
+              "event_id": "9b0ce1ed-082f-5902-a262-f9970f4eee99",
+              "object_id": "3faf6697-obj-0001",
+              "sku": "PEX-001",
+              "type": "SKU_RESOLVED",
+              "timestamp": 0.3070794343948364
+            }
+          ],
+          "review_required": false
+        },
+        {
+          "frame_id": 82,
+          "timestamp": 11.198673248291016,
+          "detections": [
+            {
+              "bbox": [
+                462.7483825683594,
+                182.06077575683594,
+                498.41925048828125,
+                215.4703369140625
+              ],
+              "track_id": 1,
+              "object_id": "3faf6697-obj-0001",
+              "sku": "PEX-001",
+              "confidence": 0.9976676180958748,
+              "state": "ADDED",
+              "zone": "COMMIT",
+              "visible": true,
+              "membership": true,
+              "review_reason": null,
+              "detector_confidence": 0.9476756453514099
+            }
+          ],
+          "events": [
+            {
+              "event_id": "862cb334-7294-5538-96de-c04c8f567fb4",
+              "object_id": "3faf6697-obj-0001",
+              "sku": "PEX-001",
+              "type": "ITEM_ADDED",
+              "timestamp": 11.198673248291016
+            }
+          ],
+          "review_required": false
+        }
+      ]
+    },
+    {
+      "scenario": "single",
+      "run_id": "a1a3c2d4-75e2-4f7b-a800-f657442a9cbf",
+      "frames": 260,
+      "source_duration_seconds": 36.61863195896149,
+      "expected_cart": {
+        "PEX-001": 1
+      },
+      "predicted_cart": {
+        "PEX-001": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "maximum_cart_units": 1,
+      "maximum_canonical_objects": 1,
+      "event_counts": {
+        "TRACK_CREATED": 1,
+        "SKU_RESOLVED": 1,
+        "ITEM_ADDED": 1
+      },
+      "duplicate_event_ids": 0,
+      "latency_ms": {
+        "median": 9.548509999149246,
+        "p95": 11.327762999826518
+      },
+      "final_objects": [
+        {
+          "bbox": [
+            463.8597412109375,
+            150.21380615234375,
+            496.5372314453125,
+            180.4746551513672
+          ],
+          "track_id": 1,
+          "object_id": "a1a3c2d4-obj-0001",
+          "sku": "PEX-001",
+          "confidence": 0.9993771910667419,
+          "state": "ADDED",
+          "zone": "COMMIT",
+          "visible": true,
+          "membership": true,
+          "review_reason": null
+        }
+      ],
+      "trace": [
+        {
+          "frame_id": 1,
+          "timestamp": 0.020306944847106934,
+          "detections": [
+            {
+              "bbox": [
+                452.35357666015625,
+                412.6781005859375,
+                509.1907958984375,
+                465.2459716796875
+              ],
+              "track_id": 1,
+              "object_id": "a1a3c2d4-obj-0001",
+              "sku": null,
+              "confidence": 0.9965741634368896,
+              "state": "TRACKED",
+              "zone": "MIDDLE",
+              "visible": true,
+              "membership": false,
+              "review_reason": null,
+              "detector_confidence": 0.9366684556007385
+            }
+          ],
+          "events": [
+            {
+              "event_id": "9919d913-824e-57e3-bd69-be5411014938",
+              "object_id": "a1a3c2d4-obj-0001",
+              "sku": null,
+              "type": "TRACK_CREATED",
+              "timestamp": 0.020306944847106934
+            }
+          ],
+          "review_required": false
+        },
+        {
+          "frame_id": 2,
+          "timestamp": 0.1672731190919876,
+          "detections": [
+            {
+              "bbox": [
+                452.35357666015625,
+                412.6781005859375,
+                509.1907958984375,
+                465.2459716796875
+              ],
+              "track_id": 1,
+              "object_id": "a1a3c2d4-obj-0001",
+              "sku": null,
+              "confidence": 0.9965741634368896,
+              "state": "ENTERING",
+              "zone": "APPROACH",
+              "visible": true,
+              "membership": false,
+              "review_reason": null,
+              "detector_confidence": 0.9366684556007385
+            }
+          ],
+          "events": [],
+          "review_required": false
+        },
+        {
+          "frame_id": 3,
+          "timestamp": 0.3473634123802185,
+          "detections": [
+            {
+              "bbox": [
+                452.35357666015625,
+                412.6781005859375,
+                509.1907958984375,
+                465.2459716796875
+              ],
+              "track_id": 1,
+              "object_id": "a1a3c2d4-obj-0001",
+              "sku": "PEX-001",
+              "confidence": 0.9965741634368896,
+              "state": "ENTERING",
+              "zone": "APPROACH",
+              "visible": true,
+              "membership": false,
+              "review_reason": null,
+              "detector_confidence": 0.9366684556007385
+            }
+          ],
+          "events": [
+            {
+              "event_id": "b28bec75-114d-52ea-8d7d-e44ae48cff00",
+              "object_id": "a1a3c2d4-obj-0001",
+              "sku": "PEX-001",
+              "type": "SKU_RESOLVED",
+              "timestamp": 0.3473634123802185
+            }
+          ],
+          "review_required": false
+        },
+        {
+          "frame_id": 78,
+          "timestamp": 11.13054370880127,
+          "detections": [
+            {
+              "bbox": [
+                462.63739013671875,
+                182.7139892578125,
+                498.4584045410156,
+                216.1506805419922
+              ],
+              "track_id": 1,
+              "object_id": "a1a3c2d4-obj-0001",
+              "sku": "PEX-001",
+              "confidence": 0.9972630962729454,
+              "state": "ADDED",
+              "zone": "COMMIT",
+              "visible": true,
+              "membership": true,
+              "review_reason": null,
+              "detector_confidence": 0.9544582962989807
+            }
+          ],
+          "events": [
+            {
+              "event_id": "e843c9d4-a56f-5552-a0ae-37402e1185b3",
+              "object_id": "a1a3c2d4-obj-0001",
+              "sku": "PEX-001",
+              "type": "ITEM_ADDED",
+              "timestamp": 11.13054370880127
+            }
+          ],
+          "review_required": false
+        }
+      ]
+    }
+  ]
+}

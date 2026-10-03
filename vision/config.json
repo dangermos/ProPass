@@ -1,0 +1,16 @@
+{
+  "image_size": 640,
+  "detector_conf": 0.20,
+  "device": "auto",
+  "ledger": {
+    "approach_y": 0.65,
+    "commit_y": 0.40,
+    "hysteresis": 0.025,
+    "dwell_seconds": 0.12,
+    "minimum_views": 3,
+    "sku_threshold": 0.85,
+    "sku_margin": 0.20,
+    "reattach_seconds": 1.8
+  }
+}
+

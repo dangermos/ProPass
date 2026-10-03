@@ -1,0 +1,349 @@
+"""Physical merchandise identity and observed checkout transitions.
+
+This module deliberately has no image/ML dependency. Detector tracker IDs are
+observations, never purchase IDs; the canonical ledger owns cart membership.
+Unity ground truth is neither an argument nor a runtime data source.
+"""
+from __future__ import annotations
+
+from collections import deque
+from dataclasses import dataclass, field
+from math import hypot, sqrt
+from typing import Sequence
+import uuid
+
+
+@dataclass(frozen=True)
+class Observation:
+    track_id: int
+    bbox: tuple[float, float, float, float]
+    detector_confidence: float
+    probabilities: tuple[float, ...]
+    embedding: tuple[float, ...] = ()
+    quality: float = 1.0
+    unknown: bool = False
+
+    @property
+    def center(self):
+        return ((self.bbox[0] + self.bbox[2]) / 2,
+                (self.bbox[1] + self.bbox[3]) / 2)
+
+
+@dataclass
+class LedgerConfig:
+    approach_y: float = 0.65
+    commit_y: float = 0.40
+    hysteresis: float = 0.025
+    dwell_seconds: float = 0.12
+    evidence_interval: float = 0.12
+    minimum_views: int = 3
+    evidence_window: int = 8
+    sku_threshold: float = 0.85
+    sku_margin: float = 0.20
+    minimum_quality: float = 0.25
+    reattach_seconds: float = 1.8
+    reattach_distance: float = 0.15
+    reattach_appearance: float = 0.20
+    reattach_margin: float = 0.08
+    unknown_timeout: float = 0.5
+
+
+@dataclass
+class PhysicalObject:
+    object_id: str
+    track_id: int
+    bbox: tuple[float, float, float, float]
+    first_seen: float
+    last_seen: float
+    previous_center: tuple[float, float]
+    velocity: tuple[float, float] = (0.0, 0.0)
+    embedding: tuple[float, ...] = ()
+    probabilities: deque = field(default_factory=deque)
+    last_evidence: float = -1e9
+    sku: str | None = None
+    confidence: float = 0.0
+    visible: bool = True
+    state: str = "TRACKED"
+    zone: str = "MIDDLE"
+    candidate_zone: str = "MIDDLE"
+    candidate_since: float = 0.0
+    approach_observed: bool = False
+    committed: bool = False
+    membership: bool = False
+    review_reason: str | None = None
+    ambiguous_identity: bool = False
+    sequence: int = 0
+
+
+def cosine_distance(a: Sequence[float], b: Sequence[float]) -> float:
+    if not a or not b or len(a) != len(b):
+        return 1.0
+    denom = sqrt(sum(x*x for x in a) * sum(y*y for y in b))
+    return 1.0 - sum(x*y for x, y in zip(a, b)) / denom if denom else 1.0
+
+
+class PhysicalLedger:
+    def __init__(self, skus: list[str], config: LedgerConfig | None = None):
+        self.skus = skus
+        self.config = config or LedgerConfig()
+        self.reset("unstarted")
+
+    def reset(self, run_id: str):
+        self.run_id = run_id
+        self.objects: dict[str, PhysicalObject] = {}
+        self.track_to_object: dict[int, str] = {}
+        self.last_frame_id = -1
+        self.last_timestamp = -1.0
+        self.counter = 0
+        self._events: list[dict] = []
+        self._last_output: dict | None = None
+
+    def _emit(self, obj: PhysicalObject, event_type: str, timestamp: float,
+              reason: str | None = None):
+        obj.sequence += 1
+        identity = f"{self.run_id}:{obj.object_id}:{obj.sequence}:{event_type}"
+        event = {"event_id": str(uuid.uuid5(uuid.NAMESPACE_URL, identity)),
+                 "object_id": obj.object_id, "sku": obj.sku,
+                 "type": event_type, "timestamp": timestamp}
+        if reason:
+            event["reason"] = reason
+        self._events.append(event)
+
+    def _review(self, obj: PhysicalObject, timestamp: float, reason: str):
+        if obj.review_reason != reason:
+            obj.review_reason = reason
+            self._emit(obj, "REVIEW_REQUIRED", timestamp, reason)
+
+    def _zone(self, y: float) -> str:
+        if y >= self.config.approach_y + self.config.hysteresis:
+            return "APPROACH"
+        if y <= self.config.commit_y - self.config.hysteresis:
+            return "COMMIT"
+        return "MIDDLE"
+
+    def _match_cost(self, obj: PhysicalObject, obs: Observation, timestamp: float,
+                    width: int, height: int) -> float | None:
+        gap = timestamp - obj.last_seen
+        if not (0 < gap <= self.config.reattach_seconds):
+            return None
+        # Extrapolate only a short distance; handheld merchandise is not rigidly
+        # moving, and a long motion prediction should not become false evidence.
+        predicted = (obj.previous_center[0] + obj.velocity[0] * min(gap, 0.4),
+                     obj.previous_center[1] + obj.velocity[1] * min(gap, 0.4))
+        predicted_distance = hypot((obs.center[0]-predicted[0])/width,
+                                   (obs.center[1]-predicted[1])/height)
+        stationary_distance = hypot((obs.center[0]-obj.previous_center[0])/width,
+                                    (obs.center[1]-obj.previous_center[1])/height)
+        # A held object can stop abruptly during an occlusion; require it near
+        # either its short motion prediction or its last observed location.
+        distance = min(predicted_distance, stationary_distance)
+        appearance = cosine_distance(obj.embedding, obs.embedding)
+        if distance > self.config.reattach_distance or appearance > self.config.reattach_appearance:
+            return None
+        old_area = max(1.0, (obj.bbox[2]-obj.bbox[0])*(obj.bbox[3]-obj.bbox[1]))
+        new_area = max(1.0, (obs.bbox[2]-obs.bbox[0])*(obs.bbox[3]-obs.bbox[1]))
+        if not 0.45 <= new_area/old_area <= 2.2:
+            return None
+        if obj.sku and obs.probabilities:
+            index = self.skus.index(obj.sku)
+            if max(obs.probabilities) >= 0.85 and obs.probabilities[index] < 0.2:
+                return None
+        return 0.7 * distance + 0.3 * appearance
+
+    def _new(self, obs: Observation, timestamp: float, ambiguous: bool = False):
+        self.counter += 1
+        obj_id = f"{self.run_id[:8]}-obj-{self.counter:04d}"
+        obj = PhysicalObject(obj_id, obs.track_id, obs.bbox, timestamp, timestamp,
+                             obs.center, embedding=obs.embedding,
+                             ambiguous_identity=ambiguous)
+        obj.probabilities = deque(maxlen=self.config.evidence_window)
+        self.objects[obj_id] = obj
+        self.track_to_object[obs.track_id] = obj_id
+        self._emit(obj, "TRACK_CREATED", timestamp)
+        if ambiguous:
+            self._review(obj, timestamp, "Ambiguous tracker fragmentation: physical identity needs review")
+        return obj
+
+    def _recognize(self, obj: PhysicalObject, obs: Observation, timestamp: float):
+        if (obs.quality < self.config.minimum_quality or not obs.probabilities or
+                timestamp - obj.last_evidence < self.config.evidence_interval):
+            return
+        if len(obs.probabilities) != len(self.skus):
+            raise ValueError("SKU probability vector does not match catalog")
+        evidence = (tuple(1.0/len(self.skus) for _ in self.skus)
+                    if obs.unknown else obs.probabilities)
+        obj.probabilities.append(evidence)
+        obj.last_evidence = timestamp
+        averaged = [sum(p[i] for p in obj.probabilities)/len(obj.probabilities)
+                    for i in range(len(self.skus))]
+        ranking = sorted(range(len(averaged)), key=averaged.__getitem__, reverse=True)
+        top, second = ranking[0], ranking[1] if len(ranking) > 1 else ranking[0]
+        obj.confidence = averaged[top]
+        enough = len(obj.probabilities) >= self.config.minimum_views
+        confident = (averaged[top] >= self.config.sku_threshold and
+                     averaged[top]-averaged[second] >= self.config.sku_margin)
+        candidate_sku = self.skus[top]
+        if enough and confident:
+            if obj.sku is None:
+                obj.sku = candidate_sku
+                if not obj.ambiguous_identity:
+                    obj.review_reason = None
+                self._emit(obj, "SKU_RESOLVED", timestamp)
+            elif obj.sku != candidate_sku:
+                # Never silently rewrite the SKU of a cart member. A class flip
+                # can be caused by an ID switch, so it is an explicit review.
+                self._review(obj, timestamp, "Conflicting SKU evidence on the same physical object")
+
+    def _update(self, obj: PhysicalObject, obs: Observation, timestamp: float,
+                width: int, height: int):
+        dt = timestamp - obj.last_seen
+        if dt > 0:
+            obj.velocity = ((obs.center[0]-obj.previous_center[0])/dt,
+                            (obs.center[1]-obj.previous_center[1])/dt)
+        obj.previous_center = obs.center
+        obj.last_seen = timestamp
+        obj.visible = True
+        obj.track_id = obs.track_id
+        obj.bbox = obs.bbox
+        if obs.embedding:
+            obj.embedding = obs.embedding
+        self._recognize(obj, obs, timestamp)
+        observed_zone = self._zone(obs.center[1]/height)
+        if observed_zone != obj.candidate_zone:
+            obj.candidate_zone = observed_zone
+            obj.candidate_since = timestamp
+        if timestamp - obj.candidate_since >= self.config.dwell_seconds:
+            obj.zone = observed_zone
+            if observed_zone == "APPROACH":
+                obj.approach_observed = True
+                obj.committed = False
+                if obj.membership:
+                    obj.membership = False
+                    obj.state = "REMOVED"
+                    self._emit(obj, "ITEM_REMOVED", timestamp)
+                elif obj.state != "REMOVED":
+                    obj.state = "ENTERING"
+            elif observed_zone == "COMMIT":
+                if obj.approach_observed:
+                    obj.committed = True
+                elif not obj.membership:
+                    self._review(obj, timestamp, "Product first observed beyond checkout boundary")
+            else:
+                if not obj.membership and obj.state != "REMOVED":
+                    obj.state = "TRACKED"
+        if obj.committed and not obj.membership:
+            if obj.sku and not obj.review_reason:
+                obj.membership = True
+                obj.state = "ADDED"
+                self._emit(obj, "ITEM_ADDED", timestamp)
+            elif timestamp - obj.first_seen >= self.config.unknown_timeout:
+                self._review(obj, timestamp, "Checkout crossing lacks accepted SKU evidence")
+
+    def update(self, observations: list[Observation], frame_id: int, timestamp: float,
+               run_id: str, image_size: tuple[int, int]) -> dict:
+        if run_id != self.run_id:
+            raise ValueError("Run ID mismatch: reset must precede a new run")
+        if frame_id <= self.last_frame_id:
+            # Retries never repeat an event. Returning current state also avoids
+            # replacing a newer UI frame with an older frame's evidence.
+            if self._last_output:
+                return {**self._last_output, "events": [], "duplicate_frame": True}
+            raise ValueError("Frame ID must increase")
+        if timestamp < self.last_timestamp:
+            raise ValueError("Capture timestamps must be monotonic")
+        width, height = image_size
+        if width <= 0 or height <= 0:
+            raise ValueError("Image dimensions must be positive")
+        if len({obs.track_id for obs in observations}) != len(observations):
+            raise ValueError("A tracker ID may occur only once in a frame")
+        self._events = []
+        for obj in self.objects.values():
+            obj.visible = False
+        claimed: set[str] = set()
+        assigned: dict[int, PhysicalObject] = {}
+        new: list[Observation] = []
+        for obs in observations:
+            obj_id = self.track_to_object.get(obs.track_id)
+            if obj_id and obj_id not in claimed:
+                obj = self.objects[obj_id]
+                # IDs are only trusted over bounded gaps. ByteTrack is reset per
+                # run, but a distant/old reuse must not inherit purchase identity.
+                gap = timestamp-obj.last_seen
+                if gap <= self.config.reattach_seconds:
+                    assigned[obs.track_id] = obj
+                    claimed.add(obj_id)
+                    continue
+                self.track_to_object.pop(obs.track_id, None)
+            new.append(obs)
+        # Reattach fragments only to LOST objects. Every old object and new
+        # observation can participate once; simultaneous identical units cannot
+        # be collapsed by a per-SKU deduplication shortcut.
+        candidate_map = {}
+        for obs in new:
+            candidates = []
+            for obj_id, obj in self.objects.items():
+                if obj_id in claimed:
+                    continue
+                cost = self._match_cost(obj, obs, timestamp, width, height)
+                if cost is not None:
+                    candidates.append((cost, obj_id))
+            candidate_map[obs.track_id] = sorted(candidates)
+        for obs in sorted(new, key=lambda o: candidate_map[o.track_id][0][0]
+                          if candidate_map[o.track_id] else 1e9):
+            candidates = [(cost, oid) for cost, oid in candidate_map[obs.track_id]
+                          if oid not in claimed]
+            ambiguous = len(candidates) > 1 and candidates[1][0]-candidates[0][0] < self.config.reattach_margin
+            if candidates and not ambiguous:
+                obj = self.objects[candidates[0][1]]
+                self.track_to_object.pop(obj.track_id, None)
+                self.track_to_object[obs.track_id] = obj.object_id
+            else:
+                obj = self._new(obs, timestamp, ambiguous)
+                if ambiguous:
+                    for _, oid in candidates:
+                        self.objects[oid].ambiguous_identity = True
+                        self._review(self.objects[oid], timestamp,
+                                     "Multiple lost identical products match a reappearing observation")
+            assigned[obs.track_id] = obj
+            claimed.add(obj.object_id)
+        detections = []
+        for obs in observations:
+            obj = assigned[obs.track_id]
+            self._update(obj, obs, timestamp, width, height)
+            detections.append(self._serialize(obj) | {"detector_confidence": obs.detector_confidence})
+        for obj in self.objects.values():
+            if (not obj.visible and obj.committed and obj.sku is None and
+                    timestamp-obj.first_seen >= self.config.unknown_timeout):
+                self._review(obj, timestamp, "Unresolved product disappeared after a checkout crossing")
+            if (not obj.visible and obj.approach_observed and not obj.committed and
+                    not obj.membership and obj.state != "REMOVED" and
+                    timestamp-obj.last_seen > self.config.reattach_seconds):
+                self._review(obj, timestamp,
+                             "Entered merchandise disappeared before an observed checkout or reverse removal")
+        # Pending evidence blocks cart preparation even before it is a hard
+        # failure. Freezing a partly traversed lane must not omit a known item.
+        pending = [obj for obj in self.objects.values()
+                   if not obj.membership and obj.state != "REMOVED" and
+                   (obj.visible or obj.approach_observed)]
+        review = bool(pending) or any(obj.review_reason for obj in self.objects.values())
+        output = {"frame_id": frame_id, "timestamp": timestamp, "run_id": run_id,
+                  "detections": detections,
+                  "objects": [self._serialize(obj) for obj in self.objects.values()],
+                  "events": self._events.copy(), "review_required": review,
+                  "metrics": {"visible_objects": len(observations),
+                              "physical_objects": len(self.objects),
+                              "cart_units": sum(obj.membership for obj in self.objects.values()),
+                              "pending_objects": len(pending),
+                              "review_objects": sum(bool(obj.review_reason) for obj in self.objects.values())}}
+        self.last_frame_id = frame_id
+        self.last_timestamp = timestamp
+        self._last_output = output
+        return output
+
+    @staticmethod
+    def _serialize(obj: PhysicalObject):
+        return {"bbox": list(obj.bbox), "track_id": obj.track_id,
+                "object_id": obj.object_id, "sku": obj.sku,
+                "confidence": obj.confidence, "state": obj.state,
+                "zone": obj.zone, "visible": obj.visible,
+                "membership": obj.membership, "review_reason": obj.review_reason}

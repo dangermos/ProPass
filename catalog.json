@@ -1,0 +1,11 @@
+{
+  "currency": "USD",
+  "demo": true,
+  "products": [
+    {"sku":"PEX-001","name":"Workshop Drill Kit","price":129.00,"class_index":0,"color":[0.93,0.24,0.18]},
+    {"sku":"PEX-002","name":"Workshop Driver Kit","price":149.00,"class_index":1,"color":[0.08,0.58,0.72]},
+    {"sku":"PEX-003","name":"25 ft Measuring Tape","price":18.50,"class_index":2,"color":[0.96,0.71,0.12]},
+    {"sku":"PEX-004","name":"Construction Fastener Box","price":24.90,"class_index":3,"color":[0.38,0.27,0.72]},
+    {"sku":"PEX-005","name":"Heavy Duty Work Gloves","price":16.00,"class_index":4,"color":[0.24,0.64,0.35]}
+  ]
+}

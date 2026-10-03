@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+web/node_modules/
+web/dist/
+web/*.tsbuildinfo
+artifacts/
+training/data/
+training/runs/
+training/.ultralytics/
+models/*.pt
+models/baseline/*.pt
+models/pretrained/
+.env
+
+models/ultralytics-settings/
