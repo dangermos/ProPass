@@ -270,7 +270,7 @@ namespace ProPass
                     a.At(t += R(1f, 2.5f), x, CarryY, mid);
                     a.At(t += R(2f, 3f), x, CarryY, back);
                     a.At(t += R(.8f, 2f), x, CarryY, back);
-                    a.At(t += R(5f, 7f), x, CarryY, completes ? EndZ : -3.7f);
+                    a.At(t += R(5f, 7f), x, CarryY, completes ? EndZ : -5.8f);   // turning around walks back out of view
                     plan.Add(a);
                     plan.duration = t + 3f;
                     break;

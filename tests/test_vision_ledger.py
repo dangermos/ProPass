@@ -262,3 +262,22 @@ def test_long_occlusion_reattaches_when_reappearance_fits_motion():
     assert len(result["objects"]) == 1
     assert result["metrics"]["cart_units"] == 1
     assert not result["review_required"]
+
+
+def test_edge_fragment_that_is_never_fully_visible_is_dropped_quietly():
+    engine = ledger()
+    for number in range(4):   # only ever cut off by the bottom of the frame, never resolved
+        frame(engine, number, [Observation(1, (260, 960, 340, 1000), 0.6, (0.3,)*5, (1.0, 0.0), 1.0, True)])
+    result = frame(engine, 30, [])
+    assert not result["review_required"]
+    assert result["objects"][0]["state"] == "FRAGMENT"
+
+
+def test_item_carried_back_out_through_the_entry_edge_is_not_pending():
+    engine = ledger()
+    for number, y in enumerate([800, 800, 850, 900, 950, 976]):
+        frame(engine, number, [obs(1, y)])
+    result = frame(engine, 20, [])
+    assert result["metrics"]["cart_units"] == 0
+    assert not result["review_required"]
+    assert result["objects"][0]["state"] == "LEFT"

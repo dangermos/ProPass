@@ -91,6 +91,7 @@ class PhysicalObject:
     gallery: deque = field(default_factory=lambda: deque(maxlen=8))
     reference_area: float = 0.0
     last_gallery: float = -1e9
+    full_view_seen: bool = False      # ever seen without touching the image border
 
 
 def inside_polygon(x: float, y: float, polygon) -> bool:
@@ -249,6 +250,8 @@ class PhysicalLedger:
         obj.bbox = obs.bbox
         if obs.embedding:
             obj.embedding = obs.embedding
+        if obs.bbox[0] > 3 and obs.bbox[1] > 3 and obs.bbox[2] < width-3 and obs.bbox[3] < height-3:
+            obj.full_view_seen = True
         area = (obs.bbox[2]-obs.bbox[0])*(obs.bbox[3]-obs.bbox[1])
         # Decaying peak area: tolerates shrinking with distance, flags sudden occlusion.
         obj.reference_area = max(area, obj.reference_area*0.97)
@@ -366,6 +369,16 @@ class PhysicalLedger:
             self._update(obj, obs, timestamp, width, height)
             detections.append(self._serialize(obj) | {"detector_confidence": obs.detector_confidence})
         for obj in self.objects.values():
+            lost_for = timestamp - obj.last_seen
+            if not obj.visible and not obj.membership and obj.state not in ("REMOVED", "OUTSIDE"):
+                if obj.sku is None and not obj.full_view_seen and lost_for > self.config.reattach_seconds:
+                    # Only ever seen cut off by the frame edge, then superseded: a fragment.
+                    obj.state = "FRAGMENT"
+                elif obj.zone == "APPROACH" and obj.bbox[3] >= height-3 and lost_for > 0.5:
+                    # Left back out through the entry edge of the frame.
+                    obj.state = "LEFT"
+            if obj.state in ("FRAGMENT", "LEFT"):
+                continue
             if (not obj.visible and obj.committed and obj.sku is None and
                     timestamp-obj.first_seen >= self.config.unknown_timeout):
                 self._review(obj, timestamp, "Unresolved product disappeared after a checkout crossing")
@@ -377,7 +390,7 @@ class PhysicalLedger:
         # Pending evidence blocks cart preparation even before it is a hard
         # failure. Freezing a partly traversed lane must not omit a known item.
         pending = [obj for obj in self.objects.values()
-                   if not obj.membership and obj.state not in ("REMOVED", "OUTSIDE") and
+                   if not obj.membership and obj.state not in ("REMOVED", "OUTSIDE", "LEFT", "FRAGMENT") and
                    (obj.visible or obj.approach_observed)]
         review = bool(pending) or any(obj.review_reason for obj in self.objects.values())
         output = {"frame_id": frame_id, "timestamp": timestamp, "run_id": run_id,
