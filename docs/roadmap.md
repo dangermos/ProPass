@@ -26,6 +26,9 @@ You can't improve what you can't measure, so the first step was making the simul
 - 🎥 **Offline recorder** ([ProPassBenchmarkRecorder.cs](../unity/Assets/ProPass/Editor/ProPassBenchmarkRecorder.cs)). It renders scenarios × seeds at 8 fps and runs from the menu, the Unity CLI or batch mode.
 - 📊 **Scorer** ([training/benchmark.py](../training/benchmark.py)). It measures exact cart, false adds, misses, ID switches, phantom objects, review rate and detection recall, and regenerates [benchmark.md](benchmark.md).
 
+![Live dashboard during the next-aisle scenario: the bystander's product is tracked as UNRESOLVED and checkout is blocked](images/bystander-live.jpg)
+<sub>Live failure from the <b>bystander</b> scenario: the product carried in the next aisle (T3, right) gets tracked, so checkout is blocked. Fixing this needs lane-aware zones.</sub>
+
 ### 📉 Phase A results
 
 The baseline passes **46 / 70** runs: all 30 classic runs, but only 16 of 40 messy ones. The full table is in [benchmark.md](benchmark.md).

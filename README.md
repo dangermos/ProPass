@@ -43,9 +43,9 @@ The trained weights (`models/detector.pt`, `models/classifier.pt`) aren't in git
 | 🟥 **Single item** | One drill kit, counted once despite hundreds of observations | ✅ live + replay |
 | 🟥🟥 **Identical products** | Two physical drill kits → same SKU, quantity 2 | ✅ live |
 | 🟥🟨🟩 **Mixed cart** | Drill kit, measuring tape, work gloves | ✅ live |
-| 🫥 **Temporary occlusion** | Box disappears briefly and is re-attached to the same identity | unit tests |
-| ↩️ **Change of mind** | Added on the forward crossing, removed on the observed reverse crossing | unit tests |
-| ❓ **Unknown product** | Gray unenrolled package is tracked, and checkout is blocked for review | unit tests |
+| 🫥 **Temporary occlusion** | Box disappears briefly and is re-attached to the same identity | ✅ live |
+| ↩️ **Change of mind** | Added on the forward crossing, removed on the observed reverse crossing | ✅ live |
+| ❓ **Unknown product** | Gray unenrolled package is tracked, and checkout is blocked for review | ✅ live |
 
 Every scenario above passes all 5 seeds in the [benchmark](docs/benchmark.md). Eight more **messy scenarios** (busy hands, a crossing shopper, a lumber flatbed, partial views at the frame edge, stacked boxes, distractors, a shopper in the next aisle, and hesitation) currently pass **16 of 40** runs. That's the baseline the [roadmap](docs/roadmap.md) works against.
 

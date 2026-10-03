@@ -120,6 +120,9 @@ Source: [evaluation-temporal-initial-single.json](../models/evaluation-temporal-
 | Single | 1× PEX-001 | ✅ |
 | Identical products | 2× PEX-001 | ✅ |
 | Mixed | PEX-001, PEX-003, PEX-005 | ✅ |
+| Temporary occlusion | 1× PEX-001 | ✅ |
+| Change of mind | empty cart | ✅ |
+| Unknown product | empty cart, review required | ✅ |
 
 Source: [models/evaluation-live.json](../models/evaluation-live.json).
 
