@@ -50,6 +50,7 @@ class LedgerConfig:
     # center is outside it (e.g. a shopper in the next aisle) are tracked but
     # can never become pending, purchased or a reason for review.
     lane_polygon: tuple[tuple[float, float], ...] | None = None
+    lane_margin: float = 0.015
     # Longer gaps (a flatbed or shopper hiding an item) may still re-attach to
     # a lost object when the reappearance fits its motion. The position gate
     # widens by occlusion_gate_growth (normalized image units) per extra second.
@@ -151,9 +152,14 @@ class PhysicalLedger:
             obj.review_reason = reason
             self._emit(obj, "REVIEW_REQUIRED", timestamp, reason)
 
-    def _zone(self, x: float, y: float) -> str:
-        if self.config.lane_polygon and not inside_polygon(x, y, list(self.config.lane_polygon)):
-            return "OUTSIDE"
+    def _zone(self, x: float, y: float, was_outside: bool = False) -> str:
+        if self.config.lane_polygon:
+            polygon = list(self.config.lane_polygon)
+            # Hysteresis: coming back in from outside needs a clear margin, so a box
+            # riding the lane edge doesn't flicker in and out.
+            margin = self.config.lane_margin if was_outside else 0.0
+            if not all(inside_polygon(x + dx, y, polygon) for dx in {-margin, margin}):
+                return "OUTSIDE"
         if y >= self.config.approach_y + self.config.hysteresis:
             return "APPROACH"
         if y <= self.config.commit_y - self.config.hysteresis:
@@ -268,7 +274,7 @@ class PhysicalLedger:
             obj.gallery.append((obs.embedding, area))
             obj.last_gallery = timestamp
         self._recognize(obj, obs, timestamp)
-        observed_zone = self._zone(obs.center[0]/width, obs.center[1]/height)
+        observed_zone = self._zone(obs.center[0]/width, obs.center[1]/height, obj.zone == "OUTSIDE")
         if observed_zone != obj.candidate_zone:
             obj.candidate_zone = observed_zone
             obj.candidate_since = timestamp
