@@ -10,6 +10,14 @@ const scenarioOptions=[
   {id:'occlusion',name:'Temporary occlusion',detail:'Recover identity after hiding',icon:'04'},
   {id:'remove',name:'Change of mind',detail:'Forward add, reverse removal',icon:'05'},
   {id:'unknown',name:'Unknown product',detail:'Uncertain evidence needs review',icon:'06'},
+  {id:'hands',name:'Busy hands',detail:'Hands keep covering items',icon:'07'},
+  {id:'shopper',name:'Crossing shopper',detail:'Someone walks through the view',icon:'08'},
+  {id:'flatbed',name:'Lumber flatbed',detail:'Long full occlusion',icon:'09'},
+  {id:'edge',name:'Edge of frame',detail:'Partial views at the rail',icon:'10'},
+  {id:'stacked',name:'Stacked boxes',detail:'One package on another',icon:'11'},
+  {id:'distractors',name:'Distractors',detail:'Phone, cup and bag come along',icon:'12'},
+  {id:'bystander',name:'Next-aisle shopper',detail:'Must not be charged',icon:'13'},
+  {id:'hesitate',name:'Hesitation',detail:'Pause, step back, decide',icon:'14'},
 ];
 const colors=['#38d6bf','#6aa8ff','#ffbb71','#bd9aff','#ff8293'];
 

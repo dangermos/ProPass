@@ -7,7 +7,9 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
 from .models import Base, Cart, CheckoutEvent, CheckoutSession, PhysicalItem, Receipt
 
-SCENARIOS = {"single", "duplicate", "mixed", "occlusion", "remove", "unknown"}
+# Must match ProPassScenarios.Classic + Messy in unity/Assets/ProPass/Runtime/ProPassScenario.cs.
+SCENARIOS = {"single", "duplicate", "mixed", "occlusion", "remove", "unknown",
+             "hands", "shopper", "flatbed", "edge", "stacked", "distractors", "bystander", "hesitate"}
 
 
 def new_id():

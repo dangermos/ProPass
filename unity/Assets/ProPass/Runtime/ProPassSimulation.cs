@@ -36,7 +36,8 @@ namespace ProPass
         public int replayFrames;
         public int maximumReplayFrames = 260;
 
-        readonly List<GameObject> products = new List<GameObject>();
+        ProPassScenarioRunner runner;
+        Light keyLight;
         RenderTexture captureTarget;
         Texture2D capturePixels;
         long frameId;
@@ -48,6 +49,8 @@ namespace ProPass
             captureTarget = new RenderTexture(captureWidth, captureHeight, 24, RenderTextureFormat.ARGB32);
             captureTarget.antiAliasing = 1;
             capturePixels = new Texture2D(captureWidth, captureHeight, TextureFormat.RGB24, false);
+            foreach (var l in FindObjectsByType<Light>(FindObjectsSortMode.None)) if (l.type == LightType.Directional) keyLight = l;
+            if (occluder != null) occluder.gameObject.SetActive(false);
             ResetScenario("single", Guid.NewGuid().ToString("N"));
             StartCoroutine(PollControl());
             StartCoroutine(CaptureLoop());
@@ -55,54 +58,23 @@ namespace ProPass
 
         public void ResetScenario(string nextScenario, string nextRun)
         {
-            foreach (var product in products) if (product != null) Destroy(product);
-            products.Clear();
+            runner?.Dispose();
             scenario = nextScenario;
             runId = nextRun;
             scenarioTime = 0f;
             frameId = 0;
             replayFrames = 0;
             paused = false;
-            if (nextScenario == "duplicate") { Spawn(0, -.48f); Spawn(0, .48f); }
-            else if (nextScenario == "mixed") { Spawn(0, -.8f); Spawn(2, 0f); Spawn(4, .8f); }
-            else if (nextScenario == "unknown") Spawn(5, 0f);
-            else Spawn(nextScenario == "remove" ? 1 : 0, 0f);
-            UpdateObjects();
-        }
-
-        void Spawn(int index, float x)
-        {
-            if (index >= productPrefabs.Length || productPrefabs[index] == null) return;
-            var product = Instantiate(productPrefabs[index]);
-            product.name = "Purchased merchandise";
-            product.GetComponent<ProPassProduct>().AssignInstance();
-            product.transform.position = new Vector3(x, .9f, -3.4f);
-            product.transform.rotation = Quaternion.Euler(0f, index == 2 ? 8f : -8f, 0f);
-            products.Add(product);
+            // Each run gets its own seed, so messy scenarios vary between runs but replay exactly.
+            var plan = ProPassScenarios.Build(nextScenario, (nextRun ?? "").GetStableHash() % 100000);
+            runner = new ProPassScenarioRunner(plan, productPrefabs, checkoutCamera, keyLight, customer);
         }
 
         void Update()
         {
-            if (paused) return;
+            if (paused || runner == null) return;
             scenarioTime += Time.deltaTime;
-            UpdateObjects();
-        }
-
-        void UpdateObjects()
-        {
-            float progress = Mathf.Clamp01((scenarioTime - 1.5f) / 12f);
-            float z = Mathf.Lerp(-3.4f, 3.8f, progress);
-            if (scenario == "remove" && scenarioTime > 16f)
-                z = Mathf.Lerp(3.8f, -3.4f, Mathf.Clamp01((scenarioTime - 16f) / 12f));
-            foreach (var product in products)
-                if (product != null) product.transform.position = new Vector3(product.transform.position.x, .9f, z);
-            if (customer != null) customer.position = new Vector3(0, 0, z + .65f);
-            if (occluder != null)
-            {
-                bool hidden = scenario == "occlusion" && scenarioTime > 7f && scenarioTime < 7.6f;
-                occluder.gameObject.SetActive(hidden);
-                occluder.position = new Vector3(0, 1.05f, z - .25f);
-            }
+            runner.Apply(scenarioTime);
         }
 
         IEnumerator PollControl()
@@ -170,7 +142,7 @@ namespace ProPass
                 string stem = currentFrame.ToString("D6");
                 File.WriteAllBytes(Path.Combine(directory, stem + ".jpg"), jpeg);
                 var truth = new List<ReplayProduct>();
-                foreach (var product in products)
+                foreach (var product in runner.Products)
                     if (product != null)
                     {
                         var label = product.GetComponent<ProPassProduct>();
@@ -200,6 +172,7 @@ namespace ProPass
 
         void OnDestroy()
         {
+            runner?.Dispose();
             if (captureTarget != null) { captureTarget.Release(); Destroy(captureTarget); }
             if (capturePixels != null) Destroy(capturePixels);
         }
