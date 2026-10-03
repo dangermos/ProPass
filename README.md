@@ -14,6 +14,8 @@
 
 ![ProPass title screen: pick one of 14 scenarios, each with its benchmark pass rate](docs/images/title-screen.jpg)
 
+![Live lane tab during the next-aisle scenario: the lane product is charged, the other shopper's product is tracked as outside the lane](docs/images/dashboard.jpg)
+
 ![Pipeline: Unity lane → FastAPI queue → detect and classify → physical ledger → cart and dashboard](docs/images/pipeline.svg)
 
 > [!NOTE]

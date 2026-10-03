@@ -94,6 +94,8 @@ Keep that terminal open, and press Ctrl+C to stop both services. Logs go to `art
 | 🧠 **Models** | Detector, classifier and tracker settings and measured results, read live from `models/*.json` |
 | 📊 **Benchmark** | Pass rate per scenario against the Phase A baseline. **Run live** starts that scenario in Unity. |
 
+![Decisions tab](images/decisions-tab.jpg)
+
 ![Models tab](images/models-tab.jpg)
 
 The ◀ **Scenarios** button (or the **P** logo) goes back to the title screen. The URL hash (`#/lab/decisions`, for example) keeps your place on refresh.

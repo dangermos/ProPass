@@ -4,7 +4,7 @@ import { Icon, percent } from './ui';
 
 // Plain-language reason for each ledger state, so every cart line can be explained.
 const explain:Record<string,{tone:string;title:string;why:(o:Detection)=>string}>={
-  ADDED:{tone:'good',title:'In the cart',why:o=>`Seen in APPROACH, then crossed into COMMIT with ${o.sku} accepted at ${percent(o.confidence)} average confidence.`},
+  ADDED:{tone:'good',title:'In the cart',why:o=>`Seen in APPROACH, then crossed into COMMIT with ${o.sku} accepted at ${percent(o.accepted_confidence??o.confidence)} confidence over several views.`},
   REMOVED:{tone:'bad',title:'Removed',why:()=>'It was in the cart, then was seen carried back to APPROACH, so it was taken out.'},
   OUTSIDE:{tone:'muted',title:'Outside the lane',why:()=>'Tracked outside the lane polygon (for example, the next aisle). It is never charged and never blocks checkout.'},
   LEFT:{tone:'muted',title:'Left the lane',why:()=>'Carried back out through the entry edge of the frame before checkout.'},
@@ -25,7 +25,7 @@ function ObjectCard({o,events}:{o:Detection;events:Event[]}){
     {o.review_reason&&<p className="decision-review"><Icon name="alert" size={14}/> {o.review_reason}</p>}
     <div className="decision-chips">
       <span>Zone <b>{o.zone||'—'}</b></span><span>Track <b>T{o.track_id}</b></span>
-      <span>{o.visible?'Visible now':'Not visible'}</span><span>SKU confidence <b>{percent(o.confidence)}</b></span>
+      <span>{o.visible?'Visible now':'Not visible'}</span><span>Latest views <b>{percent(o.confidence)}</b></span>
     </div>
     {events.length>0&&<ol className="decision-events">{events.slice().reverse().map(e=><li key={e.sequence} className={e.type.toLowerCase()}>
       <span>{Number(e.timestamp).toFixed(2)}s</span>{eventText(e)}</li>)}</ol>}

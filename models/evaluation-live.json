@@ -3,7 +3,7 @@
   "scenarios": [
     {
       "scenario": "single",
-      "run_id": "e057a6db-7ac4-4843-8e2d-b67a9a36c4c9",
+      "run_id": "e97382c0-30aa-409f-b076-24cc34487e49",
       "expected_cart": {
         "PEX-001": 1
       },
@@ -15,52 +15,52 @@
       "passed": true,
       "frame": {
         "frame_id": 112,
-        "timestamp": 15.3041,
-        "run_id": "e057a6db-7ac4-4843-8e2d-b67a9a36c4c9",
+        "timestamp": 15.2885,
+        "run_id": "e97382c0-30aa-409f-b076-24cc34487e49",
         "width": 960,
         "height": 540,
-        "url": "/api/frame?run_id=e057a6db-7ac4-4843-8e2d-b67a9a36c4c9&frame_id=112",
-        "age_ms": 106
+        "url": "/api/frame?run_id=e97382c0-30aa-409f-b076-24cc34487e49&frame_id=112",
+        "age_ms": 20
       },
       "interim_cart": null,
       "events": [
         {
-          "event_id": "5f33da0d-3989-52e4-a252-a87035e8e835",
-          "object_id": "e057a6db-obj-0001",
+          "event_id": "54ddef5d-33e9-58e4-bde1-a55ebe4a9f3a",
+          "object_id": "e97382c0-obj-0001",
           "sku": "PEX-001",
           "type": "ITEM_ADDED",
-          "timestamp": 10.0638,
-          "sequence": 54
+          "timestamp": 10.0855,
+          "sequence": 97
         },
         {
-          "event_id": "f1564b49-c0b5-574f-9264-9ae0a2596331",
-          "object_id": "e057a6db-obj-0001",
+          "event_id": "5d379374-c452-5615-8d25-c6b462bf7ecd",
+          "object_id": "e97382c0-obj-0001",
           "sku": "PEX-001",
           "type": "SKU_RESOLVED",
-          "timestamp": 0.289,
-          "sequence": 53
+          "timestamp": 0.3341,
+          "sequence": 96
         },
         {
-          "event_id": "4082f53d-0b09-52ff-ae65-43b42245e020",
-          "object_id": "e057a6db-obj-0001",
+          "event_id": "bcc53bca-1537-5df0-90c3-3bb5b0131d69",
+          "object_id": "e97382c0-obj-0001",
           "sku": null,
           "type": "TRACK_CREATED",
-          "timestamp": 0.0128,
-          "sequence": 52
+          "timestamp": 0.061,
+          "sequence": 95
         }
       ],
       "objects": [
         {
           "bbox": [
-            457.20208740234375,
-            150.42579650878906,
-            489.99749755859375,
-            179.8239288330078
+            470.47576904296875,
+            149.72604370117188,
+            502.8943786621094,
+            178.0172882080078
           ],
           "track_id": 1,
-          "object_id": "e057a6db-obj-0001",
+          "object_id": "e97382c0-obj-0001",
           "sku": "PEX-001",
-          "confidence": 0.9999252557754517,
+          "confidence": 0.9985405653715134,
           "state": "ADDED",
           "zone": "COMMIT",
           "visible": true,
@@ -74,19 +74,19 @@
         "cart_units": 1,
         "pending_objects": 0,
         "review_objects": 0,
-        "inference_ms": 12.653042000238202,
+        "inference_ms": 14.252089998990414,
         "vision_ready": true,
         "device": "cuda:0",
         "pipeline_ms": 16.0,
-        "processed_frames": 221,
-        "dropped_frames": 12,
+        "processed_frames": 155,
+        "dropped_frames": 13,
         "queue_depth": 0
       },
       "error": null
     },
     {
       "scenario": "duplicate",
-      "run_id": "25ea42fd-16ae-495d-8ee7-72e85f4e5d98",
+      "run_id": "9d87519e-b6af-48c1-97d3-4e2c291bdd51",
       "expected_cart": {
         "PEX-001": 2
       },
@@ -97,77 +97,77 @@
       "review_required": false,
       "passed": true,
       "frame": {
-        "frame_id": 109,
-        "timestamp": 15.0048,
-        "run_id": "25ea42fd-16ae-495d-8ee7-72e85f4e5d98",
+        "frame_id": 112,
+        "timestamp": 15.3345,
+        "run_id": "9d87519e-b6af-48c1-97d3-4e2c291bdd51",
         "width": 960,
         "height": 540,
-        "url": "/api/frame?run_id=25ea42fd-16ae-495d-8ee7-72e85f4e5d98&frame_id=109",
-        "age_ms": 149
+        "url": "/api/frame?run_id=9d87519e-b6af-48c1-97d3-4e2c291bdd51&frame_id=112",
+        "age_ms": 125
       },
       "interim_cart": null,
       "events": [
         {
-          "event_id": "1867e576-e324-5be2-a933-88481647d261",
-          "object_id": "25ea42fd-obj-0002",
+          "event_id": "d3f65fcd-5aaf-5a72-b2f1-d0137865fc56",
+          "object_id": "9d87519e-obj-0002",
           "sku": "PEX-001",
           "type": "ITEM_ADDED",
-          "timestamp": 10.0497,
-          "sequence": 60
+          "timestamp": 10.1224,
+          "sequence": 103
         },
         {
-          "event_id": "faf9795d-153b-5a7f-8ce8-d78d56432ea8",
-          "object_id": "25ea42fd-obj-0001",
+          "event_id": "4f201122-730c-529d-84be-66f6b47bc2a7",
+          "object_id": "9d87519e-obj-0001",
           "sku": "PEX-001",
           "type": "ITEM_ADDED",
-          "timestamp": 10.0497,
-          "sequence": 59
+          "timestamp": 10.1224,
+          "sequence": 102
         },
         {
-          "event_id": "314e49d5-6e9c-52c7-be21-10e2f3b250a2",
-          "object_id": "25ea42fd-obj-0002",
+          "event_id": "babea4f6-9317-5ec6-87a1-b95870a820d4",
+          "object_id": "9d87519e-obj-0002",
           "sku": "PEX-001",
           "type": "SKU_RESOLVED",
-          "timestamp": 0.4108,
-          "sequence": 58
+          "timestamp": 0.4004,
+          "sequence": 101
         },
         {
-          "event_id": "52558a85-4c10-5332-8598-4a93ed43bbb6",
-          "object_id": "25ea42fd-obj-0001",
+          "event_id": "0f2957af-0549-57e1-8711-e4025e4e7fb1",
+          "object_id": "9d87519e-obj-0001",
           "sku": "PEX-001",
           "type": "SKU_RESOLVED",
-          "timestamp": 0.4108,
-          "sequence": 57
+          "timestamp": 0.4004,
+          "sequence": 100
         },
         {
-          "event_id": "b77495b2-0522-5c01-b02b-eb85961efc92",
-          "object_id": "25ea42fd-obj-0002",
+          "event_id": "fc694210-aedb-52e6-a6ee-600a4987d991",
+          "object_id": "9d87519e-obj-0002",
           "sku": null,
           "type": "TRACK_CREATED",
-          "timestamp": 0.1369,
-          "sequence": 56
+          "timestamp": 0.1259,
+          "sequence": 99
         },
         {
-          "event_id": "59d03501-f51f-50ca-98fd-e3d48b765d96",
-          "object_id": "25ea42fd-obj-0001",
+          "event_id": "a07c512d-52b6-561a-a60b-d539bb2906d0",
+          "object_id": "9d87519e-obj-0001",
           "sku": null,
           "type": "TRACK_CREATED",
-          "timestamp": 0.1369,
-          "sequence": 55
+          "timestamp": 0.1259,
+          "sequence": 98
         }
       ],
       "objects": [
         {
           "bbox": [
-            441.72979736328125,
-            150.15017700195312,
-            474.52923583984375,
-            179.75094604492188
+            483.6187438964844,
+            150.33726501464844,
+            517.4382934570312,
+            180.01669311523438
           ],
           "track_id": 1,
-          "object_id": "25ea42fd-obj-0001",
+          "object_id": "9d87519e-obj-0001",
           "sku": "PEX-001",
-          "confidence": 0.9992955923080444,
+          "confidence": 0.9950525164604187,
           "state": "ADDED",
           "zone": "COMMIT",
           "visible": true,
@@ -176,15 +176,15 @@
         },
         {
           "bbox": [
-            485.28680419921875,
-            150.68699645996094,
-            517.3711547851562,
-            179.42579650878906
+            441.17828369140625,
+            150.3815460205078,
+            473.982421875,
+            179.72470092773438
           ],
           "track_id": 2,
-          "object_id": "25ea42fd-obj-0002",
+          "object_id": "9d87519e-obj-0002",
           "sku": "PEX-001",
-          "confidence": 0.9996360540390015,
+          "confidence": 0.9902661442756653,
           "state": "ADDED",
           "zone": "COMMIT",
           "visible": true,
@@ -198,19 +198,19 @@
         "cart_units": 2,
         "pending_objects": 0,
         "review_objects": 0,
-        "inference_ms": 11.55038999968383,
+        "inference_ms": 15.855722000196693,
         "vision_ready": true,
         "device": "cuda:0",
-        "pipeline_ms": 13.3,
-        "processed_frames": 330,
-        "dropped_frames": 12,
+        "pipeline_ms": 17.9,
+        "processed_frames": 267,
+        "dropped_frames": 13,
         "queue_depth": 0
       },
       "error": null
     },
     {
       "scenario": "mixed",
-      "run_id": "ef8eb2e9-18ab-4383-9ac4-09c0429caa85",
+      "run_id": "7389db23-7a60-4775-aa06-fed9dcdb8488",
       "expected_cart": {
         "PEX-001": 1,
         "PEX-003": 1,
@@ -225,101 +225,101 @@
       "review_required": false,
       "passed": true,
       "frame": {
-        "frame_id": 110,
-        "timestamp": 15.102,
-        "run_id": "ef8eb2e9-18ab-4383-9ac4-09c0429caa85",
+        "frame_id": 111,
+        "timestamp": 15.1342,
+        "run_id": "7389db23-7a60-4775-aa06-fed9dcdb8488",
         "width": 960,
         "height": 540,
-        "url": "/api/frame?run_id=ef8eb2e9-18ab-4383-9ac4-09c0429caa85&frame_id=110",
-        "age_ms": 154
+        "url": "/api/frame?run_id=7389db23-7a60-4775-aa06-fed9dcdb8488&frame_id=111",
+        "age_ms": 38
       },
       "interim_cart": null,
       "events": [
         {
-          "event_id": "86ebd08a-7078-57e7-9e5b-7f3fa12fa5b8",
-          "object_id": "ef8eb2e9-obj-0003",
-          "sku": "PEX-003",
-          "type": "ITEM_ADDED",
-          "timestamp": 10.1361,
-          "sequence": 69
-        },
-        {
-          "event_id": "090a2699-bf4f-5982-a747-efb909971adb",
-          "object_id": "ef8eb2e9-obj-0002",
-          "sku": "PEX-005",
-          "type": "ITEM_ADDED",
-          "timestamp": 10.1361,
-          "sequence": 68
-        },
-        {
-          "event_id": "a6a806c5-2fa0-5720-baa0-71827861fd8a",
-          "object_id": "ef8eb2e9-obj-0001",
+          "event_id": "313220ca-3c3f-526a-b919-a45758b3e773",
+          "object_id": "7389db23-obj-0003",
           "sku": "PEX-001",
           "type": "ITEM_ADDED",
-          "timestamp": 10.1361,
-          "sequence": 67
+          "timestamp": 10.1366,
+          "sequence": 112
         },
         {
-          "event_id": "bcf521c9-4c7d-5ce2-b86b-fff1eca33db4",
-          "object_id": "ef8eb2e9-obj-0002",
-          "sku": "PEX-005",
-          "type": "SKU_RESOLVED",
-          "timestamp": 4.3534,
-          "sequence": 66
-        },
-        {
-          "event_id": "5b409e34-a838-5fa4-8cb2-519517649d8d",
-          "object_id": "ef8eb2e9-obj-0003",
+          "event_id": "41e5ba45-5a58-58fc-a320-6cd93f831849",
+          "object_id": "7389db23-obj-0002",
           "sku": "PEX-003",
-          "type": "SKU_RESOLVED",
-          "timestamp": 0.3508,
-          "sequence": 65
+          "type": "ITEM_ADDED",
+          "timestamp": 10.1366,
+          "sequence": 111
         },
         {
-          "event_id": "2ac49bec-05a2-5452-b147-fa6ddb999743",
-          "object_id": "ef8eb2e9-obj-0001",
+          "event_id": "f96925cb-ed23-5c59-81f0-35d1e7086956",
+          "object_id": "7389db23-obj-0001",
+          "sku": "PEX-005",
+          "type": "ITEM_ADDED",
+          "timestamp": 10.1366,
+          "sequence": 110
+        },
+        {
+          "event_id": "efd3d8f1-66a8-5b62-bc61-cbfa222e0249",
+          "object_id": "7389db23-obj-0003",
           "sku": "PEX-001",
           "type": "SKU_RESOLVED",
-          "timestamp": 0.3508,
-          "sequence": 64
+          "timestamp": 0.2889,
+          "sequence": 109
         },
         {
-          "event_id": "ded34fdc-9cb9-5dac-930a-939277b7035c",
-          "object_id": "ef8eb2e9-obj-0003",
-          "sku": null,
-          "type": "TRACK_CREATED",
-          "timestamp": 0.0759,
-          "sequence": 63
+          "event_id": "60bb4fcb-56dd-572d-9963-b7a0ea645541",
+          "object_id": "7389db23-obj-0002",
+          "sku": "PEX-003",
+          "type": "SKU_RESOLVED",
+          "timestamp": 0.2889,
+          "sequence": 108
         },
         {
-          "event_id": "b63bab88-4ddf-5193-9441-3b6ca573cbba",
-          "object_id": "ef8eb2e9-obj-0002",
-          "sku": null,
-          "type": "TRACK_CREATED",
-          "timestamp": 0.0759,
-          "sequence": 62
+          "event_id": "2677d8ea-30d8-534d-92da-0e2640798b95",
+          "object_id": "7389db23-obj-0001",
+          "sku": "PEX-005",
+          "type": "SKU_RESOLVED",
+          "timestamp": 0.2889,
+          "sequence": 107
         },
         {
-          "event_id": "4739103b-ac14-58fa-9f18-87ce65a58e8f",
-          "object_id": "ef8eb2e9-obj-0001",
+          "event_id": "79415ab2-e7cb-581e-8061-f949c5761dac",
+          "object_id": "7389db23-obj-0003",
           "sku": null,
           "type": "TRACK_CREATED",
-          "timestamp": 0.0759,
-          "sequence": 61
+          "timestamp": 0.0155,
+          "sequence": 106
+        },
+        {
+          "event_id": "95d4cb87-0d6f-5785-b22e-5c7d4e53416b",
+          "object_id": "7389db23-obj-0002",
+          "sku": null,
+          "type": "TRACK_CREATED",
+          "timestamp": 0.0155,
+          "sequence": 105
+        },
+        {
+          "event_id": "5c2322e5-91f3-557c-ae33-b2de67f7ccf2",
+          "object_id": "7389db23-obj-0001",
+          "sku": null,
+          "type": "TRACK_CREATED",
+          "timestamp": 0.0155,
+          "sequence": 104
         }
       ],
       "objects": [
         {
           "bbox": [
-            428.1092224121094,
-            151.0178680419922,
-            460.60968017578125,
-            178.43429565429688
+            504.7770690917969,
+            154.33934020996094,
+            526.6171875,
+            175.73548889160156
           ],
           "track_id": 1,
-          "object_id": "ef8eb2e9-obj-0001",
-          "sku": "PEX-001",
-          "confidence": 0.9952298849821091,
+          "object_id": "7389db23-obj-0001",
+          "sku": "PEX-005",
+          "confidence": 0.8644990921020508,
           "state": "ADDED",
           "zone": "COMMIT",
           "visible": true,
@@ -328,15 +328,15 @@
         },
         {
           "bbox": [
-            504.72906494140625,
-            155.03982543945312,
-            526.1948852539062,
-            176.0205078125
+            470.71563720703125,
+            155.36416625976562,
+            489.04730224609375,
+            174.8590545654297
           ],
           "track_id": 2,
-          "object_id": "ef8eb2e9-obj-0002",
-          "sku": "PEX-005",
-          "confidence": 0.9269507378339767,
+          "object_id": "7389db23-obj-0002",
+          "sku": "PEX-003",
+          "confidence": 0.9891730323433876,
           "state": "ADDED",
           "zone": "COMMIT",
           "visible": true,
@@ -345,15 +345,15 @@
         },
         {
           "bbox": [
-            470.955810546875,
-            155.74700927734375,
-            488.3158264160156,
-            174.71533203125
+            427.2082214355469,
+            150.438232421875,
+            460.7908630371094,
+            178.47540283203125
           ],
           "track_id": 3,
-          "object_id": "ef8eb2e9-obj-0003",
-          "sku": "PEX-003",
-          "confidence": 0.9965657070279121,
+          "object_id": "7389db23-obj-0003",
+          "sku": "PEX-001",
+          "confidence": 0.992208443582058,
           "state": "ADDED",
           "zone": "COMMIT",
           "visible": true,
@@ -367,19 +367,19 @@
         "cart_units": 3,
         "pending_objects": 0,
         "review_objects": 0,
-        "inference_ms": 13.111799000398605,
+        "inference_ms": 15.415423999002087,
         "vision_ready": true,
         "device": "cuda:0",
-        "pipeline_ms": 15.1,
-        "processed_frames": 440,
-        "dropped_frames": 12,
+        "pipeline_ms": 17.5,
+        "processed_frames": 378,
+        "dropped_frames": 13,
         "queue_depth": 0
       },
       "error": null
     },
     {
       "scenario": "occlusion",
-      "run_id": "6c47ab57-fca6-46ff-9c73-ba3273f0f141",
+      "run_id": "0c5a677f-b4d3-4e91-a076-91875ac151f9",
       "expected_cart": {
         "PEX-001": 1
       },
@@ -390,53 +390,53 @@
       "review_required": false,
       "passed": true,
       "frame": {
-        "frame_id": 112,
-        "timestamp": 15.3506,
-        "run_id": "6c47ab57-fca6-46ff-9c73-ba3273f0f141",
+        "frame_id": 110,
+        "timestamp": 15.0216,
+        "run_id": "0c5a677f-b4d3-4e91-a076-91875ac151f9",
         "width": 960,
         "height": 540,
-        "url": "/api/frame?run_id=6c47ab57-fca6-46ff-9c73-ba3273f0f141&frame_id=112",
-        "age_ms": 33
+        "url": "/api/frame?run_id=0c5a677f-b4d3-4e91-a076-91875ac151f9&frame_id=110",
+        "age_ms": 173
       },
       "interim_cart": null,
       "events": [
         {
-          "event_id": "dee5f0ff-8ca1-5d2d-814e-13cd74024f39",
-          "object_id": "6c47ab57-obj-0001",
+          "event_id": "b031669d-ab17-506c-bfae-06fc13d8ef26",
+          "object_id": "0c5a677f-obj-0001",
           "sku": "PEX-001",
           "type": "ITEM_ADDED",
-          "timestamp": 10.101,
-          "sequence": 72
+          "timestamp": 10.1051,
+          "sequence": 115
         },
         {
-          "event_id": "1e9420a6-c866-51ab-898e-6b68e59c43aa",
-          "object_id": "6c47ab57-obj-0001",
+          "event_id": "0aba91f7-a264-5658-81f5-03d5996178da",
+          "object_id": "0c5a677f-obj-0001",
           "sku": "PEX-001",
           "type": "SKU_RESOLVED",
-          "timestamp": 0.3167,
-          "sequence": 71
+          "timestamp": 0.4005,
+          "sequence": 114
         },
         {
-          "event_id": "5ff260b0-e4e1-5336-bca7-998873196f17",
-          "object_id": "6c47ab57-obj-0001",
+          "event_id": "f62c8a36-7376-5710-91c8-c5f983e629a2",
+          "object_id": "0c5a677f-obj-0001",
           "sku": null,
           "type": "TRACK_CREATED",
-          "timestamp": 0.0418,
-          "sequence": 70
+          "timestamp": 0.1268,
+          "sequence": 113
         }
       ],
       "objects": [
         {
           "bbox": [
-            463.97784423828125,
-            150.0202178955078,
-            496.04901123046875,
-            179.3373260498047
+            463.5863037109375,
+            149.01344299316406,
+            496.97137451171875,
+            179.37562561035156
           ],
           "track_id": 1,
-          "object_id": "6c47ab57-obj-0001",
+          "object_id": "0c5a677f-obj-0001",
           "sku": "PEX-001",
-          "confidence": 0.9993726015090942,
+          "confidence": 0.9965289756655693,
           "state": "ADDED",
           "zone": "COMMIT",
           "visible": true,
@@ -450,82 +450,82 @@
         "cart_units": 1,
         "pending_objects": 0,
         "review_objects": 0,
-        "inference_ms": 11.211749000722193,
+        "inference_ms": 13.430738999886671,
         "vision_ready": true,
         "device": "cuda:0",
-        "pipeline_ms": 13.4,
-        "processed_frames": 552,
-        "dropped_frames": 12,
+        "pipeline_ms": 15.1,
+        "processed_frames": 488,
+        "dropped_frames": 13,
         "queue_depth": 0
       },
       "error": null
     },
     {
       "scenario": "remove",
-      "run_id": "75f6d5cc-9237-4820-bb2d-a494abf3edfa",
+      "run_id": "1436d502-e816-4832-94cf-3bf3c197119d",
       "expected_cart": {},
       "actual_cart": {},
       "expected_review": false,
       "review_required": false,
       "passed": true,
       "frame": {
-        "frame_id": 212,
-        "timestamp": 29.1375,
-        "run_id": "75f6d5cc-9237-4820-bb2d-a494abf3edfa",
+        "frame_id": 214,
+        "timestamp": 29.224,
+        "run_id": "1436d502-e816-4832-94cf-3bf3c197119d",
         "width": 960,
         "height": 540,
-        "url": "/api/frame?run_id=75f6d5cc-9237-4820-bb2d-a494abf3edfa&frame_id=212",
-        "age_ms": 39
+        "url": "/api/frame?run_id=1436d502-e816-4832-94cf-3bf3c197119d&frame_id=214",
+        "age_ms": 81
       },
       "interim_cart": {
         "PEX-002": 1
       },
       "events": [
         {
-          "event_id": "ac032930-b142-58ec-bac1-2a375128a00b",
-          "object_id": "75f6d5cc-obj-0001",
+          "event_id": "e2434be8-cd90-5ad4-9158-a371b4fc0e52",
+          "object_id": "1436d502-obj-0001",
           "sku": "PEX-002",
           "type": "ITEM_REMOVED",
-          "timestamp": 24.9992,
-          "sequence": 76
+          "timestamp": 24.9726,
+          "sequence": 119
         },
         {
-          "event_id": "d0e0c83f-515a-508e-b275-a1f9a496b031",
-          "object_id": "75f6d5cc-obj-0001",
+          "event_id": "7a3d8175-a583-5492-9d52-30ccdebb1928",
+          "object_id": "1436d502-obj-0001",
           "sku": "PEX-002",
           "type": "ITEM_ADDED",
-          "timestamp": 10.0955,
-          "sequence": 75
+          "timestamp": 10.0264,
+          "sequence": 118
         },
         {
-          "event_id": "a88c6304-2b76-508c-857c-09bdf37428ae",
-          "object_id": "75f6d5cc-obj-0001",
+          "event_id": "985532e1-d3ca-57d7-af15-78c9f0a22d6c",
+          "object_id": "1436d502-obj-0001",
           "sku": "PEX-002",
           "type": "SKU_RESOLVED",
-          "timestamp": 0.3131,
-          "sequence": 74
+          "timestamp": 0.3228,
+          "sequence": 117
         },
         {
-          "event_id": "4ec00e9b-5e3c-5b25-9370-3462636b66dc",
-          "object_id": "75f6d5cc-obj-0001",
+          "event_id": "306104a8-f387-5d16-8a82-a58a9df5a15b",
+          "object_id": "1436d502-obj-0001",
           "sku": null,
           "type": "TRACK_CREATED",
-          "timestamp": 0.0377,
-          "sequence": 73
+          "timestamp": 0.0508,
+          "sequence": 116
         }
       ],
       "objects": [
         {
           "bbox": [
-            455.252197265625,
-            416.5135192871094,
-            505.2914733886719,
-            462.8695373535156
+            455.9925231933594,
+            417.0556945800781,
+            504.45721435546875,
+            459.5700378417969
           ],
           "track_id": 1,
-          "object_id": "75f6d5cc-obj-0001",
+          "object_id": "1436d502-obj-0001",
           "sku": "PEX-002",
-          "confidence": 0.9884184300899506,
+          "confidence": 0.4694332182407379,
           "state": "REMOVED",
           "zone": "APPROACH",
           "visible": true,
@@ -539,63 +539,63 @@
         "cart_units": 0,
         "pending_objects": 0,
         "review_objects": 0,
-        "inference_ms": 11.534762999872328,
+        "inference_ms": 14.503348000289407,
         "vision_ready": true,
         "device": "cuda:0",
-        "pipeline_ms": 13.6,
-        "processed_frames": 764,
-        "dropped_frames": 12,
+        "pipeline_ms": 17.5,
+        "processed_frames": 702,
+        "dropped_frames": 13,
         "queue_depth": 0
       },
       "error": null
     },
     {
       "scenario": "unknown",
-      "run_id": "164f2cd3-acda-4ae3-8cff-8eb4e2d3f6d7",
+      "run_id": "04582f17-b4fe-4b26-bc59-cd2accbfa2a4",
       "expected_cart": {},
       "actual_cart": {},
       "expected_review": true,
       "review_required": true,
       "passed": true,
       "frame": {
-        "frame_id": 109,
-        "timestamp": 15.003,
-        "run_id": "164f2cd3-acda-4ae3-8cff-8eb4e2d3f6d7",
+        "frame_id": 110,
+        "timestamp": 15.1077,
+        "run_id": "04582f17-b4fe-4b26-bc59-cd2accbfa2a4",
         "width": 960,
         "height": 540,
-        "url": "/api/frame?run_id=164f2cd3-acda-4ae3-8cff-8eb4e2d3f6d7&frame_id=109",
-        "age_ms": 50
+        "url": "/api/frame?run_id=04582f17-b4fe-4b26-bc59-cd2accbfa2a4&frame_id=110",
+        "age_ms": 90
       },
       "interim_cart": null,
       "events": [
         {
-          "event_id": "78526c0b-3f05-5cc1-a194-48ea8270fe1b",
-          "object_id": "164f2cd3-obj-0001",
+          "event_id": "f69eb203-1e86-5c88-b722-6bf9e902de2d",
+          "object_id": "04582f17-obj-0001",
           "sku": null,
           "type": "REVIEW_REQUIRED",
-          "timestamp": 10.1744,
+          "timestamp": 10.101,
           "reason": "Checkout crossing lacks accepted SKU evidence",
-          "sequence": 78
+          "sequence": 121
         },
         {
-          "event_id": "4682fcc8-4e2b-5f10-9627-e3d1b2c33d63",
-          "object_id": "164f2cd3-obj-0001",
+          "event_id": "ef1cff25-faed-5c79-8b13-2d0cb70e3340",
+          "object_id": "04582f17-obj-0001",
           "sku": null,
           "type": "TRACK_CREATED",
-          "timestamp": 0.1251,
-          "sequence": 77
+          "timestamp": 0.0638,
+          "sequence": 120
         }
       ],
       "objects": [
         {
           "bbox": [
-            467.31231689453125,
-            154.97596740722656,
-            491.1221923828125,
-            176.6627960205078
+            467.87652587890625,
+            154.87091064453125,
+            492.5164794921875,
+            176.40396118164062
           ],
           "track_id": 1,
-          "object_id": "164f2cd3-obj-0001",
+          "object_id": "04582f17-obj-0001",
           "sku": null,
           "confidence": 0.2,
           "state": "TRACKED",
@@ -611,12 +611,12 @@
         "cart_units": 0,
         "pending_objects": 1,
         "review_objects": 1,
-        "inference_ms": 12.029227000311948,
+        "inference_ms": 13.723984000534983,
         "vision_ready": true,
         "device": "cuda:0",
-        "pipeline_ms": 14.0,
-        "processed_frames": 873,
-        "dropped_frames": 12,
+        "pipeline_ms": 15.7,
+        "processed_frames": 812,
+        "dropped_frames": 13,
         "queue_depth": 0
       },
       "error": null

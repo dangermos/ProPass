@@ -87,7 +87,7 @@ Both `GET /api/snapshot` and every WebSocket message return this. The TypeScript
                  "url": "/api/frame?run_id=…&frame_id=108", "age_ms": 111 },
   "detections": [{                                         // visible this frame
     "bbox": [x1, y1, x2, y2], "track_id": 3, "object_id": "7f3c1a2b-obj-0002",
-    "sku": "PEX-001", "confidence": 0.98, "state": "ADDED", "zone": "COMMIT",
+    "sku": "PEX-001", "confidence": 0.98, "accepted_confidence": 0.97, "state": "ADDED", "zone": "COMMIT",
     "visible": true, "membership": true, "review_reason": null, "detector_confidence": 0.91
   }],
   "objects": [ /* every physical object this run, same fields */ ],

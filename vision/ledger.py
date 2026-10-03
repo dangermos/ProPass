@@ -93,6 +93,7 @@ class PhysicalObject:
     reference_area: float = 0.0
     last_gallery: float = -1e9
     full_view_seen: bool = False      # ever seen without touching the image border
+    accepted_confidence: float | None = None   # averaged SKU probability when the SKU was accepted
 
 
 def inside_polygon(x: float, y: float, polygon) -> bool:
@@ -240,6 +241,7 @@ class PhysicalLedger:
         if enough and confident:
             if obj.sku is None:
                 obj.sku = candidate_sku
+                obj.accepted_confidence = averaged[top]
                 if not obj.ambiguous_identity:
                     obj.review_reason = None
                 self._emit(obj, "SKU_RESOLVED", timestamp)
@@ -445,6 +447,7 @@ class PhysicalLedger:
     def _serialize(obj: PhysicalObject):
         return {"bbox": list(obj.bbox), "track_id": obj.track_id,
                 "object_id": obj.object_id, "sku": obj.sku,
-                "confidence": obj.confidence, "state": obj.state,
+                "confidence": obj.confidence,
+                "accepted_confidence": obj.accepted_confidence, "state": obj.state,
                 "zone": obj.zone, "visible": obj.visible,
                 "membership": obj.membership, "review_reason": obj.review_reason}

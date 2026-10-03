@@ -135,6 +135,8 @@ Source: [evaluation-temporal-initial-single.json](../models/evaluation-temporal-
 | Change of mind | empty cart | ✅ |
 | Unknown product | empty cart, review required | ✅ |
 
+Last run with the current (v2) models and BoT-SORT.
+
 Source: [models/evaluation-live.json](../models/evaluation-live.json).
 
 ## 🎯 Scenario benchmark

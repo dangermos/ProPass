@@ -1,4 +1,4 @@
-export type Detection = {bbox:number[];track_id:number|string;object_id?:string;sku:string|null;confidence:number;state?:string;zone?:string;visible?:boolean;membership?:boolean;review_reason?:string|null};
+export type Detection = {bbox:number[];track_id:number|string;object_id?:string;sku:string|null;confidence:number;accepted_confidence?:number|null;state?:string;zone?:string;visible?:boolean;membership?:boolean;review_reason?:string|null};
 export type Event = {event_id:string;type:string;object_id?:string;sku?:string;timestamp:number;reason?:string;sequence:number};
 export type CartLine = {sku:string;name:string;quantity:number;unit_price:number;line_total:number};
 export type Receipt = {id:string;cart_id:string;customer_name:string;version:number;items:CartLine[];total:number;created_at:string;simulated:boolean};
