@@ -183,7 +183,9 @@ namespace ProPass
                     int lead = -1;
                     for (int i = 0; i < products.Length; i++)
                     {
-                        int p = plan.Add(Walk(products[i], R(-.6f, .6f), start, walkTime));
+                        // Two products are carried side by side; random x could make them intersect.
+                        float x = products.Length == 1 ? R(-.5f, .5f) : (i == 0 ? -.55f : .55f) + R(-.1f, .1f);
+                        int p = plan.Add(Walk(products[i], x, start, walkTime));
                         if (lead < 0) lead = p;
                     }
                     float cross = start + walkTime * R(.3f, .65f), side = Pick(2) == 0 ? -1f : 1f, speed = R(1f, 1.5f);
