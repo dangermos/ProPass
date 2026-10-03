@@ -30,12 +30,17 @@ def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+DETECTOR_CLASSES = ["merchandise", "person", "cart"]
+
+
 def detector(args):
     from ultralytics import YOLO
     data_root = ROOT/"training"/"data"/"detection"
     data_root.mkdir(parents=True, exist_ok=True)
     yaml_path = data_root/"dataset.yaml"
-    yaml_path.write_text(f"path: {data_root}\ntrain: images/train\nval: images/val\ntest: images/test\nnames:\n  0: merchandise\n")
+    # Class order must match ProPassDatasetExporter.ClassNames; the engine tracks class 0 only.
+    names = "".join(f"  {i}: {n}\n" for i, n in enumerate(DETECTOR_CLASSES))
+    yaml_path.write_text(f"path: {data_root}\ntrain: images/train\nval: images/val\ntest: images/test\nnames:\n{names}")
     started = time.time()
     pretrained = ROOT/"models"/"pretrained"/"yolo26n.pt"
     pretrained.parent.mkdir(parents=True,exist_ok=True)
@@ -57,10 +62,11 @@ def detector(args):
     evaluation = YOLO(str(destination)).val(data=str(yaml_path), split="test",
         imgsz=args.imgsz, batch=args.batch, device=args.device,
         project=str(ROOT/"training"/"runs"), name="detector-test", exist_ok=True)
-    report = {"checkpoint": "YOLO26n COCO pretrained", "architecture": "one-class merchandise",
+    report = {"checkpoint": "YOLO26n COCO pretrained", "architecture": "merchandise + person + cart (occluder-aware)",
               "seconds": time.time()-started, "sha256": digest(destination),
               "epochs_requested": args.epochs, "batch": args.batch,
               "image_size": args.imgsz, "device": args.device,
+              "classes": DETECTOR_CLASSES,
               "test": {"map50": float(evaluation.box.map50),
                        "map50_95": float(evaluation.box.map),
                        "precision": float(evaluation.box.mp),

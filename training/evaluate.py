@@ -75,7 +75,7 @@ def main():
         objects = manifest["objects"]
         gt_boxes = [obj["bbox"] for obj in objects]
         started = time.perf_counter()
-        boxes = engine.detector.predict(image,imgsz=640,conf=0.20,iou=0.65,
+        boxes = engine.detector.predict(image,imgsz=640,conf=0.20,iou=0.65,classes=[0],
                                         device=engine.device,verbose=False)[0].boxes
         pred_boxes = boxes.xyxy.cpu().tolist() if boxes is not None else []
         prediction = classify(image,pred_boxes)

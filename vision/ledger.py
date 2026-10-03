@@ -179,8 +179,15 @@ class PhysicalLedger:
         gate = self.config.reattach_distance
         if long_gap:
             gate += self.config.occlusion_gate_growth * (gap - self.config.reattach_seconds)
-        if distance > gate or appearance > self.config.reattach_appearance:
+        if distance > gate:
             return None
+        if appearance > self.config.reattach_appearance:
+            # Something emerging from behind an occluder is often half-visible, so its
+            # crop looks different. After a long gap, motion plus "not confidently a
+            # different SKU" (checked below) is enough; ties still go to review.
+            if not long_gap:
+                return None
+            appearance = min(appearance, 1.0)
         old_area = max(1.0, obj.gallery[-1][1] if obj.gallery else (obj.bbox[2]-obj.bbox[0])*(obj.bbox[3]-obj.bbox[1]))
         new_area = max(1.0, (obs.bbox[2]-obs.bbox[0])*(obs.bbox[3]-obs.bbox[1]))
         if not 0.45 <= new_area/old_area <= 2.2:

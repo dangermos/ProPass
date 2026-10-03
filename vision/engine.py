@@ -28,6 +28,7 @@ class VisionEngine:
         self.image_size = int(config.get("image_size", 640))
         self.detector_conf = float(config.get("detector_conf", 0.20))
         self.device_request = config.get("device", os.environ.get("PROPASS_DEVICE", "auto"))
+        self.tracker = config.get("tracker", "bytetrack.yaml")
         self.detector = None
         self.classifier = None
         self.device = "uninitialized"
@@ -85,7 +86,7 @@ class VisionEngine:
                 "mode": "learned_rgb" if self.detector is not None else "awaiting_checkpoints",
                 "device": self.device, "detector": "YOLO26n merchandise",
                 "classifier": "EfficientNet-B0 5 SKU + enrolled-product rejection",
-                "tracker": "ByteTrack + canonical physical ledger",
+                "tracker": f"{Path(self.tracker).stem} + canonical physical ledger",
                 "error": self.error, "processed_frames": self.processed_frames,
                 "last_inference_ms": self.last_inference_ms,
                 "ground_truth_runtime": False}
@@ -106,9 +107,11 @@ class VisionEngine:
         from PIL import Image
         import numpy as np
         torch = self.torch
-        results = self.detector.track(image_bgr, persist=True, tracker="bytetrack.yaml",
+        # Class 0 is merchandise; people and carts are learned so they stop being
+        # mistaken for merchandise, but only merchandise enters the tracker.
+        results = self.detector.track(image_bgr, persist=True, tracker=self.tracker,
                                       imgsz=self.image_size, conf=self.detector_conf,
-                                      iou=0.65, device=self.device, verbose=False)
+                                      iou=0.65, classes=[0], device=self.device, verbose=False)
         boxes = results[0].boxes
         observations = []
         height, width = image_bgr.shape[:2]
