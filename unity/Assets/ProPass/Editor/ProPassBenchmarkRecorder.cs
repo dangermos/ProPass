@@ -80,7 +80,7 @@ namespace ProPass.Editor
                     string directory = Path.Combine(output, scenario, $"seed_{seed:D2}");
                     if (Directory.Exists(directory)) Directory.Delete(directory, true);
                     Directory.CreateDirectory(directory);
-                    var runner = new ProPassScenarioRunner(plan, simulation.productPrefabs, camera, light, simulation.customer);
+                    var runner = new ProPassScenarioRunner(plan, simulation.productPrefabs, camera, light, simulation.customer, simulation.characters);
                     try
                     {
                         long frameId = 0;

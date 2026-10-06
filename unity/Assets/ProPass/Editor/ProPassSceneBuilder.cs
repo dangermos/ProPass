@@ -96,6 +96,29 @@ namespace ProPass.Editor
             }
             person.transform.position=new Vector3(0,0,-2.75f);
             simulator.customer=person.transform;
+            // Optional Asset Store characters (not part of this repository). Missing files leave the capsule people.
+            const string pack="Assets/ithappy/Creative_Characters_FREE/";
+            // Wearable pieces, by folder. Each fits one slot of the base character.
+            var slots=new System.Collections.Generic.Dictionary<string,string>{{"Outfit","T_Shirt"},{"Outwear","Outerwear"},{"Pants","Pants"},{"Shorts","Pants"},
+                {"Shoes","Shoes"},{"Hairstyle","Hairstyle"},{"Hat","Hat"},{"Glasses","Glasses"},{"Gloves","Gloves"},{"Faces","Faces"},{"Face Accessories","Mustache"}};
+            var parts=new System.Collections.Generic.List<ProPassCharacterPart>();
+            foreach(var folder in slots)
+            {
+                if(!AssetDatabase.IsValidFolder(pack+"Prefabs/"+folder.Key))continue;
+                foreach(string guid in AssetDatabase.FindAssets("t:Prefab",new[]{pack+"Prefabs/"+folder.Key}))
+                {
+                    var piece=AssetDatabase.LoadAssetAtPath<GameObject>(AssetDatabase.GUIDToAssetPath(guid));
+                    var skin=piece!=null?piece.GetComponentInChildren<SkinnedMeshRenderer>(true):null;
+                    if(skin==null||skin.sharedMesh==null)continue;
+                    if(folder.Key=="Face Accessories"&&!piece.name.StartsWith("Mustache"))continue;
+                    parts.Add(new ProPassCharacterPart{slot=folder.Value,mesh=skin.sharedMesh});
+                }
+            }
+            simulator.characters=new ProPassCharacterSet{
+                parts=parts.ToArray(),
+                prefab=AssetDatabase.LoadAssetAtPath<GameObject>(pack+"Prefabs/Base_Mesh.prefab"),
+                walk=AssetDatabase.LoadAssetAtPath<AnimationClip>(pack+"Animations/Other_Animations/Walk_Forward.anim"),
+                idle=AssetDatabase.LoadAssetAtPath<AnimationClip>(pack+"Animations/Other_Animations/Idle_Breathing.anim")};
             var occluder=Cube("Temporary hand occluder",new Vector3(0,1,0),new Vector3(.88f,.9f,.18f),dark);
             occluder.SetActive(false);simulator.occluder=occluder.transform;
             EditorSceneManager.SaveScene(scene,Root+"/Scenes/Checkout.unity");

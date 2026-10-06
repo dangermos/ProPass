@@ -64,7 +64,7 @@ namespace ProPass.Editor
             var shader=Shader.Find("Universal Render Pipeline/Unlit");
             white=new Material(shader){color=Color.white};
             black=new Material(shader){color=Color.black};
-            factory=new ProPassActorFactory();
+            factory=new ProPassActorFactory(simulation.characters);
             foreach(string split in new[]{"train","val","test"})
             {
                 Directory.CreateDirectory(Path.Combine(directory,"detection","images",split));
@@ -125,9 +125,20 @@ namespace ProPass.Editor
             if(simulation.customer!=null)
             {
                 simulation.customer.position=new Vector3(R(-.8f,.8f),0,R(-2.8f,3.8f));
-                instances.Add((simulation.customer.gameObject,1));
+                // An animated character stands in for the capsule customer when the pack is present.
+                var customer=factory.CustomerAvatar(simulation.customer,seed);
+                if(customer!=null)factory.Pose(customer,simulation.customer.position,Chance(.7)?new Vector3(R(-.2f,.2f),0,R(.4f,1.2f)*(Chance(.85)?1:-1)):Vector3.zero,R(0,20),R(-40,40));
+                instances.Add((customer??simulation.customer.gameObject,1));
             }
-            if(Chance(.35)) instances.Add((Place(factory.Shopper(Color.HSVToRGB(R(0,1),R(.3f,.8f),R(.35f,.85f))),new Vector3(R(-3.3f,3.3f),0,R(-3.5f,4f)),R(0,360)),1));
+            if(Chance(.35))
+            {
+                var shopper=factory.Shopper(Color.HSVToRGB(R(0,1),R(.3f,.8f),R(.35f,.85f)),rng.Next(1024));
+                float heading=R(0,360);var where=new Vector3(R(-3.3f,3.3f),0,R(-3.5f,4f));
+                Place(shopper,where,heading);
+                // Characters walk or stand facing their heading; capsules are simply placed.
+                factory.Pose(shopper,where,Chance(.7)?Quaternion.Euler(0,heading,0)*Vector3.forward*R(.5f,1.3f):Vector3.zero,R(0,20),heading);
+                instances.Add((shopper,1));
+            }
             if(products.Count>0&&Chance(.35))
             {
                 var near=products[rng.Next(products.Count)].transform.position;
@@ -207,7 +218,8 @@ namespace ProPass.Editor
             {
                 active.backgroundColor=originalBackground;
                 for(int i=0;i<renderers.Length;i++)if(renderers[i]!=null)renderers[i].sharedMaterials=originalMaterials[i];
-                foreach(var go in current)UnityEngine.Object.DestroyImmediate(go);current.Clear();
+                foreach(var go in current)if(go!=null)UnityEngine.Object.DestroyImmediate(go);current.Clear();
+                factory.DisposeCharacters();
             }
         }
 

@@ -20,6 +20,7 @@ namespace ProPass
         public Camera checkoutCamera;
         public GameObject[] productPrefabs;
         public Transform customer;
+        public ProPassCharacterSet characters;   // optional animated people; capsules are used when unset
         public Transform occluder;
         public string serverUrl = "http://127.0.0.1:8000";
         public int captureWidth = 960;
@@ -60,7 +61,7 @@ namespace ProPass
             paused = false;
             // Each run gets its own seed, so messy scenarios vary between runs but replay exactly.
             var plan = ProPassScenarios.Build(nextScenario, (nextRun ?? "").GetStableHash() % 100000);
-            runner = new ProPassScenarioRunner(plan, productPrefabs, checkoutCamera, keyLight, customer);
+            runner = new ProPassScenarioRunner(plan, productPrefabs, checkoutCamera, keyLight, customer, characters);
         }
 
         void Update()

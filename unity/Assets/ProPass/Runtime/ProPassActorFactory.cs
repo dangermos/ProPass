@@ -9,9 +9,53 @@ namespace ProPass
     public sealed class ProPassActorFactory
     {
         readonly Dictionary<Color, Material> materials = new Dictionary<Color, Material>();
+        readonly ProPassCharacterSet characterSet;
+        readonly Dictionary<GameObject, ProPassCharacter> characters = new Dictionary<GameObject, ProPassCharacter>();
+        readonly List<Renderer> hiddenProxy = new List<Renderer>();
+
+        // With a character set, people are animated characters. Without one, capsules.
+        public ProPassActorFactory(ProPassCharacterSet characterSet = null)
+        {
+            this.characterSet = characterSet != null && characterSet.Available ? characterSet : null;
+        }
+
+        GameObject Character(int look, Color tint)
+        {
+            var character = new ProPassCharacter(characterSet, look, tint);
+            characters[character.Root] = character;
+            return character.Root;
+        }
+
+        // Stands an animated character in for the scene's capsule customer, which is hidden meanwhile.
+        // Returns null when no character set is available: the capsule customer is used as it is.
+        public GameObject CustomerAvatar(Transform proxy, int look)
+        {
+            if (characterSet == null || proxy == null) return null;
+            foreach (var renderer in proxy.GetComponentsInChildren<Renderer>())
+                if (renderer.enabled) { renderer.enabled = false; hiddenProxy.Add(renderer); }
+            return Character(look, new Color(.25f, .35f, .55f));
+        }
+
+        // Moves a person. Characters also face their direction of travel and get the walk or idle pose for time t.
+        public void Pose(GameObject go, Vector3 position, Vector3 velocity, float t, float? standingYaw = null)
+        {
+            if (go == null) return;
+            if (!characters.TryGetValue(go, out var character)) { go.transform.position = position; return; }
+            if (standingYaw.HasValue) character.Face(standingYaw.Value);
+            character.Pose(position, velocity, t);
+        }
+
+        public void DisposeCharacters()
+        {
+            foreach (var character in characters.Values) character.Dispose();
+            characters.Clear();
+            foreach (var renderer in hiddenProxy) if (renderer != null) renderer.enabled = true;
+            hiddenProxy.Clear();
+        }
 
         public void Dispose()
         {
+            DisposeCharacters();
             foreach (var material in materials.Values) ProPassScenarioRunner.Destroy(material);
             materials.Clear();
         }
@@ -37,8 +81,9 @@ namespace ProPass
             return go;
         }
 
-        public GameObject Shopper(Color shirt)
+        public GameObject Shopper(Color shirt, int look = 0)
         {
+            if (characterSet != null) return Character(look, shirt);
             var root = new GameObject("Scenario shopper");
             var skin = new Color(.78f, .6f, .48f); var dark = new Color(.12f, .13f, .16f);
             Box("Torso", new Vector3(.5f, .55f, .32f), shirt, root.transform, new Vector3(0, 1.3f, 0), PrimitiveType.Capsule);

@@ -13,13 +13,17 @@ namespace ProPass
 
         readonly List<GameObject> spawned = new List<GameObject>();
         readonly GameObject[] actorObjects;
-        readonly ProPassActorFactory actors = new ProPassActorFactory();
+        readonly ProPassActorFactory actors;
+        readonly GameObject avatar;     // animated stand-in for the capsule customer, when characters are available
         Camera camera; Light light; Transform customer;
         Vector3 cameraPosition; Quaternion cameraRotation; float baseLight = 2.1f; Color baseLightColor = Color.white;
 
-        public ProPassScenarioRunner(ScenarioPlan plan, GameObject[] productPrefabs, Camera camera, Light light, Transform customer)
+        public ProPassScenarioRunner(ScenarioPlan plan, GameObject[] productPrefabs, Camera camera, Light light, Transform customer,
+                                     ProPassCharacterSet characters = null)
         {
             Plan = plan; this.camera = camera; this.light = light; this.customer = customer;
+            actors = new ProPassActorFactory(characters);
+            avatar = actors.CustomerAvatar(customer, plan.seed);
             if (camera != null) { cameraPosition = camera.transform.position; cameraRotation = camera.transform.rotation; }
             if (light != null) { baseLight = light.intensity; baseLightColor = light.color; light.intensity = plan.lightIntensity; light.color = plan.lightColor; }
             actorObjects = new GameObject[plan.actors.Count];
@@ -36,7 +40,7 @@ namespace ProPass
                         go.transform.rotation = Quaternion.Euler(0f, actor.yaw, 0f);
                         Products.Add(go); ProductActorIndices.Add(i);
                         break;
-                    case ActorKind.Shopper: go = actors.Shopper(actor.tint); break;
+                    case ActorKind.Shopper: go = actors.Shopper(actor.tint, plan.seed * 31 + i + 1); break;
                     case ActorKind.Hand: go = actor.prop == "slab" ? actors.Slab(actor.tint) : actors.Arm(actor.tint); break;
                     case ActorKind.Flatbed: go = actors.Flatbed(actor.tint); break;
                     default: go = actors.Prop(actor.prop, actor.tint); break;
@@ -50,7 +54,7 @@ namespace ProPass
         public void Apply(float t)
         {
             t = Mathf.Clamp(t, 0f, Plan.duration);
-            Vector3 lead = Vector3.zero; bool hasLead = false;
+            Vector3 lead = Vector3.zero, leadVelocity = Vector3.zero; bool hasLead = false;
             for (int i = 0; i < actorObjects.Length; i++)
             {
                 var go = actorObjects[i];
@@ -58,19 +62,28 @@ namespace ProPass
                 bool visible = Plan.Visible(i, t);
                 if (go.activeSelf != visible) go.SetActive(visible);
                 var position = Plan.Position(i, t);
-                go.transform.position = position;
                 var actor = Plan.actors[i];
+                if (actor.kind == ActorKind.Shopper) actors.Pose(go, position, Velocity(i, t), t);
+                else go.transform.position = position;
                 if (actor.kind == ActorKind.Product && !hasLead && Mathf.Abs(position.x) <= ScenarioPlan.LaneHalfWidth && actor.follow < 0)
-                { lead = position; hasLead = true; }
+                { lead = position; leadVelocity = Velocity(i, t); hasLead = true; }
             }
             // The scene's customer proxy walks just behind the first product in the lane.
             if (customer != null && hasLead) customer.position = new Vector3(lead.x * .3f, 0f, lead.z + .65f);
+            if (customer != null) actors.Pose(avatar, customer.position, hasLead ? leadVelocity : Vector3.zero, t);
             if (camera != null && Plan.cameraShake > 0f)
             {
                 float s = Plan.cameraShake, k = Plan.seed * .37f;
                 var shake = new Vector3(Mathf.PerlinNoise(t * 2.1f, k) - .5f, Mathf.PerlinNoise(k, t * 2.3f) - .5f, Mathf.PerlinNoise(t * 1.7f, k + 3f) - .5f) * 2f * s;
                 camera.transform.SetPositionAndRotation(cameraPosition + shake, cameraRotation * Quaternion.Euler(shake.y * 8f, shake.x * 8f, 0f));
             }
+        }
+
+        // Velocity from the plan itself, so a pose depends only on (scenario, seed, time).
+        Vector3 Velocity(int actor, float t)
+        {
+            float a = Mathf.Max(0f, t - .06f), b = Mathf.Min(Plan.duration, t + .06f);
+            return b > a ? (Plan.Position(actor, b) - Plan.Position(actor, a)) / (b - a) : Vector3.zero;
         }
 
         public void Dispose()
