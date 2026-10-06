@@ -150,13 +150,26 @@ Same discipline as before: seeded scenarios, tune on seeds 0–4, report once on
 
 ## ✅ Progress
 
-- [ ] E1 Catalog and barcodes
-- [ ] E2 Scan cameras and reader
-- [ ] E3 Retrain for the new look
-- [ ] E4 Ratings, restricted items, assist flow
+- [ ] **E1 Catalog and barcodes**
+  - [x] `barcode` field in `catalog.json`; `scripts/prepare_products.py` builds label and photo textures from `Barcodes/`
+  - [x] Scene builder puts a Code 128 label (and the photo, when supplied) on every product prefab
+  - [ ] More products (needs photos and barcodes from Danny), a restricted item, lumber variants
+- [x] **E2 Scan cameras and reader**
+  - [x] 3840×1080 scan camera over the lane entrance (`ProPassCameras.cs`), streamed and recorded with the others
+  - [x] `VisionEngine._read_barcodes` / `_attach_barcodes` with zxing-cpp; text must match `SKU=<10 digits>`
+  - [x] Live: the mixed cart is charged entirely by barcode, all lines rated Verified
+- [ ] **E3 Retrain for the new look** (after the catalog grows)
+- [x] **E4 Ratings, restricted items, assist flow**
   - [x] Ledger: barcode evidence outranks the classifier, ratings, restricted SKUs, assist list (`vision/ledger.py`, `tests/test_ledger_scanning.py`)
   - [x] API: `ASSIST` cart status, `POST /api/assist/add` and `/api/assist/dismiss`, line ratings (`api/`, `tests/test_api_assist.py`)
-  - [ ] Catalog `restricted` flags, benchmark assist-rate metric, docs
-- [ ] E5 Customer phone and associate view
-- [ ] E6 Characters
-- [ ] E7 Benchmark, docs, demo recording
+  - [x] Benchmark reports the barcode share of charged items and assist counts
+  - [ ] A catalog product marked `restricted`, with a scenario for it
+- [x] **E5 Customer phone and associate view** (`web/src/CustomerPhone.tsx`, `AssociatePanel.tsx`), plus barcode outlines on the scan camera view
+- [ ] **E6 Characters** (waiting for the pack to be downloaded and imported in Unity)
+- [ ] **E7 Benchmark, docs, demo recording**
+  - [x] Development set re-recorded with labels and the scan camera (`artifacts/benchmark`; the earlier sets are `artifacts/benchmark-2cam*`)
+  - [ ] Held-out set, published results, the other docs brought up to date (api.md, vision.md, pipeline.md, getting-started.md)
+
+![Mixed cart, live: every line Verified by barcode, with the customer's phone on the right](images/v2-scanned.jpg)
+
+![Unknown barcode, live: the phone says to see an associate, and the associate panel offers Add or Not an item](images/v2-associate.jpg)

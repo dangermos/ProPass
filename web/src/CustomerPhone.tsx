@@ -26,7 +26,7 @@ export default function CustomerPhone({snapshot,busy,live,onReview,onConfirm}:Pr
   const title={welcome:'Welcome to Pro Express',scanning:moving?'Scanning your items…':'Items scanned',assist:'Please see an associate',confirm:'Ready to check out',done:'You’re all set'}[stage];
   const subtitle={welcome:live?'Walk through the lane with your items.':'The lane camera is offline.',
     scanning:moving?`${moving} item${moving>1?'s':''} still passing the scanner.`:assist.length?`We couldn’t scan ${assist.length} item${assist.length>1?'s':''}.`:'Everything was scanned.',
-    assist:`We couldn’t scan everything. Your ${qty} scanned item${qty===1?'':'s'} ${qty===1?'is':'are'} saved, and an associate will finish up.`,
+    assist:qty?`We couldn’t scan everything. Your ${qty} scanned item${qty===1?' is':'s are'} saved, and an associate will finish up.`:'We couldn’t scan your item. An associate will finish up.',
     confirm:'Check your items, then confirm.',done:'Thanks for shopping. Your receipt is saved.'}[stage];
   return <div className={`phone stage-${stage}`} aria-label="Customer phone preview">
     <div className="phone-notch"/>

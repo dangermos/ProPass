@@ -243,3 +243,4 @@ button.brand-mark{background:none;border:0;cursor:pointer}
 .associate-actions .primary-button,.associate-actions .secondary-button{margin:0;justify-content:center;padding:10px;cursor:pointer}
 .quantity-pill.warn{background:#4a3218;color:#ffcf96}
 .review-message.soft{background:#13233d;border-color:#274268;color:#b7d0f5}
+.product-text small .rating-badge{display:inline-block;width:auto;margin-left:6px;vertical-align:1px}
