@@ -1,7 +1,7 @@
 import type { CameraFrame, Detection, Snapshot } from './types';
 import { colors } from './ui';
 
-export const cameraName=(id:string)=>id==='lane'?'Lane camera':id==='overhead'?'Overhead camera':id.replaceAll('_',' ');
+export const cameraName=(id:string)=>id==='lane'?'Lane camera':id==='overhead'?'Overhead camera':id==='scan'?'Barcode scan camera':id.replaceAll('_',' ');
 export const cameraColor=(id:string)=>id==='overhead'?'#bd9aff':'#6aa8ff';
 
 export function frameForCamera(snapshot:Snapshot|null,camera:string):CameraFrame|null{

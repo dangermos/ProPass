@@ -116,6 +116,7 @@ class Runtime:
         state["frame"] = state["frames"].get(self.frame["camera_id"]) if self.frame else None
         state["detections"] = self.result.get("detections", [])
         state["objects"] = self.result.get("objects", [])
+        state["barcodes"] = self.result.get("barcodes", [])
         in_progress, assist = self.assist_state()
         state["in_progress"], state["assist"] = in_progress, assist
         state["review_required"] = bool(in_progress or assist or self.error)

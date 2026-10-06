@@ -200,3 +200,46 @@ button.brand-mark{background:none;border:0;cursor:pointer}
 .coverage-empty{padding:22px 20px;color:#9aadc3;font-size:12px}
 .coverage-empty p{font-size:11px;line-height:1.6;color:#6f879f;margin:7px 0 0;max-width:480px}
 @media(max-width:600px){.fusion-status{margin-left:0;width:100%;padding-top:2px}.coverage-count{font-size:8px}.coverage-panel .subtle-tag{display:none}.coverage-legend{gap:7px;font-size:8px}.coverage-footer{font-size:8px}}
+
+/* ---------- Customer phone preview ---------- */
+.phone{position:relative;border-radius:34px;padding:12px;background:linear-gradient(160deg,#243449,#0c1420);border:1px solid #33475e;box-shadow:0 18px 40px #00000066,inset 0 0 0 2px #0a111b;margin-bottom:18px}
+.phone-notch{position:absolute;top:19px;left:50%;transform:translateX(-50%);width:84px;height:18px;border-radius:12px;background:#05090f;z-index:1}
+.phone-screen{border-radius:24px;background:#f6f8fb;color:#17212e;padding:46px 14px 16px;min-height:430px;display:flex;flex-direction:column;gap:12px}
+.phone-brand{display:flex;align-items:baseline;gap:0;font:800 19px 'Manrope',sans-serif;letter-spacing:-.6px;color:#17212e}
+.phone-brand span{color:#f96302}
+.phone-brand small{margin-left:auto;font:500 11px 'DM Sans',sans-serif;color:#6b7a8c;letter-spacing:0}
+.phone-status{display:flex;gap:10px;align-items:flex-start;border-radius:14px;padding:12px}
+.phone-status strong{display:block;font-size:14px;margin-bottom:3px}
+.phone-status p{margin:0;font-size:11.5px;line-height:1.45;color:#44546a}
+.phone-status.tone-blue{background:#e6efff;color:#0b2a5c}
+.phone-status.tone-good{background:#d9f7e8;color:#0b3d1d}
+.phone-status.tone-warn{background:#fff1e0;color:#6b3d00}
+.phone-list{flex:1;display:flex;flex-direction:column;gap:7px}
+.phone-line{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#fff;border:1px solid #e3e8ef;border-radius:11px;padding:9px 10px}
+.phone-line strong{display:block;font-size:12px;color:#17212e}
+.phone-line small{font-size:10.5px;color:#6b7a8c}
+.phone-line.unscanned{border-style:dashed;border-color:#f3b0b8;background:#fff6f7}
+.phone-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#8a98a9;font-size:11.5px;text-align:center}
+.phone-total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid #e3e8ef;padding-top:10px;font-size:12px;color:#44546a}
+.phone-total strong{font:800 20px 'Manrope',sans-serif;color:#17212e}
+.phone-button{border:0;border-radius:12px;padding:13px;font-size:13px;font-weight:700;background:#f96302;color:#fff;cursor:pointer}
+.phone-button small{font-weight:500;opacity:.85}
+.phone-button:disabled{background:#d7dde6;color:#7a8898;cursor:default}
+.phone-wait{display:flex;align-items:center;justify-content:center;gap:8px;font-size:12px;color:#44546a;padding:12px;border-radius:12px;background:#eef2f7}
+.rating-badge{font-size:9.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:3px 7px;border-radius:999px;white-space:nowrap}
+.rating-badge.tone-good{color:#0b5a2a;background:#c9f2db}.rating-badge.tone-blue{color:#0b3a7a;background:#d6e6ff}.rating-badge.tone-warn{color:#7a4a00;background:#ffe6c2}.rating-badge.tone-bad{color:#8a1526;background:#ffd5db}.rating-badge.tone-purple{color:#3b2082;background:#e6dcff}
+
+/* ---------- Associate hand-off ---------- */
+.associate-panel{margin-bottom:18px;border-color:#4a3218}
+.associate-panel.active{border-color:#ffbb71;box-shadow:0 0 0 1px #ffbb7155,0 8px 26px #00000033}
+.associate-note{margin:12px 18px 0;font-size:11px;line-height:1.5;color:#9fb0c2}
+.associate-list{padding:12px 16px 16px;display:flex;flex-direction:column;gap:10px}
+.associate-item{background:#111d2c;border:1px solid #2a3c51;border-radius:10px;padding:11px 12px;display:flex;flex-direction:column;gap:10px}
+.associate-item-head{display:flex;gap:9px;align-items:flex-start;color:#ffcf96}
+.associate-item-head strong{display:block;font-size:12.5px;color:#eef4fb}
+.associate-item-head small{font-size:10.5px;color:#8fa3bf;line-height:1.4}
+.associate-actions{display:flex;flex-direction:column;gap:7px}
+.associate-actions select{background:#0e1724;color:#dde6f2;border:1px solid #2a3c51;border-radius:6px;padding:8px;font-size:11px}
+.associate-actions .primary-button,.associate-actions .secondary-button{margin:0;justify-content:center;padding:10px;cursor:pointer}
+.quantity-pill.warn{background:#4a3218;color:#ffcf96}
+.review-message.soft{background:#13233d;border-color:#274268;color:#b7d0f5}
