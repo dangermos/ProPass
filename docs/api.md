@@ -19,6 +19,8 @@ The FastAPI server runs on **http://127.0.0.1:8000**. Interactive docs, generate
 | 🔄 | `POST` | `/api/cart/reset` | 🖥️ Dashboard | Restart the current scenario with a new run |
 | 🧾 | `POST` | `/api/cart/prepare` | 🖥️ Dashboard | Pause, drain and freeze a cart version for review |
 | ▶️ | `POST` | `/api/cart/resume` | 🖥️ Dashboard | Cancel review and resume capture |
+| 🙋 | `POST` | `/api/assist/add` | 🖥️ Associate panel | An associate adds an item, or releases a restricted one: `{"sku": "PEX-003", "object_id": "…"}` (`object_id` settles a flagged object) |
+| 🚫 | `POST` | `/api/assist/dismiss` | 🖥️ Associate panel | An associate confirms a flagged detection is nothing to charge: `{"object_id": "…"}` |
 | ✅ | `POST` | `/api/cart/confirm` | 🖥️ Dashboard | Write the immutable simulated receipt |
 
 ## 📷 `POST /api/frames`
@@ -61,6 +63,8 @@ stateDiagram-v2
     PREPARING --> REVIEWING: queue drained, no review flags
     PREPARING --> OPEN: review needed (409)
     REVIEWING --> OPEN: new evidence or POST /api/cart/resume
+    PREPARING --> ASSIST: items need an associate (scanned cart kept)
+    ASSIST --> REVIEWING: associate settles every flagged item
     REVIEWING --> CONFIRMED: POST /api/cart/confirm
     CONFIRMED --> [*]: POST /api/scenario starts a new run
 

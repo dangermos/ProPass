@@ -18,8 +18,29 @@ os.environ.setdefault("YOLO_CONFIG_DIR",str(ROOT/"training"/".ultralytics"))
 os.environ.setdefault("TORCH_HOME",str(ROOT/"models"/"pretrained"))
 
 
+# Each camera has its own model pair. The lane camera's lives in models/, any other
+# camera's in models/<camera>/, which is where the engine looks for it.
+MODEL_DIR = ROOT/"models"
+CAMERA = None
+
+
+def use_camera(camera):
+    global MODEL_DIR, CAMERA
+    CAMERA = camera
+    MODEL_DIR = ROOT/"models" if camera in (None, "lane") else ROOT/"models"/camera
+    MODEL_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def scenes(split):
+    """Scene names rendered from the selected camera, or None for every scene."""
+    if CAMERA is None:
+        return None
+    return {path.stem for path in (ROOT/"training"/"data"/"manifests"/split).glob("*.json")
+            if json.loads(path.read_text()).get("camera", "lane") == CAMERA}
+
+
 def manifest_update(key, data):
-    path = ROOT/"models"/"manifest.json"
+    path = MODEL_DIR/"manifest.json"
     existing = json.loads(path.read_text()) if path.exists() else {}
     existing[key] = data
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -40,7 +61,18 @@ def detector(args):
     yaml_path = data_root/"dataset.yaml"
     # Class order must match ProPassDatasetExporter.ClassNames; the engine tracks class 0 only.
     names = "".join(f"  {i}: {n}\n" for i, n in enumerate(DETECTOR_CLASSES))
-    yaml_path.write_text(f"path: {data_root}\ntrain: images/train\nval: images/val\ntest: images/test\nnames:\n{names}")
+    splits = {}
+    for split in ("train", "val", "test"):
+        wanted = scenes(split)
+        if wanted is None:
+            splits[split] = f"images/{split}"
+        else:
+            # A list file restricts the split to one camera's scenes; labels are found beside the images.
+            listing = data_root/f"{split}-{CAMERA}.txt"
+            listing.write_text("".join(f"{data_root}/images/{split}/{stem}.jpg\n" for stem in sorted(wanted)))
+            splits[split] = listing.name
+    yaml_path = data_root/(f"dataset-{CAMERA}.yaml" if CAMERA else "dataset.yaml")
+    yaml_path.write_text(f"path: {data_root}\ntrain: {splits['train']}\nval: {splits['val']}\ntest: {splits['test']}\nnames:\n{names}")
     started = time.time()
     pretrained = ROOT/"models"/"pretrained"/"yolo26n.pt"
     pretrained.parent.mkdir(parents=True,exist_ok=True)
@@ -56,7 +88,7 @@ def detector(args):
                 hsv_h=0.008, hsv_s=0.2, hsv_v=0.2,
                 plots=True, verbose=False)
     best = ROOT/"training"/"runs"/"merchandise"/"weights"/"best.pt"
-    destination = ROOT/"models"/"detector.pt"
+    destination = MODEL_DIR/"detector.pt"
     destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(best, destination)
     evaluation = YOLO(str(destination)).val(data=str(yaml_path), split="test",
@@ -92,8 +124,15 @@ def classifier(args):
     device = torch.device(args.device)
     started = time.time()
     root = ROOT/"training"/"data"/"crops"
-    data = {split: ImageFolder(root/split, transform=classifier_transform(split=="train"))
-            for split in ("train", "val", "test")}
+    def crops(split, training):
+        dataset = ImageFolder(root/split, transform=classifier_transform(training))
+        wanted = scenes(split)
+        if wanted is not None:
+            # Crop files are named <scene>_<index>.jpg; keep the selected camera's scenes.
+            dataset.samples = [s for s in dataset.samples if Path(s[0]).stem.rsplit("_", 1)[0] in wanted]
+            dataset.imgs, dataset.targets = dataset.samples, [target for _, target in dataset.samples]
+        return dataset
+    data = {split: crops(split, split=="train") for split in ("train", "val", "test")}
     skus = [p["sku"] for p in sorted(json.loads((ROOT/"catalog.json").read_text())["products"],
                                     key=lambda p: p["class_index"])]
     class_labels = skus+["ZZZ-UNKNOWN"] if (root/"train"/"ZZZ-UNKNOWN").exists() else skus
@@ -188,7 +227,7 @@ def classifier(args):
     temperature = float(temperature_parameter.exp().clamp(0.5,5).detach())
     # Train-only feature prototypes provide a second rejection signal. They are
     # class appearance summaries, explicitly not unique physical-object IDs.
-    prototype_data = ImageFolder(root/"train", transform=classifier_transform(False))
+    prototype_data = crops("train", False)
     prototype_loader = DataLoader(prototype_data,batch_size=args.batch,num_workers=2)
     _,_,train_labels,train_embeddings = evaluate(prototype_loader, True)
     prototypes = torch.stack([nn.functional.normalize(train_embeddings[train_labels==i].mean(0),dim=0)
@@ -209,7 +248,7 @@ def classifier(args):
     margins = probabilities.topk(2,dim=1).values
     accepted = ((max_prob>=0.85)&(margins[:,0]-margins[:,1]>=0.2)&
                 (test_distance<=max_distance)&(probabilities.argmax(1)<len(skus)))
-    destination = ROOT/"models"/"classifier.pt"
+    destination = MODEL_DIR/"classifier.pt"
     destination.parent.mkdir(parents=True,exist_ok=True)
     temporary = destination.with_suffix(".tmp.pt")
     torch.save({"state_dict":best_state, "skus":skus, "class_labels":class_labels,"temperature":temperature,
@@ -240,12 +279,15 @@ def main():
     detect.add_argument("--batch",type=int,default=8)
     detect.add_argument("--imgsz",type=int,default=640)
     detect.add_argument("--device",default="0")
+    detect.add_argument("--camera",help="train on one camera's scenes and save to that camera's model folder")
     classify = commands.add_parser("classifier")
     classify.add_argument("--epochs",type=int,default=12)
     classify.add_argument("--head-epochs",type=int,default=4)
     classify.add_argument("--batch",type=int,default=32)
     classify.add_argument("--device",default="cuda:0")
+    classify.add_argument("--camera",help="train on one camera's scenes and save to that camera's model folder")
     args = parser.parse_args()
+    use_camera(args.camera)
     detector(args) if args.command=="detector" else classifier(args)
 
 

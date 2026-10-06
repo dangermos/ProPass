@@ -80,7 +80,7 @@ Training writes to `models/detector.pt` and `models/classifier.pt`. The engine l
 | 🔵 Lane | `models/detector.pt`, `models/classifier.pt` (v2) | 1,200 cluttered scenes from the lane camera |
 | 🟣 Overhead | `models/overhead/` | 2,100 scenes, half from each camera |
 
-To retrain a camera's pair: export data (the exporter renders half the scenes from each camera), train, then move the two files into `models/<camera>/` if they're for a camera other than the lane.
+To retrain a camera's pair, export data (the exporter renders half the scenes from each camera) and pass `--camera lane` or `--camera overhead` to both `training.train` commands. That trains on that camera's scenes only and saves into that camera's folder.
 
 **Why not one shared pair?** That was tried first. The two-view pair scored **39 / 75** development runs through the lane camera, against **68 / 75** for the lane-only pair on the same recordings. The earlier weights are kept in `models/v1/` and `models/v2/`.
 
