@@ -69,7 +69,6 @@ namespace ProPass.Editor
             if (simulation.occluder != null) simulation.occluder.gameObject.SetActive(false);
             int width = ProPassCameras.Sizes[0].x, height = ProPassCameras.Sizes[0].y;
             var customerStart = simulation.customer != null ? simulation.customer.position : Vector3.zero;
-            int knownProducts = simulation.productPrefabs.Length - 1;
             int runs = 0, frames = 0;
             try
             {
@@ -111,7 +110,7 @@ namespace ProPass.Editor
                                 frame_id = frameId, timestamp = (float)Math.Round(t, 4), run_id = runId, scenario = scenario, ground_truth = truth.ToArray() }));
                             frames++;
                         }
-                        var expected = plan.ExpectedProductCounts(knownProducts, out bool review);
+                        var expected = plan.ExpectedProductCounts(out bool review);
                         File.WriteAllText(Path.Combine(directory, "run.json"), JsonUtility.ToJson(new RunInfo {
                             run_id = runId, scenario = scenario, seed = seed, description = plan.description,
                             duration = plan.duration, frames = (int)frameId, frame_rate = FrameRate,

@@ -17,6 +17,7 @@ namespace ProPass.Editor
     public static class ProPassDatasetExporter
     {
         public static readonly string[] ClassNames = { "merchandise", "person", "cart" };
+        static readonly int[] Enrolled = { 0, 1, 2, 3, 4, 6, 7, 8 };
         public static bool Running { get; private set; }
         public static int Completed { get; private set; }
         public static int Requested { get; private set; }
@@ -69,7 +70,11 @@ namespace ProPass.Editor
                 Directory.CreateDirectory(Path.Combine(directory,"detection","images",split));
                 Directory.CreateDirectory(Path.Combine(directory,"detection","labels",split));
                 Directory.CreateDirectory(Path.Combine(directory,"manifests",split));
-                for(int i=0;i<5;i++) Directory.CreateDirectory(Path.Combine(directory,"crops",split,"PEX-00"+(i+1)));
+                foreach(var prefab in simulation.productPrefabs)
+                {
+                    string sku=prefab.GetComponent<ProPassProduct>().sku;
+                    if(sku!="UNKNOWN") Directory.CreateDirectory(Path.Combine(directory,"crops",split,sku));
+                }
             }
             Running=true;EditorApplication.update+=Step;
         }
@@ -102,7 +107,8 @@ namespace ProPass.Editor
             if(splitIndex%30==0)count=0;
             for(int i=0;i<count;i++)
             {
-                int classIndex=(splitIndex+i)%5;
+                // Every enrolled product in turn; prefab 5 is the unenrolled package.
+                int classIndex=Enrolled[(splitIndex+i)%Enrolled.Length];
                 // Unenrolled objects are still merchandise for generic localization.
                 if(splitIndex%17==0 && i==0)classIndex=5;
                 float x=count==1?R(-1.45f,1.45f):Mathf.Lerp(-1.4f,1.4f,(float)i/(count-1))+R(-.12f,.12f);
@@ -185,7 +191,7 @@ namespace ProPass.Editor
                     if(cls!=0){others.Add(new Other{label=ClassNames[cls],bbox=bbox,visible_pixels=box.count});continue;}
                     var product=instances[k].go.GetComponent<ProPassProduct>();
                     annotations.Add(new Annotation{sku=product.sku,physical_id=product.physicalId,class_index=product.classIndex,bbox=bbox,visible_pixels=box.count});
-                    if(product.classIndex<5 && width*height>300)
+                    if(product.sku!="UNKNOWN" && width*height>300)
                     {
                         int x0=Mathf.Max(0,box.minX-5),x1=Mathf.Min(960,box.maxX+6),y0=Mathf.Max(0,box.minY-5),y1=Mathf.Min(540,box.maxY+6);
                         var crop=new Texture2D(x1-x0,y1-y0,TextureFormat.RGB24,false);

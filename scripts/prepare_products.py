@@ -53,6 +53,9 @@ def label(text):
 def main():
     OUTPUT.mkdir(parents=True, exist_ok=True)
     for product in json.loads((ROOT / "catalog.json").read_text())["products"]:
+        if not product.get("barcode"):
+            print(f"{product['sku']}: no barcode (recognized by look)")
+            continue
         text = payload(product)
         label(text).save(OUTPUT / f"{product['sku']}_barcode.png")
         photo = next((SUPPLIED / f"{product['barcode']}{s}" for s in (".png", ".jpg", ".jpeg")

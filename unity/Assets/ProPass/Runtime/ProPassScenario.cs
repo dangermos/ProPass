@@ -79,7 +79,7 @@ namespace ProPass
 
         // Ground truth for scoring, from world-space motion. A product is purchased when it
         // is carried inside the lane, starts behind the approach marker and ends past commit.
-        public Dictionary<int, int> ExpectedProductCounts(int knownProducts, out bool reviewExpected)
+        public Dictionary<int, int> ExpectedProductCounts(out bool reviewExpected)
         {
             var counts = new Dictionary<int, int>();
             reviewExpected = false;
@@ -95,7 +95,9 @@ namespace ProPass
                 }
                 var end = Position(i, duration);
                 bool purchased = inLane && minZ <= ApproachZ && end.z >= CommitZ + .4f;
-                if (actors[i].productIndex >= knownProducts) { if (inLane) reviewExpected = true; continue; }
+                // An unenrolled package or a locked-cage item is never charged: it goes to an associate.
+                if (actors[i].productIndex == ProPassScenarios.Unknown || actors[i].productIndex == ProPassScenarios.Locked)
+                { if (inLane) reviewExpected = true; continue; }
                 if (purchased) counts[actors[i].productIndex] = counts.TryGetValue(actors[i].productIndex, out int n) ? n + 1 : 1;
             }
             return counts;
@@ -107,7 +109,10 @@ namespace ProPass
         // The six original demo scenarios keep fixed products so the live checks stay stable.
         public static readonly string[] Classic = { "single", "duplicate", "mixed", "occlusion", "remove", "unknown" };
         // Messy scenarios randomize products, motion, occluders and rendering by seed.
-        public static readonly string[] Messy = { "hands", "shopper", "flatbed", "edge", "stacked", "distractors", "bystander", "hesitate", "parked" };
+        public static readonly string[] Messy = { "hands", "shopper", "flatbed", "edge", "stacked", "distractors", "bystander", "hesitate", "parked", "locked", "lumber" };
+
+        // Prefab indices (see ProPassSceneBuilder): 0-4 boxed products, then these.
+        public const int Unknown = 5, Locked = 6, Lumber = 7, TreatedLumber = 8;
 
         public static IEnumerable<string> All { get { foreach (var s in Classic) yield return s; foreach (var s in Messy) yield return s; } }
 
@@ -225,6 +230,22 @@ namespace ProPass
                     plan.Add(new ActorPlan { kind = ActorKind.Flatbed, follow = lead, tint = new Color(.82f, .68f, .46f) }
                         .At(0, side * 6f, -CarryY, -1.3f).At(from - 1.5f, side * 6f, -CarryY, -1.3f)
                         .At(from, 0f, -CarryY, -1.3f).At(from + hold, 0f, -CarryY, -1.3f).At(from + hold + 1.5f, -side * 6f, -CarryY, -1.3f));
+                    break;
+                }
+                case "locked":
+                {
+                    plan.description = "A locked-cage tool is carried through with an ordinary product";
+                    plan.Add(Walk(Locked, -.5f + R(-.1f, .1f), start, walkTime));
+                    plan.Add(Walk(Distinct(1)[0], .5f + R(-.1f, .1f), start, walkTime));
+                    break;
+                }
+                case "lumber":
+                {
+                    plan.description = "Lumber with no barcode: plain and pressure-treated boards, sometimes with a box";
+                    int boards = 1 + Pick(2);
+                    for (int i = 0; i < boards; i++)
+                        plan.Add(Walk(Pick(2) == 0 ? Lumber : TreatedLumber, boards == 1 ? R(-.5f, .1f) : (i == 0 ? -.7f : -.2f), start, walkTime));
+                    if (Pick(2) == 0) plan.Add(Walk(Distinct(1)[0], .65f + R(-.1f, .1f), start, walkTime));
                     break;
                 }
                 case "edge":

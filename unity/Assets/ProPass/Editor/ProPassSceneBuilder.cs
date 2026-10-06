@@ -13,10 +13,17 @@ namespace ProPass.Editor
     {
         public const string Root = "Assets/ProPass";
         static readonly Color[] Colors = { new Color(.93f,.24f,.18f), new Color(.08f,.58f,.72f),
-            new Color(.96f,.71f,.12f), new Color(.38f,.27f,.72f), new Color(.24f,.64f,.35f), new Color(.6f,.59f,.56f) };
-        static readonly string[] Names = { "DRILL KIT", "DRIVER KIT", "MEASURING TAPE", "FASTENERS", "WORK GLOVES", "UNENROLLED" };
+            new Color(.96f,.71f,.12f), new Color(.38f,.27f,.72f), new Color(.24f,.64f,.35f), new Color(.6f,.59f,.56f),
+            new Color(.16f,.18f,.22f), new Color(.86f,.74f,.52f), new Color(.45f,.5f,.3f) };
+        // Prefab order: five boxed products, the unenrolled package, a locked-cage tool, then lumber
+        // (plain and pressure-treated). Skus and ClassIndex must match catalog.json.
+        static readonly string[] Names = { "DRILL KIT", "DRIVER KIT", "MEASURING TAPE", "FASTENERS", "WORK GLOVES", "UNENROLLED",
+            "ROTARY HAMMER", "2x4 STUD", "2x4 TREATED" };
+        static readonly string[] Skus = { "PEX-001", "PEX-002", "PEX-003", "PEX-004", "PEX-005", "UNKNOWN", "PEX-006", "PEX-007", "PEX-008" };
+        static readonly int[] ClassIndex = { 0, 1, 2, 3, 4, -1, 5, 6, 7 };
         static readonly Vector3[] Sizes = { new Vector3(.67f,.48f,.39f),new Vector3(.61f,.45f,.34f),
-            new Vector3(.36f,.34f,.18f),new Vector3(.45f,.36f,.29f),new Vector3(.45f,.4f,.2f),new Vector3(.52f,.4f,.3f) };
+            new Vector3(.36f,.34f,.18f),new Vector3(.45f,.36f,.29f),new Vector3(.45f,.4f,.2f),new Vector3(.52f,.4f,.3f),
+            new Vector3(.58f,.42f,.3f),new Vector3(.09f,.04f,1.2f),new Vector3(.09f,.04f,1.2f) };
 
         [MenuItem("ProPass/Build checkout scene")]
         public static void Build()
@@ -73,8 +80,8 @@ namespace ProPass.Editor
 
             var simulator=new GameObject("ProPass Simulation").AddComponent<ProPassSimulation>();
             simulator.checkoutCamera=camera;
-            simulator.productPrefabs=new GameObject[6];
-            for(int i=0;i<6;i++) simulator.productPrefabs[i]=Product(i);
+            simulator.productPrefabs=new GameObject[Skus.Length];
+            for(int i=0;i<Skus.Length;i++) simulator.productPrefabs[i]=Product(i);
             var person=new GameObject("Customer proxy — simulated actor");
             var body=Primitive("Torso",PrimitiveType.Capsule,new Vector3(0,1.3f,0),new Vector3(.48f,.5f,.3f),dark);
             body.transform.SetParent(person.transform,true);
@@ -100,8 +107,19 @@ namespace ProPass.Editor
         static GameObject Product(int i)
         {
             var root=new GameObject("Product "+Names[i]);
-            var p=root.AddComponent<ProPassProduct>();p.sku=i<5?"PEX-00"+(i+1):"UNKNOWN";
-            p.classIndex=i;p.brandColor=Colors[i];p.packageSize=Sizes[i];
+            var p=root.AddComponent<ProPassProduct>();p.sku=Skus[i];
+            p.classIndex=ClassIndex[i];p.brandColor=Colors[i];p.packageSize=Sizes[i];
+            if(Sizes[i].z>1f)
+            {
+                // Lumber: a bare board with darker end grain, no packaging and no barcode.
+                var board=Cube("Board",Vector3.zero,Sizes[i],Mat("Product "+i,Colors[i]));board.transform.SetParent(root.transform,false);
+                for(int end=-1;end<=1;end+=2)
+                {
+                    var grain=Cube("End grain",new Vector3(0,0,end*(Sizes[i].z*.5f+.002f)),new Vector3(Sizes[i].x,Sizes[i].y,.004f),Mat("Product grain "+i,Colors[i]*.7f));
+                    grain.transform.SetParent(root.transform,false);
+                }
+                var boardPrefab=PrefabUtility.SaveAsPrefabAsset(root,Root+"/Prefabs/Product"+i+".prefab");UnityEngine.Object.DestroyImmediate(root);return boardPrefab;
+            }
             var body=Cube("Package",Vector3.zero,Sizes[i],Mat("Product "+i,Colors[i]));body.transform.SetParent(root.transform,false);
             var inset=Cube("Package face",new Vector3(0,0,-Sizes[i].z*.5f-.003f),new Vector3(Sizes[i].x*.91f,Sizes[i].y*.82f,.004f),
                 Mat("Product panel "+i,new Color(.045f,.055f,.075f)));inset.transform.SetParent(root.transform,false);
@@ -111,7 +129,7 @@ namespace ProPass.Editor
             brand.transform.SetParent(root.transform,false);
             var label=Text(Names[i],new Vector3(0,-Sizes[i].y*.04f,-Sizes[i].z*.5f-.014f),Sizes[i].x*.035f,Color.white,Quaternion.identity);
             label.transform.SetParent(root.transform,false);
-            var model=Text(i<5?"MODEL "+(i+1)+" / DEMO":"UNENROLLED",new Vector3(0,-Sizes[i].y*.22f,-Sizes[i].z*.5f-.014f),Sizes[i].x*.027f,Colors[i],Quaternion.identity);
+            var model=Text(i<5?"MODEL "+(i+1)+" / DEMO":i==6?"LOCKED CASE":"UNENROLLED",new Vector3(0,-Sizes[i].y*.22f,-Sizes[i].z*.5f-.014f),Sizes[i].x*.027f,Colors[i],Quaternion.identity);
             model.transform.SetParent(root.transform,false);
             // Real-life dressing from scripts/prepare_products.py: a barcode label on the front face, and the
             // product photo when the owner supplied one. Without those files the box keeps its placeholder art.

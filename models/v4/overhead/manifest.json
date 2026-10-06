@@ -1,0 +1,266 @@
+{
+  "classifier": {
+    "checkpoint": "torchvision EfficientNet_B0_Weights.IMAGENET1K_V1",
+    "seconds": 46.43205547332764,
+    "sha256": "e6e33204860279f27ccf6397c7bbe0044c1ab9caa80b711902e8aac721bcd236",
+    "epochs": 12,
+    "head_epochs": 4,
+    "batch": 32,
+    "device": "cuda:0",
+    "crop_size": 224,
+    "temperature": 0.5863626599311829,
+    "maximum_prototype_distance": 0.5880744934082032,
+    "dataset_sizes": {
+      "train": 2293,
+      "val": 401,
+      "test": 376
+    },
+    "val": {
+      "correct": 389,
+      "total": 401,
+      "accuracy": 0.970074812967581,
+      "loss": 0.23414563809398403
+    },
+    "test": {
+      "correct": 359,
+      "total": 376,
+      "accuracy": 0.9547872340425532,
+      "loss": 0.27414255605099047
+    },
+    "test_confusion": [
+      [
+        80,
+        4,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        3,
+        68,
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        64,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        1,
+        70,
+        3,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        2,
+        69,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1,
+        0,
+        8
+      ]
+    ],
+    "class_labels": [
+      "PEX-001",
+      "PEX-002",
+      "PEX-003",
+      "PEX-004",
+      "PEX-005",
+      "ZZZ-UNKNOWN"
+    ],
+    "test_accepted": 344,
+    "test_accepted_correct": 338,
+    "unknown_rejection": "Training-set outlier exposure (unenrolled gray package), validation-calibrated feature distance and confidence; broader unknown performance unverified",
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 1.189959873448175,
+        "val": {
+          "correct": 336,
+          "total": 401,
+          "accuracy": 0.8379052369077307,
+          "loss": 0.8248517198158322
+        }
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.6939256256239101,
+        "val": {
+          "correct": 361,
+          "total": 401,
+          "accuracy": 0.9002493765586035,
+          "loss": 0.5908140739300601
+        }
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.5475739535940197,
+        "val": {
+          "correct": 360,
+          "total": 401,
+          "accuracy": 0.8977556109725686,
+          "loss": 0.5115556004933288
+        }
+      },
+      {
+        "epoch": 4,
+        "train_loss": 0.48006901670063734,
+        "val": {
+          "correct": 370,
+          "total": 401,
+          "accuracy": 0.9226932668329177,
+          "loss": 0.4592710443565673
+        }
+      },
+      {
+        "epoch": 5,
+        "train_loss": 0.41193069023073264,
+        "val": {
+          "correct": 383,
+          "total": 401,
+          "accuracy": 0.9551122194513716,
+          "loss": 0.3297852591386162
+        }
+      },
+      {
+        "epoch": 6,
+        "train_loss": 0.333459122701862,
+        "val": {
+          "correct": 385,
+          "total": 401,
+          "accuracy": 0.9600997506234414,
+          "loss": 0.2961143843848212
+        }
+      },
+      {
+        "epoch": 7,
+        "train_loss": 0.2908762632513795,
+        "val": {
+          "correct": 384,
+          "total": 401,
+          "accuracy": 0.9576059850374065,
+          "loss": 0.2829289432624332
+        }
+      },
+      {
+        "epoch": 8,
+        "train_loss": 0.26188092040303385,
+        "val": {
+          "correct": 388,
+          "total": 401,
+          "accuracy": 0.9675810473815462,
+          "loss": 0.2614780195484732
+        }
+      },
+      {
+        "epoch": 9,
+        "train_loss": 0.24724844741446972,
+        "val": {
+          "correct": 386,
+          "total": 401,
+          "accuracy": 0.9625935162094763,
+          "loss": 0.2698574922700178
+        }
+      },
+      {
+        "epoch": 10,
+        "train_loss": 0.22981771694173783,
+        "val": {
+          "correct": 389,
+          "total": 401,
+          "accuracy": 0.970074812967581,
+          "loss": 0.24652713098728152
+        }
+      },
+      {
+        "epoch": 11,
+        "train_loss": 0.2239560541488487,
+        "val": {
+          "correct": 389,
+          "total": 401,
+          "accuracy": 0.970074812967581,
+          "loss": 0.23414563809398403
+        }
+      },
+      {
+        "epoch": 12,
+        "train_loss": 0.2125725964700817,
+        "val": {
+          "correct": 389,
+          "total": 401,
+          "accuracy": 0.970074812967581,
+          "loss": 0.2358764162533301
+        }
+      }
+    ],
+    "dataset": "Unity synthetic crop splits; no real-camera transfer claim"
+  },
+  "detector": {
+    "checkpoint": "YOLO26n COCO pretrained",
+    "architecture": "merchandise + person + cart (occluder-aware)",
+    "seconds": 186.22819018363953,
+    "sha256": "3fb0c92f63c073b0c6dca33cd9d9bf534bc26e90e55c0e83208526db3827c48c",
+    "epochs_requested": 60,
+    "batch": 16,
+    "image_size": 640,
+    "device": "0",
+    "classes": [
+      "merchandise",
+      "person",
+      "cart"
+    ],
+    "test": {
+      "map50": 0.9757707724647391,
+      "map50_95": 0.8798271136181995,
+      "precision": 0.978894578062088,
+      "recall": 0.9627248111136503
+    },
+    "dataset": "Unity synthetic scene splits; no real-camera transfer claim",
+    "train_images": 1800,
+    "val_images": 300,
+    "test_images": 300
+  },
+  "pipeline": {
+    "version": "Phase C experimental two-camera RGB pipeline",
+    "classifier_rejection": "trained reject head + temporal confidence and margin; optional prototype bank disabled",
+    "prototype_rejection": false,
+    "tracker": "BoT-SORT per camera + calibrated fusion + physical ledger",
+    "cameras": [
+      "lane",
+      "overhead"
+    ],
+    "calibration_plane_y_m": 0.9,
+    "validation_status": "source and config frozen after development; held-out and live scoring pending",
+    "runtime_ground_truth": false,
+    "known_limitations": [
+      "Synthetic five-product catalog; no real-camera transfer",
+      "Unknown tests cover one gray package family",
+      "Nested detector fragments and conflicting camera identities require review"
+    ],
+    "historical_verified_main": {
+      "commit": "833bce284cec9e5aa805260d554defb15c633e8f",
+      "held_out_passed": 67,
+      "held_out_total": 70,
+      "live_passed": 6,
+      "live_total": 6,
+      "weights": "models/v2"
+    }
+  }
+}

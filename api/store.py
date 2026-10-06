@@ -9,7 +9,7 @@ from .models import Base, Cart, CheckoutEvent, CheckoutSession, PhysicalItem, Re
 
 # Must match ProPassScenarios.Classic + Messy in unity/Assets/ProPass/Runtime/ProPassScenario.cs.
 SCENARIOS = {"single", "duplicate", "mixed", "occlusion", "remove", "unknown",
-             "hands", "shopper", "flatbed", "edge", "stacked", "distractors", "bystander", "hesitate", "parked"}
+             "hands", "shopper", "flatbed", "edge", "stacked", "distractors", "bystander", "hesitate", "parked", "locked", "lumber"}
 
 
 def new_id():

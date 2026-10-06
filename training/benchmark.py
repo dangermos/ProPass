@@ -18,7 +18,7 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 CLASSIC = ["single", "duplicate", "mixed", "occlusion", "remove", "unknown"]
-MESSY = ["hands", "shopper", "flatbed", "edge", "stacked", "distractors", "bystander", "hesitate", "parked"]
+MESSY = ["hands", "shopper", "flatbed", "edge", "stacked", "distractors", "bystander", "hesitate", "parked", "locked", "lumber"]
 
 
 def iou(a, b):
