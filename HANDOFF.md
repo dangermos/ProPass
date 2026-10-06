@@ -35,6 +35,7 @@ Owner: Danny (GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants
 
 ## Working notes
 
+- Recording and exporting fail while the Editor is in Play mode, and Danny often leaves it playing. Check `unity command editor_status` first and ask before stopping it. `RecordDeferred` did not always fire when the Editor was unfocused: call `ProPassBenchmarkRecorder.Record(...)` through `eval` instead (the CLI times out after 5 s, but the recording continues).
 - Unity Editor is usually open on `propass/unity`. Drive it with the Unity CLI: `unity command recompile`, `recompile_status`, `eval --code '...'`, `editor_play`, `editor_stop`. Long work goes through `RecordDeferred` or `ProPassDatasetExporter.Begin` (both return at once). If the Editor is closed: `unity projects open "$PWD/unity"`.
 - Start services with `bash scripts/start.sh`, or separately: `nohup .venv/bin/python -m uvicorn api.app:app --host 127.0.0.1 --port 8000 --no-access-log > artifacts/logs/api.log 2>&1 &` and `npm run dev` in `web/`. To restart the API, kill the pid from `ss -ltnp 'sport = :8000'`.
 - Never `git add -A` without checking for `*.pt` or data folders. `main`'s history was rewritten once to remove them. A backup of the old history is at `artifacts/propass-history-before-clean.bundle`.
