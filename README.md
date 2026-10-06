@@ -51,7 +51,7 @@ The trained weights (`models/detector.pt`, `models/classifier.pt`) aren't in git
 | ↩️ **Change of mind** | Added on the forward crossing, removed on the observed reverse crossing | ✅ live |
 | ❓ **Unknown product** | Gray unenrolled package is tracked, and checkout is blocked for review | ✅ live |
 
-Nine more **messy scenarios** stress the tracker: busy hands, a crossing shopper, a lumber flatbed, a parked flatbed, partial views at the frame edge, stacked boxes, distractors, a shopper in the next aisle, and hesitation. On held-out seeds the two-camera system passes **72 of 75** runs ([benchmark](docs/benchmark.md)). Stacked identical boxes are the main remaining failure.
+Eleven more **messy scenarios** stress it: busy hands, a crossing shopper, a lumber flatbed, a parked flatbed, partial views at the frame edge, stacked boxes, distractors, a shopper in the next aisle, hesitation, a locked-cage tool and bare lumber. Boxes carry **barcode labels** that a high-resolution scan camera reads. Items without one are recognized by look. On held-out seeds, **78 of 85** runs finish fully automatically with exactly the right cart and nothing wrongly charged ([benchmark](docs/benchmark.md), [how it works](docs/pro-express-v2.md)). Anything the system can't settle goes to an associate, and the scanned cart is kept.
 
 ![Two cameras: a flatbed hides the product from the lane camera while the coverage map keeps tracking it through the overhead camera](docs/images/two-camera-live.jpg)
 

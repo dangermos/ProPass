@@ -4,27 +4,27 @@ For the next person or AI picking this up. Read this first, then [docs/roadmap.m
 
 ## Where things stand
 
-`main` holds everything and is verified: Phases A, B and C, plus the title screen and dashboard tabs.
-
-| Check | Result |
+| Branch | State |
 |---|---|
-| Tests | 124 pass (`.venv/bin/python -m pytest tests -q`) |
-| Held-out benchmark, two cameras | 72 / 75 ([docs/benchmark.md](docs/benchmark.md)) |
-| Held-out benchmark, lane camera only | 71 / 75 |
-| Live check, both cameras | 6 / 6 (`scripts/verify_live.py`) |
+| `main` | Phases A, B and C plus the dashboard. Verified on 2026-10-06: held-out 72/75 with two cameras, no barcodes. |
+| `pro-express-v2` | **Current work.** Barcode scanning, ratings, locked items, associate hand-off, customer phone view, eight products. Held-out: **78/85** fully automatic, nothing wrongly charged. 143 tests pass. Not merged yet: ask Danny. |
 
-Owner: Danny (GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants real trained models, colorful visual docs, no bloat, and to be asked before deleting or restructuring. Commit and push often.
+Owner: Danny (GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants real trained models, colorful visual docs, no bloat, and to be asked before deleting or restructuring. Commit and push often. He likes short progress updates as work goes on.
+
+**The plan, progress checklist and results for the current work are in [docs/pro-express-v2.md](docs/pro-express-v2.md). Start there.**
 
 ## Things that are easy to get wrong
 
-- **Models are per camera.** `models/detector.pt` and `models/classifier.pt` are the lane camera's (the v2 weights). `models/overhead/` holds the overhead camera's pair. One shared two-view pair scored 39/75 through the lane camera, so don't merge them back. Weights are git-ignored. Earlier sets are in `models/v1/`, `models/v2/`.
+- **Models are per camera.** `models/detector.pt` and `models/classifier.pt` are the lane camera's. `models/overhead/` holds the overhead camera's pair. Train each with `training.train ... --camera lane|overhead`. They must match `catalog.json` (eight products): after changing the catalog, re-export data, retrain both pairs and re-record the benchmark. One shared two-view pair scored 39/75 through the lane camera, so don't merge them back. Weights are git-ignored. Earlier sets are in `models/v1/`, `v2/`, `v4/`.
 - **Fusion is lane-primary** (`VisionEngine._fuse`). Only the lane camera starts objects. A symmetric version scored 45–58/75 because stray overhead detections blocked checkout.
-- **Tune on `artifacts/benchmark` (seeds 0–4), report on `artifacts/benchmark-test` (seeds 5–9).** Both hold two-camera recordings of 15 scenarios × 5 seeds. The older single-camera sets are `artifacts/benchmark-1cam` and `artifacts/benchmark-test-1cam`.
+- **Tune on `artifacts/benchmark` (seeds 0–4), report on `artifacts/benchmark-test` (seeds 5–9).** Both hold three-camera recordings (lane, overhead, scan) of 17 scenarios × 5 seeds with the eight-product catalog. Older sets are kept beside them (`-1cam`, `-2cam`, `-v2a`).
 - After moving a camera, re-export `vision/cameras.json` (Unity menu: ProPass → Export camera calibration) and restart the API.
 
-## What's next
+## Waiting on Danny
 
-**[docs/pro-express-v2.md](docs/pro-express-v2.md)** is the current plan (Danny's brief from 2026-10-06): real product looks with barcodes, a barcode reader, ratings, restricted items, associate handoff and a customer phone view. Work it phase by phase and tick the checklist at its bottom. Danny's own product photos and barcodes are in `Barcodes/` (git-ignored).
+- More product photo and barcode pairs in `Barcodes/` (git-ignored, two files per 10-digit SKU). Claude does not copy images from homedepot.com. Run `scripts/prepare_products.py`, add catalog entries, rebuild the scene, then retrain.
+- The Asset Store character pack: Danny has to Download and Import it in Unity's Package Manager. Keep it out of git. Then phase E6 in the plan.
+- Whether to merge `pro-express-v2` into `main`.
 
 ## Open problems, in rough priority
 

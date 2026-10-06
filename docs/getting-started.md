@@ -81,7 +81,7 @@ Keep that terminal open, and press Ctrl+C to stop both services. Logs go to `art
 ## 5️⃣ Run a scenario
 
 1. In Unity, open **Checkout.unity** and press **▶ Play**. Make sure the Editor's Pause button is off.
-2. Open the dashboard. The **title screen** lists 15 scenarios, with previews and benchmark scores when reports are available. Start with **Identical products** to inspect two physical units of one SKU.
+2. Open the dashboard. The **title screen** lists 17 scenarios, with previews and benchmark scores when reports are available. Start with **Identical products** to inspect two physical units of one SKU.
 3. Click a card. Unity switches to that scenario within about 0.35 s, and the dashboard opens the **Live lane** tab.
 4. In **Live lane**, switch between **Lane camera** and **Overhead camera**. The view counter should show both images present. The coverage map shows the shared lane, orange approach marker and teal commit marker; one physical object has the same canonical ID across its image views and map dot.
 5. Items join the cart after an observed forward crossing with accepted SKU evidence. For the clean scenarios, wait about 15 seconds, then click **Review checkout** and **Confirm demo checkout** once evidence is resolved. Review pauses capture, drains accepted camera groups and freezes the cart version before confirmation.

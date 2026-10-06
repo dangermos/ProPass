@@ -60,7 +60,7 @@ sequenceDiagram
 | # | Step | Where in the code | Notes |
 |:-:|---|---|---|
 | 1 | Capture | `ProPassSimulation.SendFrame` in [unity/…/ProPassSimulation.cs](../unity/Assets/ProPass/Runtime/ProPassSimulation.cs) | Renders both cameras before yielding to the upload loop. JPEG quality is 85; capture dimensions are 960×540. Camera setup lives in [ProPassCameras.cs](../unity/Assets/ProPass/Runtime/ProPassCameras.cs). |
-| 2 | Upload | same | Two `POST /api/frames` requests, each with `camera_id`, shared `frame_id`, `timestamp` and `run_id`; body is `image/jpeg`, timeout is 3 s. Timestamp is scenario time in seconds. |
+| 2 | Upload | same | Three `POST /api/frames` requests (lane, overhead, and the 3840×1080 barcode scan camera), each with `camera_id`, shared `frame_id`, `timestamp` and `run_id`; body is `image/jpeg`, timeout is 3 s. Timestamp is scenario time in seconds. |
 | 3 | Validate and group | `frames()` in [api/app.py](../api/app.py) | Checks JPEG type/size, configured camera, current run and capture state. One camera cannot contribute twice. Timestamps in a group must agree within 1 ms. Late or duplicate payloads cannot reopen a completed group. |
 | 4 | Queue | `Runtime.flush_pending` / `Runtime.queue` | At most **two groups**. The oldest whole group is dropped when full. Complete groups enqueue immediately; the next frame number flushes an incomplete group with its available views. |
 | 5 | Infer | `Runtime.worker` → `VisionEngine.process_frames` in [vision/engine.py](../vision/engine.py) | Decodes available images and processes one group at a time in a worker thread. Missing images are not substituted with older ones. Details are in [vision.md](vision.md). |
