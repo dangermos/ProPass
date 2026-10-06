@@ -27,6 +27,7 @@ class Observation:
     full_view: bool | None = None       # seen clear of the image border by some camera
     at_entry_edge: bool | None = None   # at the entry edge of camera coverage
     sized: bool = True                  # bbox area is a meaningful apparent size
+    barcode: str | None = None          # SKU decoded from a barcode on this box, if one was read
     ambiguous_identity: bool = False   # calibrated camera views disagree about one prior object
     conflicting_tracks: tuple[int, ...] = ()  # distinct established identities joined by camera fusion
 
@@ -57,6 +58,11 @@ class LedgerConfig:
     # center is outside it (e.g. a shopper in the next aisle) are tracked but
     # can never become pending, purchased or a reason for review.
     lane_polygon: tuple[tuple[float, float], ...] | None = None
+    # SKUs that can never be self-checked-out (for example, tools from a locked cage).
+    # They are tracked and reported, then routed to an associate.
+    restricted_skus: tuple[str, ...] = ()
+    # Averaged visual probability at or above this is rated "high", below it "medium".
+    high_rating: float = 0.95
     lane_margin: float = 0.015
     # Longer gaps (a flatbed or shopper hiding an item) may still re-attach to
     # a lost object when the reappearance fits its motion. The position gate
@@ -93,6 +99,8 @@ class PhysicalObject:
     membership: bool = False
     review_reason: str | None = None
     ambiguous_identity: bool = False
+    sku_source: str | None = None       # "barcode" or "visual": how the SKU was established
+    barcode_reads: int = 0
     sequence: int = 0
     # Appearance memory from clear views only, so a crop taken while something
     # slides in front of the box doesn't become the object's identity.
@@ -229,7 +237,26 @@ class PhysicalLedger:
             self._review(obj, timestamp, "Ambiguous tracker fragmentation: physical identity needs review")
         return obj
 
+    def _scan(self, obj: PhysicalObject, obs: Observation, timestamp: float):
+        """A decoded barcode is the strongest SKU evidence and outranks the visual classifier."""
+        if obs.barcode not in self.skus:
+            self._review(obj, timestamp, "Barcode is not in the catalog")
+            return
+        obj.barcode_reads += 1
+        if obj.sku == obs.barcode:
+            obj.sku_source = "barcode"
+        elif obj.sku is None or (obj.sku_source == "visual" and not obj.membership):
+            obj.sku, obj.sku_source, obj.accepted_confidence = obs.barcode, "barcode", 1.0
+            if not obj.ambiguous_identity:
+                obj.review_reason = None
+            self._emit(obj, "SKU_RESOLVED", timestamp)
+        else:
+            # Never silently rewrite a cart member or an earlier barcode read.
+            self._review(obj, timestamp, "Barcode disagrees with the product already recorded")
+
     def _recognize(self, obj: PhysicalObject, obs: Observation, timestamp: float):
+        if obs.barcode:
+            self._scan(obj, obs, timestamp)
         if (obs.quality < self.config.minimum_quality or not obs.probabilities or
                 timestamp - obj.last_evidence < self.config.evidence_interval):
             return
@@ -251,11 +278,12 @@ class PhysicalLedger:
         if enough and confident:
             if obj.sku is None:
                 obj.sku = candidate_sku
+                obj.sku_source = "visual"
                 obj.accepted_confidence = averaged[top]
                 if not obj.ambiguous_identity:
                     obj.review_reason = None
                 self._emit(obj, "SKU_RESOLVED", timestamp)
-            elif obj.sku != candidate_sku:
+            elif obj.sku != candidate_sku and obj.sku_source != "barcode":
                 # Never silently rewrite the SKU of a cart member. A class flip
                 # can be caused by an ID switch, so it is an explicit review.
                 self._review(obj, timestamp, "Conflicting SKU evidence on the same physical object")
@@ -316,11 +344,14 @@ class PhysicalLedger:
                 if not obj.membership and obj.state != "REMOVED":
                     obj.state = "TRACKED"
         if obj.committed and not obj.membership:
-            if obj.sku and not obj.review_reason:
+            if obj.sku in self.config.restricted_skus:
+                self._review(obj, timestamp, "Restricted item: an associate must release it")
+            elif obj.sku and not obj.review_reason:
                 obj.membership = True
                 obj.state = "ADDED"
                 self._emit(obj, "ITEM_ADDED", timestamp)
-            elif timestamp - obj.first_seen >= self.config.unknown_timeout:
+            elif timestamp - obj.first_seen >= self.config.unknown_timeout and not obj.review_reason:
+                # A more specific reason (an unknown barcode, say) is kept.
                 self._review(obj, timestamp, "Checkout crossing lacks accepted SKU evidence")
 
     def update(self, observations: list[Observation], frame_id: int, timestamp: float,
@@ -441,10 +472,18 @@ class PhysicalLedger:
                    if not obj.membership and obj.state not in ("REMOVED", "OUTSIDE", "LEFT", "FRAGMENT") and
                    (obj.visible or obj.approach_observed)]
         review = bool(pending) or any(obj.review_reason for obj in self.objects.values())
+        # Two different reasons checkout can't finish on its own: items still moving
+        # through the lane (wait), and items an associate has to settle (hand off).
+        assist = [{"object_id": obj.object_id, "sku": obj.sku, "reason": obj.review_reason,
+                   "restricted": obj.sku in self.config.restricted_skus}
+                  for obj in self.objects.values()
+                  if obj.review_reason and obj.state not in ("OUTSIDE", "LEFT", "FRAGMENT")]
+        in_progress = sum(1 for obj in pending if not obj.review_reason)
         output = {"frame_id": frame_id, "timestamp": timestamp, "run_id": run_id,
                   "detections": detections,
                   "objects": [self._serialize(obj) for obj in self.objects.values()],
                   "events": self._events.copy(), "review_required": review,
+                  "assist": assist, "in_progress": in_progress,
                   "metrics": {"visible_objects": len(observations),
                               "physical_objects": len(self.objects),
                               "cart_units": sum(obj.membership for obj in self.objects.values()),
@@ -476,9 +515,20 @@ class PhysicalLedger:
             claimed.add(lost.object_id)
             assigned[obs.track_id] = lost
 
-    @staticmethod
-    def _serialize(obj: PhysicalObject):
+    def _rating(self, obj: PhysicalObject) -> str | None:
+        """How sure the system is about this item, for the customer and the associate."""
+        if obj.review_reason:
+            return "needs_associate"
+        if obj.sku is None:
+            return None
+        if obj.sku_source == "barcode":
+            return "verified"
+        return "high" if (obj.accepted_confidence or 0) >= self.config.high_rating else "medium"
+
+    def _serialize(self, obj: PhysicalObject):
         return {"bbox": list(obj.bbox), "track_id": obj.track_id,
+                "sku_source": obj.sku_source, "barcode_reads": obj.barcode_reads,
+                "rating": self._rating(obj),
                 "object_id": obj.object_id, "sku": obj.sku,
                 "confidence": obj.confidence,
                 "accepted_confidence": obj.accepted_confidence, "state": obj.state,
