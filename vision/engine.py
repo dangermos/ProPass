@@ -57,6 +57,8 @@ class VisionEngine:
             self.calibration = geometry.Calibration(calibration_path)
             ledger.update(self.calibration.ledger_overrides())
             ledger.update({k: v for k, v in config.get("world_ledger", {}).items() if k in permitted})
+        # Restricted products come from the catalog and always go to an associate.
+        ledger["restricted_skus"] = tuple(p["sku"] for p in self.products if p.get("restricted"))
         self.fuse_radius = float(config.get("fuse_radius_m", 0.45))
         self.ledger = PhysicalLedger(self.skus, LedgerConfig(**ledger))
         self.image_size = int(config.get("image_size", 640))

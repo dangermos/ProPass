@@ -1,7 +1,7 @@
 # 🧰 Pro Express v2: plan
 
 > [!NOTE]
-> **Status: planned, not built.** Written on 2026-10-06 from Danny's brief, before any code, so the work can be picked up by anyone. Progress is tracked in the checklist at the bottom.
+> **Status: in progress on the `pro-express-v2` branch.** Written on 2026-10-06 from Danny's brief, before any code, so the work can be picked up by anyone. Progress is tracked in the checklist at the bottom.
 
 ## 🎯 The brief, in Danny's words (condensed)
 
@@ -154,6 +154,9 @@ Same discipline as before: seeded scenarios, tune on seeds 0–4, report once on
 - [ ] E2 Scan cameras and reader
 - [ ] E3 Retrain for the new look
 - [ ] E4 Ratings, restricted items, assist flow
+  - [x] Ledger: barcode evidence outranks the classifier, ratings, restricted SKUs, assist list (`vision/ledger.py`, `tests/test_ledger_scanning.py`)
+  - [x] API: `ASSIST` cart status, `POST /api/assist/add` and `/api/assist/dismiss`, line ratings (`api/`, `tests/test_api_assist.py`)
+  - [ ] Catalog `restricted` flags, benchmark assist-rate metric, docs
 - [ ] E5 Customer phone and associate view
 - [ ] E6 Characters
 - [ ] E7 Benchmark, docs, demo recording

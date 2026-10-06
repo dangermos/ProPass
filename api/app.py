@@ -26,6 +26,15 @@ class CustomerRequest(BaseModel):
     customer_name: str = Field(min_length=1, max_length=80)
 
 
+class AssistAddRequest(BaseModel):
+    sku: str = Field(min_length=1, max_length=40)
+    object_id: str | None = Field(default=None, max_length=100)
+
+
+class AssistDismissRequest(BaseModel):
+    object_id: str = Field(min_length=1, max_length=100)
+
+
 class ConfirmationRequest(BaseModel):
     version: int = Field(ge=0)
     idempotency_key: str = Field(min_length=8, max_length=100)
@@ -86,6 +95,13 @@ class Runtime:
             return self.vision.geometry()
         return self._geometry
 
+    def assist_state(self):
+        """(items still moving, items waiting for an associate). A vision result without
+        these fields (an older or stub engine) is treated as all-or-nothing review."""
+        if "assist" not in self.result:
+            return (1 if self.result.get("review_required") else 0), []
+        return self.result.get("in_progress", 0), [a for a in self.result["assist"] if a["object_id"] not in self.store.resolved]
+
     def snapshot(self):
         state = self.store.snapshot()
         state["simulator"]["paused"] = self.paused
@@ -100,7 +116,14 @@ class Runtime:
         state["frame"] = state["frames"].get(self.frame["camera_id"]) if self.frame else None
         state["detections"] = self.result.get("detections", [])
         state["objects"] = self.result.get("objects", [])
-        state["review_required"] = bool(self.result.get("review_required", False) or self.error)
+        in_progress, assist = self.assist_state()
+        state["in_progress"], state["assist"] = in_progress, assist
+        state["review_required"] = bool(in_progress or assist or self.error)
+        # Rate each cart line by its least certain member; an associate's addition is its own rating.
+        order = ["verified", "high", "medium", "needs_associate"]
+        for line in state["cart"]["items"]:
+            ratings = [o.get("rating") for o in state["objects"] if o.get("membership") and o.get("sku") == line["sku"] and o.get("rating")]
+            line["rating"] = max(ratings, key=order.index) if ratings else ("associate" if line.get("added_by_associate") else None)
         state["metrics"] = dict(self.result.get("metrics", {}), processed_frames=self.processed_frames,
                                 dropped_frames=self.dropped_frames, queue_depth=self.queue.qsize(),
                                 incomplete_frame_groups=self.incomplete_frame_groups,
@@ -405,7 +428,8 @@ def create_app(database_url=None, vision_factory: Callable | None = None, camera
                 if not runtime.vision_status().get("ready", False):
                     runtime.store.abort_prepare()
                     raise CheckoutConflict("The vision checkpoint is not ready")
-                runtime.store.finish_prepare(run_id, runtime.frame["frame_id"], bool(runtime.result.get("review_required", False)))
+                in_progress, assist = runtime.assist_state()
+                runtime.store.finish_prepare(run_id, runtime.frame["frame_id"], bool(in_progress), bool(assist))
             except CheckoutConflict as exc:
                 conflict = str(exc)
             state = runtime.snapshot()
@@ -414,12 +438,35 @@ def create_app(database_url=None, vision_factory: Callable | None = None, camera
             raise HTTPException(409, conflict)
         return state
 
+    async def associate(action):
+        async with runtime.lock:
+            try:
+                action()
+                if not runtime.assist_state()[1]:
+                    runtime.store.finish_assist()
+            except CheckoutConflict as exc:
+                raise HTTPException(409, str(exc)) from exc
+            state = runtime.snapshot()
+        await runtime.publish()
+        return state
+
+    @app.post("/api/assist/add")
+    async def assist_add(body: AssistAddRequest):
+        """An associate adds an item (optionally settling a flagged object) or releases a restricted one."""
+        return await associate(lambda: runtime.store.associate_add(body.sku, body.object_id))
+
+    @app.post("/api/assist/dismiss")
+    async def assist_dismiss(body: AssistDismissRequest):
+        """An associate confirms a flagged detection is nothing to charge."""
+        return await associate(lambda: runtime.store.associate_dismiss(body.object_id))
+
     @app.post("/api/cart/confirm")
     async def confirm(body: ConfirmationRequest):
         async with runtime.lock:
             state = runtime.store.snapshot()
             try:
-                receipt = runtime.store.confirm(body.version, body.idempotency_key, state["session"]["run_id"], bool(runtime.result.get("review_required", False) or runtime.error))
+                in_progress, assist = runtime.assist_state()
+                receipt = runtime.store.confirm(body.version, body.idempotency_key, state["session"]["run_id"], bool(in_progress or assist or runtime.error))
             except CheckoutConflict as exc:
                 raise HTTPException(409, str(exc)) from exc
             runtime.paused = True

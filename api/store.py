@@ -40,6 +40,7 @@ class Store:
             raise CheckoutConflict("Unknown scenario")
         name = customer_name or (self.snapshot()["session"]["customer_name"] if self.session_id else "Avery Morgan")
         self.session_id, self.cart_id, run_id = new_id(), new_id(), new_id()
+        self.resolved = set()   # tracked objects an associate has settled in this session
         with self.db.begin() as db:
             db.add(CheckoutSession(id=self.session_id, customer_name=name, run_id=run_id, scenario=scenario, status="OPEN"))
             db.add(Cart(id=self.cart_id, session_id=self.session_id, status="OPEN", version=0))
@@ -73,26 +74,69 @@ class Store:
     def abort_prepare(self):
         with self.db.begin() as db:
             cart, session = db.get(Cart, self.cart_id), db.get(CheckoutSession, self.session_id)
-            if cart.status in {"PREPARING", "REVIEWING"}:
+            if cart.status in {"PREPARING", "REVIEWING", "ASSIST"}:
                 self._invalidate(cart, session)
 
-    def finish_prepare(self, run_id, frame_id, review_required):
+    def finish_prepare(self, run_id, frame_id, in_progress, assist_open=False):
+        """Freeze the cart for review. Items still moving through the lane block it. Items
+        that need an associate don't: the scanned part is kept and the cart waits in ASSIST."""
         blocked = False
         with self.db.begin() as db:
             cart, session = db.get(Cart, self.cart_id), db.get(CheckoutSession, self.session_id)
             if session.run_id != run_id or cart.status != "PREPARING":
                 raise CheckoutConflict("The checkout session changed during preparation")
             unresolved = db.scalars(select(PhysicalItem).where(PhysicalItem.session_id == self.session_id, PhysicalItem.active.is_(True), PhysicalItem.sku.is_(None))).first()
-            if review_required or unresolved:
+            if in_progress or unresolved:
                 self._invalidate(cart, session)
                 blocked = True
             else:
-                cart.status = session.status = "REVIEWING"
+                cart.status = session.status = "ASSIST" if assist_open else "REVIEWING"
                 cart.prepared_version, cart.prepared_frame_id, cart.prepared_run_id = cart.version, frame_id, run_id
             version = cart.version
         if blocked:
-            raise CheckoutConflict("Unresolved product evidence requires review. Resume or run another scenario.")
+            raise CheckoutConflict("Items are still moving through the lane. Wait for them to cross, or resume."
+                                   if in_progress else "Unresolved product evidence requires review. Resume or run another scenario.")
         return version
+
+    def _associate_event(self, db, session, kind, object_id, sku=None):
+        db.add(CheckoutEvent(session_id=self.session_id, run_id=session.run_id, event_id=new_id(), event_type=kind,
+                             object_id=object_id, sku=sku, timestamp=0.0,
+                             detail=dict(event_id=new_id(), type=kind, object_id=object_id, sku=sku, timestamp=0.0, by="associate")))
+
+    def associate_add(self, sku, resolves=None):
+        """An associate adds an item the cameras couldn't settle, or releases a restricted one."""
+        if sku not in self.products:
+            raise CheckoutConflict("That product is not in the catalog")
+        with self.db.begin() as db:
+            cart, session = db.get(Cart, self.cart_id), db.get(CheckoutSession, self.session_id)
+            if cart.status not in {"ASSIST", "REVIEWING"}:
+                raise CheckoutConflict("Review the checkout before an associate adds items")
+            object_id = f"associate:{resolves or new_id()}"
+            if db.scalar(select(PhysicalItem.id).where(PhysicalItem.session_id == self.session_id, PhysicalItem.object_id == object_id)):
+                raise CheckoutConflict("An associate already settled that item")
+            db.add(PhysicalItem(id=new_id(), session_id=self.session_id, object_id=object_id, sku=sku, active=True))
+            self._associate_event(db, session, "ASSOCIATE_ADDED", object_id, sku)
+            cart.version += 1
+            cart.prepared_version = cart.version
+        if resolves:
+            self.resolved.add(resolves)
+
+    def associate_dismiss(self, object_id):
+        """An associate confirms a flagged detection is not something to charge."""
+        with self.db.begin() as db:
+            cart, session = db.get(Cart, self.cart_id), db.get(CheckoutSession, self.session_id)
+            if cart.status != "ASSIST":
+                raise CheckoutConflict("There is nothing waiting for an associate")
+            self._associate_event(db, session, "ASSOCIATE_DISMISSED", object_id)
+        self.resolved.add(object_id)
+
+    def finish_assist(self):
+        """Every flagged item is settled: the cart moves on to customer confirmation."""
+        with self.db.begin() as db:
+            cart, session = db.get(Cart, self.cart_id), db.get(CheckoutSession, self.session_id)
+            if cart.status == "ASSIST":
+                cart.status = session.status = "REVIEWING"
+                cart.prepared_version = cart.version
 
     def apply_result(self, result):
         with self.db.begin() as db:
@@ -135,11 +179,14 @@ class Store:
             return True
 
     def _lines(self, db):
-        counts = {}
+        counts, by_associate = {}, {}
         for item in db.scalars(select(PhysicalItem).where(PhysicalItem.session_id == self.session_id, PhysicalItem.active.is_(True))):
             if item.sku:
                 counts[item.sku] = counts.get(item.sku, 0) + 1
-        return [dict(sku=sku, name=self.products[sku]["name"], quantity=qty, unit_price=self.products[sku]["price"], line_total=round(self.products[sku]["price"] * qty, 2)) for sku, qty in sorted(counts.items())]
+                by_associate[item.sku] = by_associate.get(item.sku, 0) + item.object_id.startswith("associate:")
+        return [dict(sku=sku, name=self.products[sku]["name"], quantity=qty, unit_price=self.products[sku]["price"],
+                     line_total=round(self.products[sku]["price"] * qty, 2), added_by_associate=by_associate[sku])
+                for sku, qty in sorted(counts.items())]
 
     @staticmethod
     def _receipt(receipt):
