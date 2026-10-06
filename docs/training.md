@@ -21,6 +21,8 @@ flowchart LR
     classDef e fill:#d9f7e8,stroke:#2ea043,color:#0b3d1d
 ```
 
+> 📈 **Watching a run.** The dashboard's **Training** tab shows each step below as a progress bar and refreshes every 3 seconds. It reads `training/data/export-progress.json`, the newest `artifacts/logs/train-*.log` (so send training output there, for example `... 2>&1 | tee artifacts/logs/train-v7.log`), and the run folders under `artifacts/benchmark*`. It only watches. It never starts anything.
+
 ## 📦 1. Export a dataset from Unity
 
 Each randomized scene selects the lane or overhead camera with equal probability, then varies camera pose, lighting and its color, and package placement, rotation and scale. This creates approximately equal numbers of both views; it does not render a paired training image for every scene. The manifest records `camera`. Scenes are deliberately cluttered with the same actors the messy scenarios use:

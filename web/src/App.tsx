@@ -7,12 +7,14 @@ import LiveTab from './LiveTab';
 import DecisionsTab from './DecisionsTab';
 import ModelsTab from './ModelsTab';
 import BenchmarkTab from './BenchmarkTab';
+import TrainingTab from './TrainingTab';
 
 const tabs=[
   {id:'live',name:'Live lane',icon:'camera',hint:'Camera, overlays, cart and checkout'},
   {id:'decisions',name:'Decisions',icon:'list',hint:'Why each object is (or isn’t) in the cart'},
   {id:'models',name:'Models',icon:'chip',hint:'Detector, classifier and tracker results'},
   {id:'benchmark',name:'Benchmark',icon:'chart',hint:'Held-out scenario pass rates'},
+  {id:'training',name:'Training',icon:'pulse',hint:'Progress of data export, training, recording and scoring'},
 ];
 
 // The hash keeps the current view on refresh: #/ is the title screen, #/lab/<tab> the lab.
@@ -77,6 +79,7 @@ export default function App(){
       {tab==='decisions'&&<DecisionsTab snapshot={snapshot}/>}
       {tab==='models'&&<ModelsTab reports={reports}/>}
       {tab==='benchmark'&&<BenchmarkTab reports={reports} busy={busy} onRun={start}/>}
+      {tab==='training'&&<TrainingTab/>}
       <footer className="footer"><span><span className="dot"/> PROPASS / LOCAL RESEARCH PROTOTYPE</span><span>Learned perception · canonical identity · reversible events</span><span>SIMULATION ONLY</span></footer>
     </main>
   </div>;

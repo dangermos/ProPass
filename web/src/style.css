@@ -244,3 +244,23 @@ button.brand-mark{background:none;border:0;cursor:pointer}
 .quantity-pill.warn{background:#4a3218;color:#ffcf96}
 .review-message.soft{background:#13233d;border-color:#274268;color:#b7d0f5}
 .product-text small .rating-badge{display:inline-block;width:auto;margin-left:6px;vertical-align:1px}
+
+/* ---------- Training pipeline progress ---------- */
+.pipeline-badge{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;padding:8px 14px;border-radius:999px;border:1px solid #2a3c51;color:#8fa3bf;background:#101b2a}
+.pipeline-badge.busy{color:#7ee2b8;border-color:#245a45;background:#0f2620}
+.progress-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px}
+.progress-step{padding:16px 18px;display:flex;flex-direction:column;gap:12px}
+.progress-step p{margin:0;font-size:11.5px;color:#8597ab;line-height:1.5}
+.progress-step.state-running{border-color:#245a45;box-shadow:0 0 0 1px #2ea04333}
+.progress-head{display:flex;align-items:center;gap:12px}
+.progress-head h3{margin:0;flex:1;font:700 14px 'Manrope',sans-serif;color:#eef4fb}
+.progress-state{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:4px 9px;border-radius:999px;color:#9fb0c2;background:#152234}
+.progress-state.state-done{color:#7ee2b8;background:#0f2620}.progress-state.state-running{color:#b7d0f5;background:#13233d}.progress-state.state-stopped{color:#ffcf96;background:#2a1d10}
+.progress-bar{height:10px;flex:none;width:100%}
+.progress-bar .bar-fill{bottom:0;transition:width .4s}
+.bar-fill.tone-teal{background:#38d6bf}.bar-fill.tone-blue{background:#6aa8ff}.bar-fill.tone-purple{background:#bd9aff}.bar-fill.tone-orange{background:#ffbb71}.bar-fill.tone-good{background:#2ea043}
+.stage-list{display:flex;flex-direction:column;gap:9px}
+.stage{display:grid;grid-template-columns:170px 1fr auto;gap:12px;align-items:center;font-size:12px;color:#c9d6e3}
+.stage em{font-style:normal;font-size:11px;color:#8597ab;white-space:nowrap}
+.stage.state-waiting{opacity:.55}
+@media(max-width:600px){.progress-grid{grid-template-columns:1fr}.stage{grid-template-columns:1fr}}

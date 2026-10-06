@@ -13,6 +13,7 @@ The FastAPI server runs on **http://127.0.0.1:8000**. Interactive docs, generate
 | 🔴 | `WS` | `/api/ws` | 🖥️ Dashboard | Snapshot pushed after every processed frame and every action |
 | 🖼️ | `GET` | `/api/frame` | 🖥️ Dashboard | The processed JPEG matching a camera and frame ID |
 | 📋 | `GET` | `/api/catalog` | 🖥️ Dashboard | Products, prices, currency |
+| 📈 | `GET` | `/api/progress` | 🖥️ Dashboard | Where the offline pipeline is: scenes exported, training stage and epoch, benchmark runs recorded, latest scores (read-only) |
 | 📊 | `GET` | `/api/reports` | 🖥️ Dashboard | Measured reports, configuration, active cameras and calibration geometry |
 | 🎬 | `POST` | `/api/scenario` | 🖥️ Dashboard | Start a new run of a scenario |
 | 👤 | `POST` | `/api/session` | 🖥️ Dashboard | Switch the simulated customer |

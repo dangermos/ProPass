@@ -13,6 +13,7 @@ from urllib.parse import urlencode
 from fastapi import FastAPI, HTTPException, Request, Response, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel, Field
 
+from .progress import progress
 from .store import CheckoutConflict, SCENARIOS, Store
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -280,10 +281,15 @@ def create_app(database_url=None, vision_factory: Callable | None = None, camera
             return report and {"summary": report["summary"], "scenarios": report["scenarios"]}
         return {"manifest": load("manifest.json"), "static": load("evaluation-static-test.json"),
                 "live": load("evaluation-live-c.json") or load("evaluation-live.json"),
-                "benchmark": scenarios(load("benchmark-c-final-test.json") or load("benchmark-final-test.json")),
+                "benchmark": scenarios(load("benchmark-v2-test.json") or load("benchmark-c-final-test.json") or load("benchmark-final-test.json")),
                 "benchmark_reference": scenarios(load("benchmark-c-world-1cam-test.json") or load("benchmark-baseline-test.json")),
                 "config": json.loads((ROOT / "vision" / "config.json").read_text()),
                 "cameras": list(runtime.camera_ids), "geometry": runtime.geometry()}
+
+    @app.get("/api/progress")
+    async def pipeline_progress():
+        """Where the offline pipeline is: export, training, benchmark recording and scoring (read-only)."""
+        return progress(ROOT, len(SCENARIOS))
 
     @app.get("/api/simulator/control")
     async def control():

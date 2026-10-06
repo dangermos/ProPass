@@ -44,6 +44,7 @@ export default function TitleScreen({snapshot,connected,live,reports,busy,onStar
         {snapshot&&<button className="primary-button" onClick={onResume}><Icon name="camera" size={17}/> Resume live lane <span className="muted">· {scenarioName(snapshot.simulator.scenario)}</span></button>}
         <button className="secondary-button" onClick={()=>onOpen('benchmark')}><Icon name="chart" size={16}/> Benchmark{bench?` · ${bench.passed}/${bench.runs} runs pass`:''}</button>
         <button className="secondary-button" onClick={()=>onOpen('models')}><Icon name="chip" size={16}/> Models</button>
+        <button className="secondary-button" onClick={()=>onOpen('training')}><Icon name="pulse" size={16}/> Training</button>
       </div>
       {!live&&<p className="title-hint"><Icon name="alert" size={14}/> Open <code>unity/</code> in Unity, load <code>Checkout.unity</code> and press <b>Play</b>. Unity follows whatever you pick here.</p>}
     </section>
