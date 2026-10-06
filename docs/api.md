@@ -61,7 +61,7 @@ stateDiagram-v2
     [*] --> OPEN: POST /api/scenario
     OPEN --> PREPARING: POST /api/cart/prepare
     PREPARING --> REVIEWING: queue drained, no review flags
-    PREPARING --> OPEN: review needed (409)
+    PREPARING --> OPEN: items still moving through the lane (409)
     REVIEWING --> OPEN: new evidence or POST /api/cart/resume
     PREPARING --> ASSIST: items need an associate (scanned cart kept)
     ASSIST --> REVIEWING: associate settles every flagged item
