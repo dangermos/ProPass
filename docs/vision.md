@@ -88,6 +88,29 @@ The fused ledger box is a **map marker**, so `sized=False` disables apparent-ima
 > [!NOTE]
 > A homography is an approximation for a particular height, not 3D reconstruction. Stacking, unusual carrying heights, partial boxes and camera shake can make two projections disagree. A footprint shows geometric coverage at the plane; it does not account for products hidden by people or flatbeds. The extra view reduces occlusion only when it actually supplies usable evidence.
 
+## 🏷️ Barcode reading
+
+![The scan camera's view: boxes with Code 128 labels, and lumber with none](images/v2-scan-camera.jpg)
+<sub>The scan camera: a 3840×1080 strip from a bar over the lane entrance, aimed at box faces as they pass.</sub>
+
+A printed label is only a few pixels wide to the tracking cameras, so a third camera does the scanning. It never detects or tracks. Per frame:
+
+1. **Decode.** [zxing-cpp](https://github.com/zxing-cpp/zxing-cpp) reads every Code 128 symbol in the scan frame (about 5 ms). The text must look like a store label, `SKU=<10 digits>`: a damaged read can still pass the checksum, and this rejects it.
+2. **Place.** The label's image position goes through the scan camera's calibration onto the lane map.
+3. **Attach.** The read goes to the nearest tracked box, within 0.45 m across the lane and 0.9 m along it. One read per box per frame.
+4. **Decide** (in the ledger). A barcode outranks the classifier: it sets the SKU at once, and replaces a visual guess made before the item reached the cart. It never rewrites an item already in the cart. A disagreement there goes to an associate. A code that isn't in the catalog marks the item as an unknown product.
+
+Every item carries a **rating**:
+
+| Rating | When |
+|---|---|
+| 🟢 Verified | Two or more agreeing barcode reads |
+| 🔵 High | One barcode read, or recognized by look at ≥ 95% |
+| 🟡 Medium | Recognized by look with less margin (typical for lumber, which has no barcode) |
+| 🔴 Needs associate | Unscanned, unknown barcode, conflicting evidence, or a **restricted** catalog item |
+
+Items that need an associate no longer block checkout outright. The ledger reports them in `assist`, separately from `in_progress` (items still walking through). The API keeps the scanned cart and waits in `ASSIST` until an associate adds, releases or dismisses each one. The full flow is in [pro-express-v2.md](pro-express-v2.md).
+
 ## 🧾 The physical ledger
 
 [vision/ledger.py](../vision/ledger.py) holds the logic that makes the cart correct. It keeps one `PhysicalObject` per real box, and that object outlives any number of tracker IDs.

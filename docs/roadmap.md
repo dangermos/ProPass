@@ -115,6 +115,10 @@ The live check passes all six classic scenarios with both cameras running.
 - ⏳ Thumbnail crops and per-camera evidence in the Decisions timeline.
 - ⏳ **Demo recording:** a 60–90 s video of a messy scenario passing, for the portfolio.
 
+## 🧰 Next: Pro Express v2
+
+Barcode scanning, confidence ratings, locked items, an associate hand-off that keeps the scanned cart, a customer phone view, and real product looks. The plan, progress and results are in [pro-express-v2.md](pro-express-v2.md).
+
 ## 📏 Ground rules that don't change
 
 - Runtime still only receives **pixels + timing**. Unity labels are for training and scoring only.

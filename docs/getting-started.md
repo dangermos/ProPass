@@ -44,6 +44,14 @@ models/overhead/classifier.pt
 
 Either copy them from a machine that already has them (check SHA-256 against [models/manifest.json](../models/manifest.json)), or reproduce them with [training.md](training.md). Without weights, the API still starts. Models initialize on the first accepted capture group; missing checkpoints then appear in `/api/health`. Predictions are never simulated.
 
+### Product labels and photos
+
+```bash
+.venv/bin/python scripts/prepare_products.py
+```
+
+This builds each product's barcode label, and its photo when you have put one in `Barcodes/` (two files per product, named by the 10-digit SKU: `1015765383.png` for the photo, `1015765383.gif` for the barcode). The folder and the generated textures stay out of git. Afterwards, rebuild the scene in Unity with **ProPass → Build checkout scene**.
+
 ## 3️⃣ Open the Unity project
 
 The whole Unity project lives in this repo under [`unity/`](../unity), including `Assets/`, `Packages/` and `ProjectSettings/`. Unity regenerates `Library/` and the other caches on first open, and they're git-ignored.
