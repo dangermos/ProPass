@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 580" font-family="Segoe UI, Helvetica, Arial, sans-serif">
-<rect width="840" height="580" rx="16" fill="#0d1420"/>
-<text x="24" y="36" fill="#ffffff" font-size="18" font-weight="700">Benchmark · Phase B (held-out)</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 614" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="840" height="614" rx="16" fill="#0d1420"/>
+<text x="24" y="36" fill="#ffffff" font-size="18" font-weight="700">Benchmark · two cameras (held-out)</text>
 <text x="24" y="54" fill="#8fa3bf" font-size="12">Share of runs with the exact cart and the correct review decision</text>
 <circle cx="30" cy="76" r="4" fill="#ffbb71"/>
 <text x="42" y="80" fill="#c9d4e3" font-size="13">single</text>
@@ -49,8 +49,8 @@
 <rect x="150" y="271" width="520" height="18" rx="5" fill="#1b2638"/>
 <rect x="150" y="271" width="520" height="18" rx="5" fill="#2ea043"/>
 <text x="682" y="284" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="292" width="416" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="284" fill="#8fa3bf" font-size="12">was 80%</text>
+<rect x="150" y="292" width="520" height="5" rx="2" fill="#5b6b82"/>
+<text x="726" y="284" fill="#8fa3bf" font-size="12">was 100%</text>
 <circle cx="30" cy="314" r="4" fill="#bd9aff"/>
 <text x="42" y="318" fill="#c9d4e3" font-size="13">shopper</text>
 <rect x="150" y="305" width="520" height="18" rx="5" fill="#1b2638"/>
@@ -63,44 +63,51 @@
 <rect x="150" y="339" width="520" height="18" rx="5" fill="#1b2638"/>
 <rect x="150" y="339" width="520" height="18" rx="5" fill="#2ea043"/>
 <text x="682" y="352" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="360" width="104" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="352" fill="#8fa3bf" font-size="12">was 20%</text>
+<rect x="150" y="360" width="520" height="5" rx="2" fill="#5b6b82"/>
+<text x="726" y="352" fill="#8fa3bf" font-size="12">was 100%</text>
 <circle cx="30" cy="382" r="4" fill="#bd9aff"/>
 <text x="42" y="386" fill="#c9d4e3" font-size="13">edge</text>
 <rect x="150" y="373" width="520" height="18" rx="5" fill="#1b2638"/>
 <rect x="150" y="373" width="416" height="18" rx="5" fill="#2ea043"/>
 <text x="682" y="386" fill="#ffffff" font-size="13" font-weight="600">80%</text>
-<rect x="150" y="394" width="104" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="386" fill="#8fa3bf" font-size="12">was 20%</text>
+<rect x="150" y="394" width="416" height="5" rx="2" fill="#5b6b82"/>
+<text x="726" y="386" fill="#8fa3bf" font-size="12">was 80%</text>
 <circle cx="30" cy="416" r="4" fill="#bd9aff"/>
 <text x="42" y="420" fill="#c9d4e3" font-size="13">stacked</text>
 <rect x="150" y="407" width="520" height="18" rx="5" fill="#1b2638"/>
 <rect x="150" y="407" width="312" height="18" rx="5" fill="#d29922"/>
 <text x="682" y="420" fill="#ffffff" font-size="13" font-weight="600">60%</text>
-<rect x="150" y="428" width="2" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="420" fill="#8fa3bf" font-size="12">was 0%</text>
+<rect x="150" y="428" width="312" height="5" rx="2" fill="#5b6b82"/>
+<text x="726" y="420" fill="#8fa3bf" font-size="12">was 60%</text>
 <circle cx="30" cy="450" r="4" fill="#bd9aff"/>
 <text x="42" y="454" fill="#c9d4e3" font-size="13">distractors</text>
 <rect x="150" y="441" width="520" height="18" rx="5" fill="#1b2638"/>
 <rect x="150" y="441" width="520" height="18" rx="5" fill="#2ea043"/>
 <text x="682" y="454" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="462" width="416" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="454" fill="#8fa3bf" font-size="12">was 80%</text>
+<rect x="150" y="462" width="520" height="5" rx="2" fill="#5b6b82"/>
+<text x="726" y="454" fill="#8fa3bf" font-size="12">was 100%</text>
 <circle cx="30" cy="484" r="4" fill="#bd9aff"/>
 <text x="42" y="488" fill="#c9d4e3" font-size="13">bystander</text>
 <rect x="150" y="475" width="520" height="18" rx="5" fill="#1b2638"/>
 <rect x="150" y="475" width="520" height="18" rx="5" fill="#2ea043"/>
 <text x="682" y="488" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="496" width="2" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="488" fill="#8fa3bf" font-size="12">was 0%</text>
+<rect x="150" y="496" width="520" height="5" rx="2" fill="#5b6b82"/>
+<text x="726" y="488" fill="#8fa3bf" font-size="12">was 100%</text>
 <circle cx="30" cy="518" r="4" fill="#bd9aff"/>
 <text x="42" y="522" fill="#c9d4e3" font-size="13">hesitate</text>
 <rect x="150" y="509" width="520" height="18" rx="5" fill="#1b2638"/>
 <rect x="150" y="509" width="520" height="18" rx="5" fill="#2ea043"/>
 <text x="682" y="522" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="530" width="312" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="522" fill="#8fa3bf" font-size="12">was 60%</text>
-<circle cx="30" cy="558" r="4" fill="#ffbb71"/><text x="42" y="562" fill="#8fa3bf" font-size="12">classic scenario</text>
-<circle cx="170" cy="558" r="4" fill="#bd9aff"/><text x="182" y="562" fill="#8fa3bf" font-size="12">messy scenario</text>
-<rect x="300" y="555" width="24" height="5" rx="2" fill="#5b6b82"/><text x="332" y="562" fill="#8fa3bf" font-size="12">reference run</text>
+<rect x="150" y="530" width="520" height="5" rx="2" fill="#5b6b82"/>
+<text x="726" y="522" fill="#8fa3bf" font-size="12">was 100%</text>
+<circle cx="30" cy="552" r="4" fill="#bd9aff"/>
+<text x="42" y="556" fill="#c9d4e3" font-size="13">parked</text>
+<rect x="150" y="543" width="520" height="18" rx="5" fill="#1b2638"/>
+<rect x="150" y="543" width="520" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="556" fill="#ffffff" font-size="13" font-weight="600">100%</text>
+<rect x="150" y="564" width="416" height="5" rx="2" fill="#5b6b82"/>
+<text x="726" y="556" fill="#8fa3bf" font-size="12">was 80%</text>
+<circle cx="30" cy="592" r="4" fill="#ffbb71"/><text x="42" y="596" fill="#8fa3bf" font-size="12">classic scenario</text>
+<circle cx="170" cy="592" r="4" fill="#bd9aff"/><text x="182" y="596" fill="#8fa3bf" font-size="12">messy scenario</text>
+<rect x="300" y="589" width="24" height="5" rx="2" fill="#5b6b82"/><text x="332" y="596" fill="#8fa3bf" font-size="12">reference run</text>
 </svg>

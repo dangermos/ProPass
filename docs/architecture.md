@@ -72,8 +72,6 @@ Each capture group's images share `(run_id, frame_id, timestamp)` and have disti
 | **Bounded queue that drops the oldest whole capture group** | A live demo should stay current without mixing camera images from different instants. The drops and incomplete groups are counted and shown. |
 | **One process, one worker** | Inference, sequencing and the simulator session share state under one lock. That's simple and correct for one lane. Scaling out is covered below. |
 
-The SKU appearance bank is a rejection signal, not physical identity. `prototype_rejection` defaults to `true`; setting it to `false` is an experimental **reject-head-only ablation**. It keeps the trained reject output and temporal SKU thresholds. That option is not a selected release configuration without its own development evaluation.
-
 ## 🔄 Physical item lifecycle
 
 ```mermaid

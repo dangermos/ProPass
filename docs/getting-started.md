@@ -36,11 +36,13 @@ If `torch.cuda.is_available()` is `False` on a GPU machine, install the matching
 Weights are git-ignored. You need:
 
 ```text
-models/detector.pt     ← fine-tuned YOLO26n
-models/classifier.pt   ← fine-tuned EfficientNet-B0 + rejection calibration
+models/detector.pt            ← lane camera: fine-tuned YOLO26n
+models/classifier.pt          ← lane camera: fine-tuned EfficientNet-B0 + rejection calibration
+models/overhead/detector.pt   ← overhead camera pair
+models/overhead/classifier.pt
 ```
 
-Either copy them from a machine that already has them (check SHA-256 against [models/manifest.json](../models/manifest.json)), or reproduce them with [training.md](training.md), including appearance-bank calibration after classifier training. Without weights, the API still starts. Models initialize on the first accepted capture group; missing checkpoints then appear in `/api/health`. Predictions are never simulated.
+Either copy them from a machine that already has them (check SHA-256 against [models/manifest.json](../models/manifest.json)), or reproduce them with [training.md](training.md). Without weights, the API still starts. Models initialize on the first accepted capture group; missing checkpoints then appear in `/api/health`. Predictions are never simulated.
 
 ## 3️⃣ Open the Unity project
 

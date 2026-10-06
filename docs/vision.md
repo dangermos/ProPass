@@ -15,7 +15,7 @@ flowchart LR
     C --> E[EfficientNet-B0]:::cls
     E --> P[Softmax of logits ÷ T<br/>5 SKUs + reject]:::cls
     E --> F[Pooled feature<br/>L2-normalized]:::cls
-    F --> G{Nearest predicted-class bank center<br/>cosine distance within gate?}:::cls
+    F --> G{Prototype distance<br/>within the checkpoint's gate?}:::cls
     P --> O[Camera observation]:::out
     G --> O
     T --> O
@@ -34,7 +34,7 @@ flowchart LR
 | **Detect** | YOLO26n fine-tuned from COCO on cluttered scenes: **merchandise**, plus **person** and **cart** | It finds *any* package, including unknown ones, without committing to an identity. Learning people and carts as their own classes stops shoppers, hands and flatbeds from being boxed as products. |
 | **Track** | One Ultralytics BoT-SORT tracker per camera (`botsort.yaml`, set by `tracker`) on merchandise boxes only | IDs are namespaced by camera. Occlusion can break them; fusion and the ledger supply continuity. |
 | **Classify** | EfficientNet-B0 fine-tuned from ImageNet, with 5 SKU outputs plus a reject class | Recognizes the exact SKU from a crop, aspect-preserving padded to 224 px |
-| **Reject** | Two gates: argmax lands on the reject class, **or** the nearest cosine distance among that predicted class's eight feature-bank centers exceeds the checkpoint's limit | The current two-view checkpoint uses **0.536377**, selected from known validation crops. The bank is built from training crops; unknown performance is only measured for one gray-package family. |
+| **Reject** | Two gates: argmax lands on the reject class, **or** the cosine distance to that class's feature prototype exceeds the checkpoint's limit | Out-of-distribution packages get flagged instead of being forced into a known SKU. Unknown performance is only measured for one gray-package family. |
 | **Quality** | `quality = min(1, box_area / 1800 px²)` | Tiny sliver boxes from partial views don't outvote clear ones |
 
 Each **CameraObservation** carries the camera ID, camera-local tracker ID, image box, confidence, SKU probabilities, appearance embedding, quality, unknown flag and projected `(x, z)`. `process_frames({camera_id: image}, frame_id, timestamp, run_id)` accepts pixels and source-frame metadata. Product transforms, simulator object IDs and labels never enter that call.
@@ -48,45 +48,45 @@ Each **CameraObservation** carries the camera ID, camera-local tracker ID, image
 - **Plane:** package centers are approximated as lying at **0.9 m** above the floor. Each normalized image-box center is mapped through that camera's homography to world `(x, z)`.
 - **Map:** world `x ∈ [−5, 5]`, `z ∈ [−7, 7]` becomes a virtual 1000×1000 ledger frame. Map `v` decreases as a customer moves forward.
 
+### 🎯 A specialist model pair per camera
+
+Each camera loads its own checkpoints: `models/<camera>/detector.pt` and `classifier.pt` when that folder exists, otherwise the shared ones in `models/`. The lane camera uses the models trained on the oblique view. The overhead camera uses a pair trained on both views (`models/overhead/`).
+
+This is a measured choice. Training one shared pair on both views made the lane camera much worse: **39 of 75** development runs, against **68 of 75** for the lane-only models on the same recordings. A top-down box and an oblique box of the same product look very different, and one small network served both poorly.
+
+### 🤝 The lane camera leads, the overhead camera assists
+
 ```mermaid
 flowchart LR
-    A["🔵 Lane box + local ID"]:::cam --> H1["Image center → carry plane"]:::geo
-    B["🟣 Overhead box + local ID"]:::cam --> H2["Image center → carry plane"]:::geo
-    H1 --> F{"Within fusion radius?<br/>SKU evidence compatible?"}:::q
-    H2 --> F
-    F -- yes --> U["One fused observation<br/>camera aliases share an ID"]:::good
-    F -- no --> S["Separate evidence<br/>review conflicting prior identity"]:::warn
-    U --> L["Canonical physical ledger"]:::good
-    S --> L
+    A["🔵 Lane box"]:::cam --> P["Project to the lane map"]:::geo
+    B["🟣 Overhead box"]:::cam --> Q["Project to the lane map"]:::geo
+    P --> F{"Same spot?<br/>SKUs not confidently different?"}:::q
+    Q --> F
+    F -- "yes" --> U["One observation<br/>position from overhead"]:::good
+    F -- "lane only" --> L1["Observation at the lane position<br/>+ learned height shift"]:::good
+    F -- "overhead only,<br/>merged before" --> K["Keeps the object alive<br/>while the lane view is blocked"]:::good
+    F -- "overhead only,<br/>never merged" --> X["Ignored"]:::warn
+    U --> L["Physical ledger"]:::led
+    L1 --> L
+    K --> L
     classDef cam fill:#e6efff,stroke:#6aa8ff,color:#0b2a5c
     classDef geo fill:#f1e9ff,stroke:#bd9aff,color:#2c1660
     classDef q fill:#f2f4f8,stroke:#8fa3bf,color:#1b2533
-    classDef good fill:#e0fbf6,stroke:#38d6bf,color:#00382f
-    classDef warn fill:#ffe1e5,stroke:#ff8293,color:#5c0a17
+    classDef good fill:#d9f7e8,stroke:#2ea043,color:#0b3d1d
+    classDef warn fill:#fff1e0,stroke:#ffbb71,color:#4a2c00
+    classDef led fill:#e0fbf6,stroke:#38d6bf,color:#00382f
 ```
 
-Fusion is **one-to-one across cameras**, with a default radius of **0.45 m**. Two boxes from the same camera never become one observation. An established, geometrically plausible pair takes priority over a nearer competing pair during a crossing. Distinct established identities cannot join a competing partner while their existing partners are still present.
-
-SKU disagreement is handled differently during **acquisition** and **continuity**. A new pair is refused when its current non-rejected views strongly predict different SKUs. An established pair survives a transient crop error; splitting on SKU disagreement requires **sustained, differing camera-local votes**. Each `(camera_id, tracker_id)` has its own deque, reset for each run. It reuses the ledger's default **8-vote window**, **3-view minimum**, **0.85 top probability** and **0.20 margin**. These camera histories update once per fusion call; the canonical ledger separately applies its timed/quality evidence sampling.
-
-Camera aliases follow the fused ID through loss of either view and replacement of an ID in the other view. When previously separate camera tracks are joined, their aliases are redirected, preventing an old ID from reappearing after a camera disappears. If the proposed join spans **two already distinct canonical ledger objects**, `Observation.conflicting_tracks` carries both prior fused IDs to the ledger. It reviews every lane-relevant prior unit, including a cart member now outside the lane; changing aliases cannot silently erase that conflict.
-
-If observations belonging to one prior identity split into separate groups, `ambiguous_identity` raises a review for lane-relevant merchandise; the system cannot silently charge two units from that disagreement. A split entirely outside the lane is not a checkout failure unless the object previously entered or became a cart member.
-
-When a **strong non-rejected view** exists (top probability and margin pass the configured SKU thresholds), only strong views contribute quality-weighted SKU evidence, position and the chosen appearance embedding. Weak or rejected crops cannot pull that confident view below the acceptance threshold or shift its position toward a partial box. With no strong view, non-rejected evidence is used; if all views are rejected, positions are retained as unresolved merchandise.
+- **Only the lane camera can start an object.** A stray overhead detection that never lined up with a lane detection is ignored, so it can't block checkout.
+- **Merging is one-to-one.** A lane box and an overhead box merge when they project within **0.45 m across the lane and 0.9 m along it** (`fuse_radius_m`), unless both are confident about *different* SKUs. Pairs that were already merged are matched before new ones, so two products passing each other don't swap partners.
+- **The overhead view supplies the position.** It looks straight down, so carrying height barely moves its estimate. The oblique lane camera can be off by tens of centimeters along the lane when a box is carried high or low. Each object learns that shift while both cameras see it, and applies it when only the lane camera does.
+- **Handover through occlusion.** Once merged, the overhead view alone keeps the object's identity while a flatbed or a person blocks the lane camera. When the lane camera finds the box again under a new tracker ID, it rejoins the same object.
+- **SKU evidence** is the quality-weighted average of the views that aren't rejected, so an unclear crop in one camera doesn't dilute a clear one in the other.
 
 The fused ledger box is a **map marker**, so `sized=False` disables apparent-image-size matching. `full_view` comes from whether any camera saw a box clear of its image border, and `at_entry_edge` comes from world `z ≤ −4.2 m`.
 
 > [!NOTE]
 > A homography is an approximation for a particular height, not 3D reconstruction. Stacking, unusual carrying heights, partial boxes and camera shake can make two projections disagree. A footprint shows geometric coverage at the plane; it does not account for products hidden by people or flatbeds. The extra view reduces occlusion only when it actually supplies usable evidence.
-
-### 🧬 SKU appearance bank
-
-One mean feature vector per SKU places distinct overhead and oblique appearances around an artificial average. [vision/rejection.py](../vision/rejection.py) instead compares a crop against **eight centers within its predicted class**, using the minimum cosine distance. The centers describe SKU appearance modes, not unique physical products; two identical packages can share the same bank while remaining separate ledger objects.
-
-The bank is built by deterministic spherical k-means from **4,054 training crops**. Its shape is `6 × 8 × 1280`: five SKU classes plus the reject class, eight centers each, 1,280-dimensional EfficientNet features. Calibration loads **631 validation crops**, and only the **617 known crops** select the threshold. Their labeled-class distance has `q99 = 0.486377`, giving **`q99 + 0.05 = 0.536377`**. Runtime uses the **predicted** class's bank. Network weights, temperature and temporal SKU-vote thresholds stay fixed.
-
-The original v3 mean-prototype gate of 0.45 and its intermediate validation-calibrated 0.633318 version remain in `models/v3-original/` and `models/v3-calibrated-mean/`. The active bank checkpoint and selection details are recorded in [rejection-calibration.json](../models/rejection-calibration.json). No benchmark or test examples built the bank or selected its gate. Temporal cart reports measure its effect on checkout; validation distances alone do not establish that.
 
 ## 🧾 The physical ledger
 
@@ -161,8 +161,6 @@ Without calibration, **image mode** retains the lane camera's original zone line
 | Review reason | Triggered by |
 |---|---|
 | Ambiguous tracker fragmentation | Two or more lost identical objects match a reappearing box equally well |
-| Camera projections disagree | One established camera-fusion identity splits into multiple observations |
-| Camera fusion joined distinct identities | Proposed camera association spans multiple established ledger objects; all relevant prior units receive review |
 | Conflicting SKU evidence | The SKU vote flips on an object that already has an SKU |
 | First observed beyond boundary | Object appears already in COMMIT |
 | Crossing lacks accepted SKU | Committed but still unrecognized 0.5 s after first being seen (for example, the gray unknown box) |
@@ -177,7 +175,6 @@ The live API, static evaluator and benchmark all load this file. Any `LedgerConf
 | Key | Default | Raise it to… | Lower it to… |
 |---|---:|---|---|
 | `detector_conf` | 0.20 | cut false boxes | catch faint or occluded boxes |
-| `prototype_rejection` | `true` | enable the calibrated appearance-distance gate | `false` tests reject-head-only behavior; an ablation, not a selected release change |
 | `cameras` | `lane`, `overhead` | configure additional registered views | select one registered camera for an ablation |
 | `fuse_radius_m` | 0.45 m | tolerate more projection disagreement | reduce accidental nearby-object pairings |
 | `ledger.approach_y` / `commit_y` | 0.65 / 0.40 in image mode | move the image zone lines down | move them up. World zones come from calibration. |

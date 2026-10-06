@@ -1,7 +1,7 @@
 # 🗺️ Roadmap: tracking that holds up in messy lanes
 
 > [!NOTE]
-> **Status:** Phases A and B are ✅ done ([A results](#-phase-a-results), [B results](#-phase-b-results)). Most of Phase D (title screen, Decisions and Benchmark pages) was pulled forward and is done. Phase C is next. Each phase lists what changes, which *real models* are involved, and how success gets measured.
+> **Status:** Phases A and B are ✅ done ([A results](#-phase-a-results), [B results](#-phase-b-results)). Phase C (second camera) is ✅ done ([C results](#-phase-c-results)), and so is most of Phase D. Each phase lists what changes, which *real models* are involved, and how success gets measured.
 
 Today's lane is clean: boxes slide in a straight line, the only occluder is a slab that appears for 0.6 s, and nothing else ever enters the frame. Real checkout lanes are messy. The goal is a tracker that keeps an exact cart through **occlusion, partial views, distractors and multiple cameras**, and can prove it with numbers.
 
@@ -76,16 +76,33 @@ xychart-beta
 
 **What changed from the original plan.** A separate learned re-identification network wasn't built. Identical products in the simulation are pixel-identical, so an appearance model *can't* tell two copies apart, and different SKUs are already separated by the classifier. Identity comes from motion plus a clear-view appearance gallery. Segmentation and a Kalman filter weren't needed for these scenarios. The detector's person and cart detections teach it what *isn't* merchandise, but they aren't yet passed to the ledger as explicit occluders. That's a natural next step if longer occlusions show up.
 
-## 🅲 Phase C: multiple cameras and a coverage map
+## 🅲 Phase C: a second camera and a coverage map ✅
 
-- 📷 **2–3 cameras** (overhead, plus side or angled) rendered in Unity, each streaming with a `camera_id`.
-- 🗺️ **Ground-plane mapping:** a calibrated homography per camera projects detections into lane coordinates (meters), so zones become **world-space lines**, not per-camera pixel rows.
-- 🔗 **Cross-camera fusion:** one physical ledger in world space. ReID embeddings link the same box seen by different cameras. A box hidden from one camera stays tracked by another.
-- 🔦 **Coverage visualization:**
-  - In Unity, draw camera frustums as gizmos and generate a coverage heatmap of the lane floor.
-  - In the dashboard, add a **top-down lane map** that shows each camera's field of view, overlap regions, blind spots, and every tracked object as a dot with its trail.
+![Live dashboard: a flatbed hides the product from the lane camera, while the coverage map still tracks it through the overhead camera](images/two-camera-live.jpg)
+<sub>The <b>parked flatbed</b> scenario, live. The lane camera sees only lumber. The overhead camera still sees the box, so it stays tracked on the lane map.</sub>
 
-**Done when:** a long single-camera occlusion that fails in Phase B passes with two cameras, and the dashboard shows where coverage is thin.
+**What was built**
+- 📷 **An overhead camera** at ceiling height, streamed with the lane camera under one frame number.
+- 🗺️ **Calibration to a shared lane map** ([vision/geometry.py](../vision/geometry.py)). Each camera's detections are projected onto the carry-height plane, so zones are physical lines (the orange and teal floor markers) and the lane outline is in meters.
+- 🤝 **Lane-primary fusion** ([vision/engine.py](../vision/engine.py)). The lane camera starts objects. The overhead camera merges into them, supplies the position, and keeps them alive while the lane view is blocked. See [vision.md](vision.md#-the-lane-camera-leads-the-overhead-camera-assists).
+- 🎯 **A specialist model pair per camera.** One shared two-view pair made the lane camera much worse, so each camera has its own.
+- 🖥️ **Dashboard:** a camera switcher on the Live lane tab and a **coverage map** with each camera's footprint, the overlap, the zone lines and every tracked object.
+- 🪵 A new **parked flatbed** scenario that hides products from the lane camera for 7–9 seconds.
+
+### 📈 Phase C results
+
+| 75 runs each | One camera | Two cameras |
+|---|:-:|:-:|
+| Development seeds 0–4 | 68 | **71** |
+| Held-out seeds 5–9 | 71 | **72** |
+| Parked flatbed (dev / held-out) | 40% / 80% | **100% / 100%** |
+| Median time per frame | 17 ms | 29 ms |
+
+The live check passes all six classic scenarios with both cameras running.
+
+**What this shows.** The second camera fixes the case it was added for: long occlusion from the lane camera's side. It doesn't help where both cameras see the same ambiguity. **Stacked identical boxes still pass only 60%**, because the bottom box is hidden from above too, and one edge-of-frame run still fails.
+
+**What didn't work.** A first version let either camera start objects and merged them symmetrically. It scored 45–58 of 75, mostly from stray overhead detections that never matched a lane box and then blocked checkout. Making the lane camera primary removed that whole class of failure.
 
 ## 🅳 Phase D: explainable, polished dashboard (mostly ✅)
 
@@ -95,7 +112,7 @@ xychart-beta
 - ✅ **Decisions tab:** answers "why is this in my cart?" with every physical object's state, a plain-language reason, its events, and exactly what is blocking checkout.
 - ✅ **Models tab:** detector, classifier and tracker results, read live from the training reports.
 - ✅ **Benchmark tab:** pass rates against the baseline, with **Run live** on every scenario.
-- ⏳ Thumbnail crops and per-camera evidence in the Decisions timeline (after Phase C).
+- ⏳ Thumbnail crops and per-camera evidence in the Decisions timeline.
 - ⏳ **Demo recording:** a 60–90 s video of a messy scenario passing, for the portfolio.
 
 ## 📏 Ground rules that don't change

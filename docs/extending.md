@@ -34,7 +34,7 @@ mindmap
    ```
 2. **Unity:** in [ProPassSceneBuilder.cs](../unity/Assets/ProPass/Editor/ProPassSceneBuilder.cs), extend `Colors`, `Names` and `Sizes`. Keep the gray *unenrolled* package **last**, then update the `"PEX-00"+(i+1)` and `i<5` logic and known-product bounds. In [ProPassDatasetExporter.cs](../unity/Assets/ProPass/Editor/ProPassDatasetExporter.cs), update crop folders, known-product sampling/modulo bounds, crop eligibility and the gray-prefab index. Run **ProPass → Build checkout scene**.
 3. **Scenario indices:** move the `unknown` scenario's gray-prefab index in [ProPassScenario.cs](../unity/Assets/ProPass/Runtime/ProPassScenario.cs) after the new known products; otherwise the unknown demo would show the newly enrolled SKU.
-4. **Data and models:** export both camera perspectives, extract unknown crops, retrain **the classifier**, then rebuild its appearance bank with `training.calibrate_rejection` (see [training.md](training.md)). The classifier's SKU order and output size come from the catalog. Evaluate whether the merchandise detector needs retraining for the new package's appearance or geometry.
+4. **Data and models:** export both camera perspectives, extract unknown crops, retrain **the classifiers** for both cameras (see [training.md](training.md)). The classifier's SKU order and output size come from the catalog. Evaluate whether the merchandise detector needs retraining for the new package's appearance or geometry.
 5. **Check:** the engine refuses to load a classifier whose SKU order doesn't match the catalog, so a stale checkpoint fails loudly instead of mislabeling. Re-run static evaluation and the temporal benchmark, including two identical units of the new SKU.
 
 ## 🎬 Add a scenario
@@ -73,7 +73,7 @@ The API only depends on the [`VisionEngine` interface](api.md#-vision-package-in
 
 - **A different detector** (another YOLO size, RT-DETR, and so on): change per-camera model loading and `self.detectors[camera].track(...)` in [vision/engine.py](../vision/engine.py). Return the same `CameraObservation` fields; calibrated projection/fusion then produces ledger `Observation`s.
 - **A different tracker:** set `"tracker"` in [vision/config.json](../vision/config.json) (`botsort.yaml` is the default, `bytetrack.yaml` is faster), or plug in your own. The ledger already tolerates ID switches.
-- **A different classifier** (for example, a stronger embedding backbone): update runtime, training, calibration and static evaluation together. Keep per-SKU probabilities, a normalized embedding and an `unknown` flag. Rebuild the appearance bank for the new feature dimension and SKU order.
+- **A different classifier** (for example, a stronger embedding backbone): update runtime, training, calibration and static evaluation together. Keep per-SKU probabilities, a normalized embedding and an `unknown` flag.
 - Record the checkpoint in [models/manifest.json](../models/manifest.json), then re-run `training.evaluate` and `training.benchmark` with fixed seeds and camera modes so results stay comparable. Tune on development runs before opening the held-out split.
 
 ## 🌍 Use a real camera

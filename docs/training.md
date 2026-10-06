@@ -1,6 +1,6 @@
 # 🧪 Training and results
 
-Both models are trained only on **procedural Unity data** from the lane and overhead views. There's no human footage and no scraped imagery. Unity's labels are used offline and never at runtime. The current v3 training set has **2,100 scenes**; the dual-view temporal benchmark is separate from those static scenes.
+Both models are trained only on **procedural Unity data** from the lane and overhead views. There's no human footage and no scraped imagery. Unity's labels are used offline and never at runtime. The two-view training set has **2,100 scenes**. The scenario benchmark uses separate recordings and seeds.
 
 ```mermaid
 flowchart LR
@@ -59,7 +59,6 @@ The splits are **whole scenes with disjoint random-seed ranges** (1,600 / 250 / 
 .venv/bin/python -m training.extract_outliers
 .venv/bin/python -m training.train detector   --epochs 60 --batch 16 --imgsz 640 --device 0
 .venv/bin/python -m training.train classifier --epochs 12 --head-epochs 4 --batch 32 --device cuda:0
-.venv/bin/python -m training.calibrate_rejection --clusters 8 --batch 32 --iterations 30 --device cuda:0
 ```
 
 | | 🔵 Detector | 🟣 Classifier |
@@ -67,53 +66,30 @@ The splits are **whole scenes with disjoint random-seed ranges** (1,600 / 250 / 
 | Start | COCO-pretrained `yolo26n.pt` | ImageNet EfficientNet-B0 (torchvision) |
 | Task | 3 classes: merchandise, person, cart (only merchandise is tracked) | 5 SKUs + 1 reject (training-only gray package) |
 | Recipe | 640 px, AdamW lr 1e-3, mild geometry and lighting augmentation, **no horizontal flip** (it would mirror packaging text), patience 10 | 4 epochs head-only, then 8 epochs fine-tuning the last two feature stages with BatchNorm frozen |
-| Calibration | Operating confidence 0.20 | Temperature **0.652668**; nearest appearance-bank distance gate **0.536377**, selected on **validation only** |
-| v3 entrypoint elapsed on RTX 4070 Super | ~350 s, including detector test evaluation | ~79 s |
-| Output | `models/detector.pt` | `models/classifier.pt` (SKU order, legacy means, appearance bank and calibration) |
+| Calibration | Operating confidence 0.20 | Temperature and per-class prototype distance, chosen on **validation only** |
+| Output | `models/detector.pt` | `models/classifier.pt` (also holds SKU order, prototypes and calibration) |
 
 Each run records its checkpoint SHA-256, settings and metrics in [models/manifest.json](../models/manifest.json). AMP is on when CUDA is available. Restart the API after replacing weights.
 
-### 🎚️ Train-only appearance bank, validation-only gate
+### 🎯 One model pair per camera
 
-The two cameras make each SKU's appearance distribution multimodal. A single mean prototype can sit between valid overhead and oblique views. [training/calibrate_rejection.py](../training/calibrate_rejection.py) freezes the trained EfficientNet, extracts features from **4,054 training crops**, and builds **eight spherical k-means centers per class**. Clustering is deterministic, with at most 30 iterations. The bank has shape `6 × 8 × 1280`, including the gray reject class.
+Training writes to `models/detector.pt` and `models/classifier.pt`. The engine loads a camera's own pair from `models/<camera>/` when that folder exists, and the shared pair otherwise.
 
-It then opens **only the validation split** (631 crops, 617 known and 14 gray). Known labeled-class distances select the gate; at runtime the crop is compared against its **predicted class's** bank:
+| Camera | Checkpoints | Trained on |
+|---|---|---|
+| 🔵 Lane | `models/detector.pt`, `models/classifier.pt` (v2) | 1,200 cluttered scenes from the lane camera |
+| 🟣 Overhead | `models/overhead/` | 2,100 scenes, half from each camera |
 
-```text
-known validation distance 99th percentile = 0.486377
-bank limit = q99 + 0.05                   = 0.536377
-```
+To retrain a camera's pair: export data (the exporter renders half the scenes from each camera), train, then move the two files into `models/<camera>/` if they're for a camera other than the lane.
 
-No benchmark or test crop is opened by this calibration command. EfficientNet weights, temperature, confidence and temporal SKU-vote thresholds remain unchanged. The bank gate rejects **5/617 known validation crops** by distance; the explicit reject head rejects **14/14 gray validation crops**. Those are validation diagnostics for one synthetic unknown family, not claims about open-world rejection or checkout improvement.
-
-The original mean-prototype gate was 0.45. An intermediate mean-only calibration increased it to 0.633318; the current bank replaces that representation and uses the lower 0.536377 limit. Previous classifier checkpoints and reports remain recoverable in `models/v3-original/` and `models/v3-calibrated-mean/`. [models/rejection-calibration.json](../models/rejection-calibration.json) records bank/classifier hashes, per-class distances and the split-selection procedure. The active classifier hash is `63c35ecea2364e3fc6c62c16cacae815ed4d5baf117d038e01433333a578c078`.
-
-Run bank calibration **after** `training.train classifier` and **before** evaluating the final checkpoint with `training.evaluate` or `training.benchmark`: training writes legacy mean prototypes, while the separate command adds the multi-view bank. Use `.venv/bin/python -m training.calibrate_rejection --help` to inspect the actual `--clusters`, `--batch`, `--iterations` and `--device` flags. Restart the API after replacing the checkpoint.
+**Why not one shared pair?** That was tried first. The two-view pair scored **39 / 75** development runs through the lane camera, against **68 / 75** for the lane-only pair on the same recordings. The earlier weights are kept in `models/v1/` and `models/v2/`.
 
 > [!TIP]
 > These training times are for this small synthetic dataset. They aren't estimates for real retail-scale training.
 
 ## 📊 3. Results
 
-### Current two-view model reports
-
-| Measurement | v3 training report | Source |
-|---|---:|---|
-| Detector mAP50–95, all three classes | 0.879 | [models/manifest.json](../models/manifest.json), 250 static test scenes |
-| Classifier top-1, labeled test crops including reject | 622 / 637 | Same manifest; this measures classification, not final accepted cart accuracy |
-| Accepted SKU precision and abstentions on detector crops | See current static evaluation | [models/evaluation-static-test.json](../models/evaluation-static-test.json) |
-| Exact cart, quantities and review behavior over time | See scenario benchmark | [benchmark.md](benchmark.md) |
-| Live API/cart behavior | See current live report | [models/evaluation-live.json](../models/evaluation-live.json) |
-
-Run the static evaluator after checkpoint or calibration changes:
-
-```bash
-.venv/bin/python -m training.evaluate --split test
-```
-
-It reports perfect-label crop results separately from **actual detector crops**, with accepted-correct counts, abstentions, unknown rejection, misses and false boxes. A high top-1 crop score alone does not establish a correct checkout.
-
-### Historical single-view v2 test (150 cluttered scenes, 387 packages)
+### Static held-out test, lane camera models (150 cluttered scenes, 387 packages)
 
 | Metric | v2 (cluttered lane view) | v1 (clean lane view) |
 |---|---:|---:|
@@ -201,21 +177,25 @@ The per-frame truth stores SKU, physical ID, lane projected bounds and world pos
 **2. Score:**
 
 ```bash
-.venv/bin/python -m training.benchmark --root artifacts/benchmark --label c-image --image-mode
-.venv/bin/python -m training.benchmark --root artifacts/benchmark --label c-world-1cam --cameras lane
-.venv/bin/python -m training.benchmark --root artifacts/benchmark --label c-world-2cam
+.venv/bin/python -m training.benchmark --root artifacts/benchmark --label dev-1cam --cameras lane
+.venv/bin/python -m training.benchmark --root artifacts/benchmark --label dev-2cam
 ```
 
-These runs isolate image zones, world zones and the extra view on the **same RGB recordings and current weights**. They are distinct from comparing v2 single-view weights against v3 two-view weights. Reports include camera IDs, mode, seeds, checkpoint/config hashes, quantities, false adds, missed units and review behavior. A review blocking a wrong cart is reported separately from a successful exact cart.
+`--cameras lane` scores the lane camera alone on the same recordings, so the second camera's contribution is isolated. `--image-mode` ignores the calibration and uses image-space zones. `--models <dir>` scores a different set of checkpoints.
 
-**Tune on development seeds 0–4 only.** Once settings are fixed, score held-out seeds 5–9 and update [benchmark.md](benchmark.md):
+**Tune on development seeds 0–4 only.** Once settings are fixed, score held-out seeds 5–9 once and update [benchmark.md](benchmark.md):
 
 ```bash
-.venv/bin/python -m training.benchmark --root artifacts/benchmark-test --label c-heldout-image --image-mode
-.venv/bin/python -m training.benchmark --root artifacts/benchmark-test --label c-heldout --docs --compare models/benchmark-c-heldout-image.json
+.venv/bin/python -m training.benchmark --root artifacts/benchmark-test --label "One camera" --cameras lane --output models/benchmark-c-world-1cam-test.json
+.venv/bin/python -m training.benchmark --root artifacts/benchmark-test --label "Two cameras" --output models/benchmark-c-final-test.json --docs --compare models/benchmark-c-world-1cam-test.json
 ```
 
-`--docs` regenerates the benchmark table and chart. The example compares frozen image-mode and two-camera configurations on the **same held-out runs**. Score each fixed mode once, and do not tune afterward on these outcomes. If comparing against a different split, scenario set or model generation, label that difference explicitly. The [roadmap](roadmap.md) records the final selected configuration and measured release results.
+| 75 runs each | One camera | Two cameras |
+|---|:-:|:-:|
+| Development seeds 0–4 | 68 | **71** |
+| Held-out seeds 5–9 | 71 | **72** |
+
+The second camera's clear win is the **parked flatbed** scenario, where the lane camera can't see the products for 7–9 seconds: 40% → 100% on development seeds and 80% → 100% on held-out seeds. Everything else is level. Stacked identical boxes and one edge run still fail with either setup.
 
 ## ⚠️ What these numbers don't prove
 
