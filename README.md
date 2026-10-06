@@ -9,10 +9,13 @@
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/UI-React%20%2B%20Vite-61DAFB?logo=react&logoColor=black)
 ![Unity 6](https://img.shields.io/badge/Sim-Unity%206.6%20URP-000000?logo=unity&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-38%20passing-2EA043)
-![Benchmark](https://img.shields.io/badge/benchmark-67%2F70%20held--out-2EA043)
+![Tests](https://img.shields.io/badge/tests-146%20passing-2EA043)
+![Phase B](https://img.shields.io/badge/Phase%20B-67%2F70%20held--out-2EA043)
 
-![ProPass title screen: pick one of 14 scenarios, each with its benchmark pass rate](docs/images/title-screen.jpg)
+> [!IMPORTANT]
+> **`phase-c-wip` is the two-camera research branch.** It adds synchronized camera groups, calibrated fusion, a camera switcher and a coverage map. Its measured results are kept separate from the verified **`main`** version (Phase B: 67/70 held-out and 6/6 live). See [Phase C results](docs/phase-c-results.md) before choosing a version for a demo.
+
+![ProPass title screen: choose a scenario and inspect its measured pass rate](docs/images/title-screen.jpg)
 
 ![Live lane tab during the next-aisle scenario: the lane product is charged, the other shopper's product is tracked as outside the lane](docs/images/dashboard.jpg)
 
@@ -49,7 +52,7 @@ The trained weights (`models/detector.pt`, `models/classifier.pt`) aren't in git
 | ↩️ **Change of mind** | Added on the forward crossing, removed on the observed reverse crossing | ✅ live |
 | ❓ **Unknown product** | Gray unenrolled package is tracked, and checkout is blocked for review | ✅ live |
 
-Every scenario above passes all of its seeds in the [benchmark](docs/benchmark.md). Eight more **messy scenarios** stress the tracker: busy hands, a crossing shopper, a lumber flatbed, partial views at the frame edge, stacked boxes, distractors, a shopper in the next aisle, and hesitation. On held-out seeds, the system now passes **37 of 40** messy runs, up from 18 at the Phase A baseline (67 / 70 overall).
+The table describes the verified Phase B demo. Its held-out benchmark passed **37 of 40** messy runs and **67 of 70** overall. Phase C adds a **parked flatbed** with a long lane-camera occlusion and scores 75 new dual-view recordings. Those results are a separate experiment, reported in the [current benchmark](docs/benchmark.md); the two cohorts should not be treated as the same test.
 
 ![Eight messy benchmark scenarios rendered by Unity](docs/images/messy-scenarios.jpg)
 
@@ -59,11 +62,13 @@ Every scenario above passes all of its seeds in the [benchmark](docs/benchmark.m
 |---|---|
 | 🚀 [Getting started](docs/getting-started.md) | Install, run the demo, and fix common problems |
 | 🖥️ [Dashboard tour](docs/getting-started.md#️-dashboard-tour) | Use the title screen and the Live lane, Decisions, Models and Benchmark tabs |
+| 📷 [Camera evidence and coverage](docs/dashboard.md) | Switch views and read the calibrated map |
+| 🔬 [Phase C results](docs/phase-c-results.md) | Compare cameras, development choices and held-out results |
 | 🔁 [Unity → web pipeline](docs/pipeline.md) | Follow a frame from Unity's camera to the cart on screen |
 | 🏗️ [Architecture](docs/architecture.md) | Understand the components, the checkout state machine and the design decisions |
 | 👁️ [Vision and tracking](docs/vision.md) | See how detection, classification, tracking and zone events work, and tune them |
 | 🧪 [Training and results](docs/training.md) | Export data from Unity, retrain both models, and read the measured results |
-| 📊 [Benchmark](docs/benchmark.md) | See the per-scenario scores on 70 seeded runs (exact cart, ID switches, false adds) |
+| 📊 [Benchmark](docs/benchmark.md) | See current per-scenario exact-cart and review scores |
 | 🔌 [API reference](docs/api.md) | Look up endpoints, payloads and the snapshot shape |
 | 🧩 [Extending ProPass](docs/extending.md) | Add a product, scenario, camera or model |
 | 🗺️ [Roadmap](docs/roadmap.md) | See what's next: messy lanes, learned re-ID, multi-camera coverage |
@@ -87,7 +92,7 @@ catalog.json  The five fictional products, prices and class indices
 ## ✅ Checks
 
 ```bash
-.venv/bin/python -m pytest tests -q        # 38 tests: ledger, engine, checkout races, scoring
+.venv/bin/python -m pytest tests -q        # ledger, fusion, calibration, checkout races, rejection
 (cd web && npm run build)                  # type-check and bundle the dashboard
 .venv/bin/python scripts/verify_live.py    # needs Unity in Play mode + the API
 ```

@@ -12,6 +12,7 @@ where the entry is at the bottom of the image).
 from __future__ import annotations
 from dataclasses import dataclass
 import json
+from math import isfinite
 from pathlib import Path
 
 # Extent of the top-down map, in meters. Wide enough for the next aisles and the entry.
@@ -41,7 +42,13 @@ class Camera:
 
     def to_world(self, x_px: float, y_px: float, width: int, height: int) -> tuple[float, float]:
         import numpy as np
+        if width <= 0 or height <= 0:
+            raise ValueError("Image dimensions must be positive")
+        if not all(isfinite(value) for value in (x_px, y_px, width, height)):
+            raise ValueError("Image coordinates and dimensions must be finite")
         p = self.image_to_plane @ np.array([x_px / width, y_px / height, 1.0])
+        if not np.isfinite(p).all() or abs(p[2]) < 1e-12:
+            raise ValueError(f"Camera {self.id!r} cannot project this image point onto the carry plane")
         return float(p[0] / p[2]), float(p[1] / p[2])
 
 
@@ -52,12 +59,33 @@ class Calibration:
         data = json.loads(Path(path).read_text())
         self.lane = data["lane"]
         self.plane_height = data.get("plane_height", 0.9)
+        if not isfinite(self.plane_height):
+            raise ValueError("Calibration plane_height must be finite")
         self.cameras: dict[str, Camera] = {}
         for cam in data["cameras"]:
+            camera_id = cam["id"]
+            if camera_id in self.cameras:
+                raise ValueError(f"Duplicate calibration camera ID: {camera_id!r}")
+            if not all(isfinite(cam[field]) for field in ("width", "height")):
+                raise ValueError(f"Camera {camera_id!r} dimensions must be finite")
+            if cam["width"] <= 0 or cam["height"] <= 0:
+                raise ValueError(f"Camera {camera_id!r} dimensions must be positive")
             pairs = np.array(cam["plane_to_image"], dtype=np.float64)
-            homography, _ = cv2.findHomography(pairs[:, 2:4], pairs[:, 0:2])
-            self.cameras[cam["id"]] = Camera(cam["id"], cam["width"], cam["height"], homography,
+            if pairs.ndim != 2 or pairs.shape[1] != 4 or pairs.shape[0] < 4:
+                raise ValueError(f"Camera {camera_id!r} requires at least four [x, z, u, v] calibration pairs")
+            if not np.isfinite(pairs).all():
+                raise ValueError(f"Camera {camera_id!r} calibration pairs must be finite")
+            try:
+                homography, _ = cv2.findHomography(pairs[:, 2:4], pairs[:, 0:2])
+            except cv2.error as exc:
+                raise ValueError(f"Camera {camera_id!r} calibration cannot define a homography") from exc
+            if (homography is None or not np.isfinite(homography).all()
+                    or np.linalg.matrix_rank(homography) != 3):
+                raise ValueError(f"Camera {camera_id!r} calibration is degenerate")
+            self.cameras[camera_id] = Camera(camera_id, cam["width"], cam["height"], homography,
                                              cam["footprint"], cam["position"])
+        if not self.cameras:
+            raise ValueError("Calibration must include at least one camera")
 
     def ledger_overrides(self) -> dict:
         """Zones and lane outline expressed in map coordinates."""

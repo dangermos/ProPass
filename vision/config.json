@@ -42,5 +42,6 @@
     "occlusion_gate_growth": 0.02,
     "hysteresis": 0.015,
     "lane_margin": 0.01
-  }
+  },
+  "prototype_rejection": false
 }

@@ -1,0 +1,15 @@
+{
+  "split": "validation only",
+  "source_sha256": "dd97aa91ba05190976bac4cc68d75e70f2da2335961b3df440511a8202f16c34",
+  "sha256": "b0217c7f173c425af518952ad3388e435808eb8ed72d826c4c9386c3cd5f6be6",
+  "source_threshold": 0.45,
+  "threshold": 0.6333184719085694,
+  "known_distance_q99": 0.5833184719085693,
+  "known_samples": 617,
+  "known_distance_rejections_before": 83,
+  "known_distance_rejections_after": 4,
+  "unknown_samples": 14,
+  "unknown_head_rejections": 14,
+  "benchmark_or_test_used": false,
+  "limitations": "Unknown evaluation covers one synthetic gray package family only"
+}

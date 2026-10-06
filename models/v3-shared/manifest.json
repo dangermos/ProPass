@@ -1,0 +1,411 @@
+{
+  "classifier": {
+    "checkpoint": "torchvision EfficientNet_B0_Weights.IMAGENET1K_V1",
+    "seconds": 78.78257703781128,
+    "sha256": "63c35ecea2364e3fc6c62c16cacae815ed4d5baf117d038e01433333a578c078",
+    "epochs": 12,
+    "head_epochs": 4,
+    "batch": 32,
+    "device": "cuda:0",
+    "crop_size": 224,
+    "temperature": 0.6526679992675781,
+    "maximum_prototype_distance": 0.5363772094249726,
+    "dataset_sizes": {
+      "train": 4054,
+      "val": 631,
+      "test": 637
+    },
+    "val": {
+      "correct": 619,
+      "total": 631,
+      "accuracy": 0.9809825673534073,
+      "loss": 0.2296638086131182
+    },
+    "test": {
+      "correct": 622,
+      "total": 637,
+      "accuracy": 0.9764521193092621,
+      "loss": 0.23124479652152893
+    },
+    "test_confusion": [
+      [
+        122,
+        4,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        126,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        118,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        2,
+        1,
+        122,
+        2,
+        0
+      ],
+      [
+        0,
+        2,
+        0,
+        1,
+        120,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        14
+      ]
+    ],
+    "class_labels": [
+      "PEX-001",
+      "PEX-002",
+      "PEX-003",
+      "PEX-004",
+      "PEX-005",
+      "ZZZ-UNKNOWN"
+    ],
+    "unknown_rejection": "Training-set outlier exposure (unenrolled gray package), validation-calibrated feature distance and confidence; broader unknown performance unverified",
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 1.093305917902421,
+        "val": {
+          "correct": 554,
+          "total": 631,
+          "accuracy": 0.8779714738510301,
+          "loss": 0.7404052729463049
+        }
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.6369027422458948,
+        "val": {
+          "correct": 570,
+          "total": 631,
+          "accuracy": 0.9033280507131537,
+          "loss": 0.5697956274598601
+        }
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.5337622762020433,
+        "val": {
+          "correct": 571,
+          "total": 631,
+          "accuracy": 0.9049128367670365,
+          "loss": 0.5089079706491267
+        }
+      },
+      {
+        "epoch": 4,
+        "train_loss": 0.47734589353534584,
+        "val": {
+          "correct": 575,
+          "total": 631,
+          "accuracy": 0.9112519809825673,
+          "loss": 0.4694780098088381
+        }
+      },
+      {
+        "epoch": 5,
+        "train_loss": 0.40674977591899913,
+        "val": {
+          "correct": 598,
+          "total": 631,
+          "accuracy": 0.9477020602218701,
+          "loss": 0.32284249207108223
+        }
+      },
+      {
+        "epoch": 6,
+        "train_loss": 0.30795664127436423,
+        "val": {
+          "correct": 606,
+          "total": 631,
+          "accuracy": 0.9603803486529319,
+          "loss": 0.28355347954338966
+        }
+      },
+      {
+        "epoch": 7,
+        "train_loss": 0.2744605851161639,
+        "val": {
+          "correct": 605,
+          "total": 631,
+          "accuracy": 0.9587955625990491,
+          "loss": 0.2807193876446332
+        }
+      },
+      {
+        "epoch": 8,
+        "train_loss": 0.24587056186320339,
+        "val": {
+          "correct": 618,
+          "total": 631,
+          "accuracy": 0.9793977812995246,
+          "loss": 0.24675001936083552
+        }
+      },
+      {
+        "epoch": 9,
+        "train_loss": 0.22814688711373396,
+        "val": {
+          "correct": 611,
+          "total": 631,
+          "accuracy": 0.9683042789223455,
+          "loss": 0.24327057529175905
+        }
+      },
+      {
+        "epoch": 10,
+        "train_loss": 0.21346999973896752,
+        "val": {
+          "correct": 619,
+          "total": 631,
+          "accuracy": 0.9809825673534073,
+          "loss": 0.2296638086131182
+        }
+      },
+      {
+        "epoch": 11,
+        "train_loss": 0.20591660047553711,
+        "val": {
+          "correct": 617,
+          "total": 631,
+          "accuracy": 0.9778129952456418,
+          "loss": 0.2281107223355071
+        }
+      },
+      {
+        "epoch": 12,
+        "train_loss": 0.19588683312552047,
+        "val": {
+          "correct": 618,
+          "total": 631,
+          "accuracy": 0.9793977812995246,
+          "loss": 0.22445861940905334
+        }
+      }
+    ],
+    "dataset": "Unity synthetic crop splits; no real-camera transfer claim",
+    "initial_threshold_test_accepted": 518,
+    "initial_threshold_test_accepted_correct": 516,
+    "rejection_calibration": {
+      "method": "class-conditioned spherical k-means feature bank",
+      "source_sha256": "b0217c7f173c425af518952ad3388e435808eb8ed72d826c4c9386c3cd5f6be6",
+      "sha256": "63c35ecea2364e3fc6c62c16cacae815ed4d5baf117d038e01433333a578c078",
+      "bank_sha256": "03e5c45ace3b5ebbf6fb340815c89b909a6e5fa1dac856994615cc54631e6e67",
+      "split": "training bank; known validation threshold",
+      "training_samples": 4054,
+      "training_split": "training/data/crops/train",
+      "calibration_split": "training/data/crops/val",
+      "prototype_bank_shape": [
+        6,
+        8,
+        1280
+      ],
+      "clusters_per_class": 8,
+      "clustering_max_iterations": 30,
+      "clustering": [
+        {
+          "class_index": 0,
+          "samples": 800,
+          "active_clusters": 8,
+          "iterations": 25
+        },
+        {
+          "class_index": 1,
+          "samples": 807,
+          "active_clusters": 8,
+          "iterations": 13
+        },
+        {
+          "class_index": 2,
+          "samples": 756,
+          "active_clusters": 8,
+          "iterations": 18
+        },
+        {
+          "class_index": 3,
+          "samples": 798,
+          "active_clusters": 8,
+          "iterations": 30
+        },
+        {
+          "class_index": 4,
+          "samples": 805,
+          "active_clusters": 8,
+          "iterations": 30
+        },
+        {
+          "class_index": 5,
+          "samples": 88,
+          "active_clusters": 8,
+          "iterations": 8
+        }
+      ],
+      "initialization": "stable class-mean first center, then farthest cosine centers; no randomness",
+      "source_threshold": 0.6333184719085694,
+      "threshold": 0.5363772094249726,
+      "known_distance_q99": 0.48637720942497253,
+      "quantile": 0.99,
+      "margin": 0.05,
+      "quantile_uses": "known labeled-class validation distances",
+      "known_samples": 617,
+      "known_distance_rejections_before": 4,
+      "known_distance_rejections_after": 5,
+      "known_runtime_distance_rejections_before": 4,
+      "known_runtime_distance_rejections_after": 5,
+      "known_runtime_head_or_distance_rejections_before": 4,
+      "known_runtime_head_or_distance_rejections_after": 5,
+      "known_head_correct": 605,
+      "unknown_samples": 14,
+      "unknown_head_rejections": 14,
+      "unknown_head_or_distance_rejections_after": 14,
+      "per_class": [
+        {
+          "class": "PEX-001",
+          "samples": 122,
+          "distance_q99_before": 0.523199200630188,
+          "distance_q99_after": 0.42697349190711975,
+          "distance_rejections_before": 0,
+          "distance_rejections_after": 0,
+          "head_correct": 121
+        },
+        {
+          "class": "PEX-002",
+          "samples": 122,
+          "distance_q99_before": 0.6802077889442444,
+          "distance_q99_after": 0.5628644227981567,
+          "distance_rejections_before": 2,
+          "distance_rejections_after": 2,
+          "head_correct": 117
+        },
+        {
+          "class": "PEX-003",
+          "samples": 126,
+          "distance_q99_before": 0.5795683264732361,
+          "distance_q99_after": 0.46569833159446716,
+          "distance_rejections_before": 1,
+          "distance_rejections_after": 1,
+          "head_correct": 125
+        },
+        {
+          "class": "PEX-004",
+          "samples": 126,
+          "distance_q99_before": 0.6313773393630981,
+          "distance_q99_after": 0.5394469499588013,
+          "distance_rejections_before": 1,
+          "distance_rejections_after": 2,
+          "head_correct": 122
+        },
+        {
+          "class": "PEX-005",
+          "samples": 121,
+          "distance_q99_before": 0.4929139316082001,
+          "distance_q99_after": 0.4557175934314728,
+          "distance_rejections_before": 0,
+          "distance_rejections_after": 0,
+          "head_correct": 120
+        },
+        {
+          "class": "ZZZ-UNKNOWN",
+          "samples": 14,
+          "distance_q99_before": 0.5788568258285522,
+          "distance_q99_after": 0.5103735327720642,
+          "distance_rejections_before": 0,
+          "distance_rejections_after": 0,
+          "head_correct": 14
+        }
+      ],
+      "benchmark_or_test_used": false,
+      "classifier_weights_changed": false,
+      "temperature_changed": false,
+      "confidence_or_sku_vote_thresholds_changed": false,
+      "device": "cuda:0",
+      "seconds": 5.794,
+      "backups": [
+        "models/v3-original",
+        "models/v3-calibrated-mean"
+      ],
+      "limitations": "Unknown validation covers one synthetic gray package family only; real-camera transfer unmeasured"
+    },
+    "prototype_bank_shape": [
+      6,
+      8,
+      1280
+    ]
+  },
+  "detector": {
+    "checkpoint": "YOLO26n COCO pretrained",
+    "architecture": "merchandise + person + cart (occluder-aware)",
+    "seconds": 350.1712658405304,
+    "sha256": "af8c712c417a992f3c021087ee92720ba2f8866b4b28e7bf712a6d60af8fc1e4",
+    "epochs_requested": 60,
+    "batch": 16,
+    "image_size": 640,
+    "device": "0",
+    "classes": [
+      "merchandise",
+      "person",
+      "cart"
+    ],
+    "test": {
+      "map50": 0.9830653568489544,
+      "map50_95": 0.8787240933838212,
+      "precision": 0.9847326683603423,
+      "recall": 0.9624435494080233
+    },
+    "dataset": "Unity synthetic scene splits; no real-camera transfer claim",
+    "train_images": 1600,
+    "val_images": 250,
+    "test_images": 250
+  },
+  "pipeline": {
+    "version": "Phase C experimental two-camera RGB pipeline",
+    "classifier_rejection": "trained reject head + temporal confidence and margin; optional prototype bank disabled",
+    "prototype_rejection": false,
+    "tracker": "BoT-SORT per camera + calibrated fusion + physical ledger",
+    "cameras": [
+      "lane",
+      "overhead"
+    ],
+    "calibration_plane_y_m": 0.9,
+    "validation_status": "source and config frozen after development; held-out and live scoring pending",
+    "runtime_ground_truth": false,
+    "known_limitations": [
+      "Synthetic five-product catalog; no real-camera transfer",
+      "Unknown tests cover one gray package family",
+      "Nested detector fragments and conflicting camera identities require review"
+    ],
+    "historical_verified_main": {
+      "commit": "833bce284cec9e5aa805260d554defb15c633e8f",
+      "held_out_passed": 67,
+      "held_out_total": 70,
+      "live_passed": 6,
+      "live_total": 6,
+      "weights": "models/v2"
+    }
+  }
+}

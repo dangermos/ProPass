@@ -170,6 +170,10 @@ Packages/packages-lock.json linguist-generated
 # Exceptions for .asset files such as lightning pre-baking
 LightingData.asset     binary
 
-# Keep documentation images as plain files so GitHub previews them directly
-docs/** -filter -diff -merge
+# Keep documentation readable in diffs and images directly previewable.
+docs/** -filter diff -merge text
+docs/images/*.png -filter -diff -merge -text
+docs/images/*.jpg -filter -diff -merge -text
+docs/images/*.jpeg -filter -diff -merge -text
+docs/images/*.webp -filter -diff -merge -text
 web/public/** -filter -diff -merge

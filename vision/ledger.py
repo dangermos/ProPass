@@ -27,6 +27,8 @@ class Observation:
     full_view: bool | None = None       # seen clear of the image border by some camera
     at_entry_edge: bool | None = None   # at the entry edge of camera coverage
     sized: bool = True                  # bbox area is a meaningful apparent size
+    ambiguous_identity: bool = False   # calibrated camera views disagree about one prior object
+    conflicting_tracks: tuple[int, ...] = ()  # distinct established identities joined by camera fusion
 
     @property
     def center(self):
@@ -198,7 +200,9 @@ class PhysicalLedger:
             # Something emerging from behind an occluder is often half-visible, so its
             # crop looks different. After a long gap, motion plus "not confidently a
             # different SKU" (checked below) is enough; ties still go to review.
-            if not long_gap:
+            world_sku_support = (not obs.sized and not obs.unknown and obj.sku in self.skus and obs.probabilities
+                                 and obs.probabilities[self.skus.index(obj.sku)] >= self.config.sku_threshold)
+            if not long_gap and not world_sku_support:
                 return None
             appearance = min(appearance, 1.0)
         old_area = max(1.0, obj.gallery[-1][1] if obj.gallery else (obj.bbox[2]-obj.bbox[0])*(obj.bbox[3]-obj.bbox[1]))
@@ -337,6 +341,20 @@ class PhysicalLedger:
         if len({obs.track_id for obs in observations}) != len(observations):
             raise ValueError("A tracker ID may occur only once in a frame")
         self._events = []
+        # Camera association cannot silently turn two established ledger units
+        # into one. Review every prior unit, including a member now outside the
+        # lane; the selected primary alias may otherwise hide that conflict.
+        for obs in observations:
+            if not obs.conflicting_tracks:
+                continue
+            current_zone = self._zone(obs.center[0]/width, obs.center[1]/height)
+            for track_id in obs.conflicting_tracks:
+                object_id = self.track_to_object.get(track_id)
+                obj = self.objects.get(object_id)
+                if obj and (obj.membership or obj.approach_observed or current_zone != "OUTSIDE"):
+                    obj.ambiguous_identity = True
+                    self._review(obj, timestamp,
+                                 "Camera fusion joined distinct established physical identities")
         for obj in self.objects.values():
             obj.visible = False
         claimed: set[str] = set()
@@ -390,6 +408,12 @@ class PhysicalLedger:
         detections = []
         for obs in observations:
             obj = assigned[obs.track_id]
+            relevant = (obj.membership or obj.approach_observed or
+                        self._zone(obs.center[0]/width, obs.center[1]/height) != "OUTSIDE")
+            if obs.ambiguous_identity and relevant:
+                obj.ambiguous_identity = True
+                self._review(obj, timestamp,
+                             "Camera projections disagree on an established physical identity")
             self._update(obj, obs, timestamp, width, height)
             detections.append(self._serialize(obj) | {"detector_confidence": obs.detector_confidence})
         for obj in self.objects.values():

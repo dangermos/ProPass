@@ -1,42 +1,51 @@
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import type { Snapshot, Detection, Event } from './types';
+import type { Snapshot, Event, Geometry } from './types';
 import { Icon, colors, money, shortId } from './ui';
+import { cameraName, detectionsForCamera, frameForCamera, objectColor } from './camera';
+import CoverageMap from './CoverageMap';
 
-export type LiveProps = {config?:any;snapshot:Snapshot|null;busy:string|null;action:(path:string,body?:unknown)=>Promise<void>;confirm:()=>void;live:boolean;statusText:string};
+export type LiveProps = {config?:any;geometry?:Geometry|null;snapshot:Snapshot|null;busy:string|null;action:(path:string,body?:unknown)=>Promise<void>;confirm:()=>void;live:boolean;statusText:string};
 
-function VideoCanvas({snapshot,config}:{snapshot:Snapshot|null;config?:any}){
+function VideoCanvas({snapshot,config,camera,showTracks,worldMode}:{snapshot:Snapshot|null;config?:any;camera:string;showTracks:boolean;worldMode:boolean}){
   const ref=useRef<HTMLCanvasElement>(null);
-  const [hasImage,setHasImage]=useState(false);
+  const [displayedFrame,setDisplayedFrame]=useState<string|null>(null);
+  const [failedFrame,setFailedFrame]=useState<string|null>(null);
+  const frame=frameForCamera(snapshot,camera);
+  const frameKey=frame?`${camera}:${frame.run_id}:${frame.frame_id}:${showTracks}`:null;
   useEffect(()=>{
-    if(!snapshot?.frame){setHasImage(false);return;}
-    const frame=snapshot.frame;
+    if(!frame)return;
     const image=new Image();
     let cancelled=false;
     image.onload=()=>{
       if(cancelled||!ref.current)return;
       const canvas=ref.current,ctx=canvas.getContext('2d');if(!ctx)return;
       canvas.width=frame.width;canvas.height=frame.height;
-      ctx.drawImage(image,0,0);setHasImage(true);
+      ctx.drawImage(image,0,0);
+      if(!showTracks){setDisplayedFrame(frameKey);return;}
       const ledger=config?.ledger||{},W=frame.width,H=frame.height;
       const lane:number[][]|undefined=ledger.lane_polygon;
-      if(lane){ctx.save();ctx.beginPath();lane.forEach(([x,y],i)=>i?ctx.lineTo(x*W,y*H):ctx.moveTo(x*W,y*H));ctx.closePath();ctx.fillStyle='rgba(56,214,191,0.07)';ctx.fill();ctx.setLineDash([4,6]);ctx.lineWidth=1.5;ctx.strokeStyle='rgba(220,235,255,0.45)';ctx.stroke();ctx.restore();ctx.font='bold 12px monospace';ctx.fillStyle='rgba(220,235,255,0.7)';ctx.fillText('LANE',lane[3][0]*W+8,24);}
+      if(lane&&!worldMode){ctx.save();ctx.beginPath();lane.forEach(([x,y],i)=>i?ctx.lineTo(x*W,y*H):ctx.moveTo(x*W,y*H));ctx.closePath();ctx.fillStyle='rgba(56,214,191,0.07)';ctx.fill();ctx.setLineDash([4,6]);ctx.lineWidth=1.5;ctx.strokeStyle='rgba(220,235,255,0.45)';ctx.stroke();ctx.restore();ctx.font='bold 12px monospace';ctx.fillStyle='rgba(220,235,255,0.7)';ctx.fillText('LANE',lane[3][0]*W+8,24);}
       const zones=[{y:ledger.commit_y??.4,name:'COMMITTED',color:'#38d6bf'},{y:ledger.approach_y??.65,name:'APPROACH',color:'#ffbb71'}];
-      zones.forEach(z=>{ctx.strokeStyle=z.color+'99';ctx.lineWidth=2;ctx.setLineDash([9,8]);ctx.beginPath();ctx.moveTo(0,frame.height*z.y);ctx.lineTo(frame.width,frame.height*z.y);ctx.stroke();ctx.setLineDash([]);ctx.font='bold 13px monospace';ctx.fillStyle=z.color;ctx.fillText(z.name,16,frame.height*z.y-10);});
-      snapshot.detections.forEach((d:Detection,i:number)=>{
-        const [x1,y1,x2,y2]=d.bbox;if(d.bbox.length!==4)return;
+      if(!worldMode)zones.forEach(z=>{ctx.strokeStyle=z.color+'99';ctx.lineWidth=2;ctx.setLineDash([9,8]);ctx.beginPath();ctx.moveTo(0,frame.height*z.y);ctx.lineTo(frame.width,frame.height*z.y);ctx.stroke();ctx.setLineDash([]);ctx.font='bold 13px monospace';ctx.fillStyle=z.color;ctx.fillText(z.name,16,frame.height*z.y-10);});
+      detectionsForCamera(snapshot,camera).forEach(d=>{
+        const [x1,y1,x2,y2]=d.bbox;if(d.bbox.length!==4||!d.bbox.every(Number.isFinite))return;
         const outside=d.state==='OUTSIDE';
-        const color=outside?'#8fa3bf':d.sku?colors[i%colors.length]:'#ff8293';
+        const color=objectColor(d);
         ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.strokeRect(x1,y1,x2-x1,y2-y1);
-        const label=`T${d.track_id} · ${d.sku||'UNRESOLVED'} · ${outside?'OUTSIDE LANE':Math.round(d.confidence*100)+'%'}`;
+        const label=`${d.object_id||`T${d.track_id}`} · ${d.sku||'UNRESOLVED'} · ${outside?'OUTSIDE LANE':Math.round(d.confidence*100)+'%'}`;
         ctx.font='bold 13px monospace';const w=ctx.measureText(label).width+16;
-        ctx.fillStyle=color;ctx.fillRect(x1,Math.max(0,y1-25),w,25);ctx.fillStyle='#07121a';ctx.fillText(label,x1+8,Math.max(17,y1-8));
+        const labelX=Math.max(0,Math.min(x1,W-w));
+        ctx.fillStyle=color;ctx.fillRect(labelX,Math.max(0,y1-25),w,25);ctx.fillStyle='#07121a';ctx.fillText(label,labelX+8,Math.max(17,y1-8));
       });
+      setDisplayedFrame(frameKey);
     };
+    image.onerror=()=>{if(!cancelled)setFailedFrame(frameKey);};
     image.src=frame.url;
-    return()=>{cancelled=true;image.onload=null;};
-  },[snapshot?.frame?.url,snapshot?.session.run_id,snapshot?.detections,config]); // overlays belong to this exact processed frame
-  return <div className="camera-stage"><canvas ref={ref} className={hasImage?'':'hidden'}/>{!hasImage&&<div className="empty-camera"><div className="camera-grid"/><div className="camera-orbit"><Icon name="camera" size={36}/></div><h3>Waiting for the checkout camera</h3><p>Start the Unity simulation to stream rendered RGB frames.</p><span className="connection-code">UNITY → VISION → CHECKOUT</span></div>}<div className="feed-corner top-left"><span className="dot"/> CAM 01 <span className="muted">/ CHECKOUT LANE</span></div><div className="feed-corner bottom-left">{snapshot?.frame?`FRAME ${snapshot.frame.frame_id.toString().padStart(5,'0')} · ${snapshot.frame.width} × ${snapshot.frame.height}`:'NO FRAMES RECEIVED'}</div><div className="feed-corner bottom-right">RGB INPUT ONLY</div></div>;
+    return()=>{cancelled=true;image.onload=null;image.onerror=null;};
+  },[frame?.url,frameKey,snapshot?.detections,config,camera,showTracks,worldMode]); // image and boxes come from the same processed group
+  const hasImage=!!frameKey&&displayedFrame===frameKey&&failedFrame!==frameKey;
+  return <div className="camera-stage"><canvas ref={ref} className={hasImage?'':'hidden'}/>{!hasImage&&<div className="empty-camera"><div className="camera-grid"/><div className="camera-orbit"><Icon name="camera" size={36}/></div><h3>{frame?failedFrame===frameKey?'Frame no longer available':'Loading camera frame':snapshot?.frame?`${cameraName(camera)} is missing from this frame`:'Waiting for the checkout camera'}</h3><p>{frame?'The displayed image and boxes use the same frame ID.':snapshot?.frame?'The cart continues with the available view. No older image is reused.':'Start the Unity simulation to stream rendered RGB frames.'}</p><span className="connection-code">UNITY → VISION → CHECKOUT</span></div>}<div className="feed-corner top-left"><span className="dot"/> {camera.toUpperCase()} <span className="muted">/ CHECKOUT VIEW</span></div><div className="feed-corner bottom-left">{frame?`FRAME ${frame.frame_id.toString().padStart(5,'0')} · ${frame.width} × ${frame.height}`:'NO MATCHING CAMERA FRAME'}</div><div className="feed-corner bottom-right">RGB INPUT ONLY</div></div>;
 }
 
 export function eventText(e:Event){
@@ -45,13 +54,20 @@ export function eventText(e:Event){
   return texts[e.type]||e.type.replaceAll('_',' ').toLowerCase();
 }
 
-export default function LiveTab({config,snapshot,busy,action,confirm,live,statusText}:LiveProps){
+export default function LiveTab({config,geometry,snapshot,busy,action,confirm,live,statusText}:LiveProps){
   const [showTracks,setShowTracks]=useState(true);
+  const [selectedCamera,setSelectedCamera]=useState('lane');
+  const cameras=[...new Set(snapshot?.cameras?.length?snapshot.cameras:geometry?.cameras.length?geometry.cameras.map(c=>c.id):Object.keys(snapshot?.frames??{}).length?Object.keys(snapshot!.frames!):['lane'])];
+  const camera=cameras.includes(selectedCamera)?selectedCamera:cameras[0];
+  const selectedFrame=frameForCamera(snapshot,camera);
+  const present=Object.keys(snapshot?.frames??{}).length||Number(!!snapshot?.frame);
+  const worldMode=typeof snapshot?.vision.world_mode==='boolean'?snapshot.vision.world_mode:!!geometry;
   const cart=snapshot?.cart,qty=cart?.items.reduce((n,i)=>n+i.quantity,0)||0;
   const reviewing=cart?.status==='REVIEWING',confirmed=cart?.status==='CONFIRMED';
   return <>
       <section className="metric-row"><div className="metric-card"><span className="metric-icon teal"><Icon name="eye"/></span><div><span className="metric-label">VISION ENGINE</span><strong className="engine-value">{snapshot?.vision.ready?'Model ready':snapshot?.vision.mode==='loading'?'Loading model':'Awaiting model'}</strong><small>{snapshot?.vision.mode?.replaceAll('_',' ')||'No checkpoint status yet'}</small></div></div><div className="metric-card"><span className="metric-icon blue"><Icon name="box"/></span><div><span className="metric-label">PHYSICAL UNITS IN CART</span><strong>{qty.toString().padStart(2,'0')}<em>units</em></strong><small>Canonical object membership</small></div></div><div className="metric-card"><span className="metric-icon orange"><Icon name="pulse"/></span><div><span className="metric-label">PIPELINE LATENCY</span><strong>{snapshot?.metrics.pipeline_ms??'—'}<em>ms</em></strong><small>Measured per processed frame</small></div></div><div className="metric-card"><span className="metric-icon purple"><Icon name="check"/></span><div><span className="metric-label">CHECKOUT STATE</span><strong className="state-value">{statusText}</strong><small>Cart version {cart?.version??0}</small></div></div></section>
-      <div className="main-grid"><section className="left-column"><article className="panel camera-panel"><div className="panel-heading"><div><span className={`dot ${live?'live':'idle'}`}/><h2>Checkout camera</h2><span className="subtle-tag">UNITY RGB STREAM</span></div><div className="camera-controls"><button className={`toggle ${showTracks?'on':''}`} onClick={()=>setShowTracks(v=>!v)}>Overlays <span/></button><span className="frame-status">{snapshot?.simulator.paused?'PAUSED':live?'LIVE':'IDLE'}</span></div></div><VideoCanvas config={config} snapshot={showTracks?snapshot:snapshot?{...snapshot,detections:[]}:null}/><div className="feed-footer"><div><Icon name="shield" size={15}/><span>Predictions from pixels. Simulator labels never enter inference.</span></div><span>{snapshot?.metrics.processed_frames??0} frames processed</span></div></article>
+      <div className="main-grid"><section className="left-column"><article className="panel camera-panel"><div className="panel-heading"><div><span className={`dot ${live?'live':'idle'}`}/><h2>Checkout camera</h2><span className="subtle-tag">UNITY RGB STREAM</span></div><div className="camera-controls"><button className={`toggle ${showTracks?'on':''}`} aria-pressed={showTracks} onClick={()=>setShowTracks(v=>!v)}>Overlays <span/></button><span className="frame-status">{snapshot?.simulator.paused?'PAUSED':live?'LIVE':'IDLE'}</span></div></div><div className="camera-switcher" role="group" aria-label="Camera view">{cameras.map(id=><button key={id} aria-pressed={camera===id} onClick={()=>setSelectedCamera(id)} className={camera===id?'selected':''}><Icon name="camera" size={14}/>{cameraName(id)}<span className={`dot ${frameForCamera(snapshot,id)?'live':'idle'}`}/></button>)}<span className="fusion-status">{worldMode?`${present}/${cameras.length} views · one physical ledger`:'Single view · image-space zones'}</span></div><VideoCanvas config={config} snapshot={snapshot} camera={camera} showTracks={showTracks} worldMode={worldMode}/>{snapshot?.frame&&!selectedFrame&&<div className="camera-warning"><Icon name="alert" size={14}/>{cameraName(camera)} did not arrive for frame {snapshot.frame.frame_id}. Select an available camera above.</div>}<div className="feed-footer"><div><Icon name="shield" size={15}/><span>{worldMode?'Shared world zones are shown on the map below.':'Predictions from pixels. Simulator labels never enter inference.'}</span></div><span>{snapshot?.metrics.processed_frames??0} groups processed</span></div></article>
+        <CoverageMap geometry={worldMode?geometry:null} snapshot={snapshot} camera={camera} onCamera={setSelectedCamera}/>
         <article className="panel events-panel"><div className="panel-heading"><div><h2>Evidence timeline</h2><span className="subtle-tag">PERSISTED EVENTS</span></div><span className="event-count">{snapshot?.events.length??0} events</span></div><div className="event-stream">{snapshot?.events.length?snapshot.events.map(e=><div className={`event-row ${e.type==='REVIEW_REQUIRED'?'review-event':''}`} key={e.sequence}><span className={`event-node ${e.type==='ITEM_ADDED'?'added':e.type==='ITEM_REMOVED'?'removed':''}`}/><span className="event-time">{Number(e.timestamp).toFixed(2)}s</span><span className="event-text">{eventText(e)}</span><span className="event-kind">{e.type.replaceAll('_',' ')}</span></div>):<div className="empty-events"><Icon name="pulse"/><span>The event timeline will appear as merchandise is observed.</span></div>}</div></article>
       </section><aside className="right-column"><article className="panel customer-panel"><div className="panel-heading"><div><h2>Demo customer</h2></div><span className="subtle-tag">SIMULATED</span></div><div className="customer-content"><div className="avatar"><Icon name="user" size={24}/></div><div><strong>{snapshot?.session.customer_name||'Avery Morgan'}</strong><span>Independent portfolio account</span></div></div><select aria-label="Select simulated customer" value={snapshot?.session.customer_name||'Avery Morgan'} disabled={!!busy||confirmed} onChange={e=>void action('session',{customer_name:e.target.value})}><option>Avery Morgan</option><option>Jordan Ellis</option><option>Sam Rivera</option></select><p className="account-note">Demo account picker. No external authentication is connected.</p></article>
         <article className={`panel cart-panel ${confirmed?'confirmed-cart':''}`}><div className="panel-heading"><div><h2>Live cart</h2><span className="quantity-pill">{qty}</span></div><span className="cart-version">v{cart?.version??0}</span></div><div className="cart-lines">{cart?.items.length?cart.items.map((i,index)=><div className="cart-line" key={i.sku}><div className="product-mini" style={{'--product-color':colors[index%colors.length]} as React.CSSProperties}><Icon name="box" size={22}/></div><div className="product-text"><strong>{i.name}</strong><span>{i.sku} · {money(i.unit_price)} each</span><small>Qty <b>{i.quantity}</b></small></div><strong className="line-total">{money(i.line_total)}</strong></div>):<div className="empty-cart"><div><Icon name="box" size={30}/></div><strong>Your cart starts with a crossing</strong><p>Recognized physical products appear here after an observed checkout event.</p></div>}</div>

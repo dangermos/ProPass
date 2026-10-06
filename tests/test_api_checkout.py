@@ -145,7 +145,7 @@ def post_frame(client, run_id, frame_id=1):
 
 def test_api_prepare_drains_inflight_and_rejects_new_capture(tmp_path):
     vision = FakeVision()
-    app = create_app(f"sqlite:///{tmp_path / 'api.db'}", lambda: vision)
+    app = create_app(f"sqlite:///{tmp_path / 'api.db'}", lambda: vision, camera_ids=["lane"])
     with TestClient(app) as client:
         run = client.get("/api/simulator/control").json()["run_id"]
         assert post_frame(client, run).json()["accepted"]
@@ -175,7 +175,7 @@ def test_api_prepare_drains_inflight_and_rejects_new_capture(tmp_path):
 
 
 def test_api_new_run_rejects_stale_frames_and_invalid_payload(tmp_path):
-    app = create_app(f"sqlite:///{tmp_path / 'api.db'}", FakeVision)
+    app = create_app(f"sqlite:///{tmp_path / 'api.db'}", FakeVision, camera_ids=["lane"])
     with TestClient(app) as client:
         old = client.get("/api/simulator/control").json()["run_id"]
         state = client.post("/api/scenario", json={"scenario": "duplicate"}).json()
@@ -188,7 +188,7 @@ def test_api_new_run_rejects_stale_frames_and_invalid_payload(tmp_path):
 
 def test_api_reset_while_preparing_rejects_old_barrier_without_server_error(tmp_path):
     vision = FakeVision()
-    app = create_app(f"sqlite:///{tmp_path / 'api.db'}", lambda: vision)
+    app = create_app(f"sqlite:///{tmp_path / 'api.db'}", lambda: vision, camera_ids=["lane"])
     with TestClient(app) as client:
         run = client.get("/api/simulator/control").json()["run_id"]
         post_frame(client, run)
@@ -212,7 +212,7 @@ def test_api_reset_while_preparing_rejects_old_barrier_without_server_error(tmp_
 
 
 def test_api_resume_invalidates_confirmation(tmp_path):
-    app = create_app(f"sqlite:///{tmp_path / 'api.db'}", FakeVision)
+    app = create_app(f"sqlite:///{tmp_path / 'api.db'}", FakeVision, camera_ids=["lane"])
     with TestClient(app) as client:
         run = client.get("/api/simulator/control").json()["run_id"]
         post_frame(client, run)
@@ -223,7 +223,7 @@ def test_api_resume_invalidates_confirmation(tmp_path):
 
 
 def test_api_uncertain_recognition_cannot_prepare(tmp_path):
-    app = create_app(f"sqlite:///{tmp_path / 'api.db'}", lambda: FakeVision(unknown=True))
+    app = create_app(f"sqlite:///{tmp_path / 'api.db'}", lambda: FakeVision(unknown=True), camera_ids=["lane"])
     with TestClient(app) as client:
         run = client.get("/api/simulator/control").json()["run_id"]
         post_frame(client, run)
@@ -234,5 +234,7 @@ def test_api_uncertain_recognition_cannot_prepare(tmp_path):
 def test_reports_endpoint_serves_measured_results_read_only(tmp_path):
     with TestClient(create_app(f"sqlite:///{tmp_path/'r.db'}", vision_factory=lambda: None)) as client:
         body = client.get("/api/reports").json()
-    assert set(body) == {"manifest", "static", "live", "benchmark", "benchmark_reference", "config"}
+    assert set(body) == {"manifest", "static", "live", "benchmark", "benchmark_reference", "config", "cameras", "geometry"}
     assert "ledger" in body["config"]
+    assert body["cameras"] == ["lane", "overhead"]
+    assert [camera["id"] for camera in body["geometry"]["cameras"]] == body["cameras"]

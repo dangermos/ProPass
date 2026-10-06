@@ -9,37 +9,37 @@
     </marker>
   </defs>
   <rect width="1200" height="340" rx="18" fill="url(#bg)"/>
-  <text x="40" y="44" fill="#ffffff" font-size="22" font-weight="700">ProPass pipeline</text>
+  <text x="40" y="44" fill="#ffffff" font-size="22" font-weight="700">ProPass · two cameras, one physical ledger</text>
   <text x="40" y="68" fill="#8fa3bf" font-size="14">Pixels in, explainable cart out. Unity's ground truth never reaches the checkout API.</text>
 
   <!-- Stage boxes -->
   <g>
     <rect x="40" y="105" width="190" height="120" rx="14" fill="#2a1a10" stroke="#ff7a3d" stroke-width="2"/>
     <text x="135" y="140" text-anchor="middle" fill="#ff9a66" font-size="13" font-weight="700" letter-spacing="1.5">1 · SIMULATE</text>
-    <text x="135" y="168" text-anchor="middle" fill="#ffffff" font-size="17" font-weight="600">Unity lane</text>
-    <text x="135" y="192" text-anchor="middle" fill="#c9d4e3" font-size="12.5">960×540 RGB camera</text>
-    <text x="135" y="210" text-anchor="middle" fill="#c9d4e3" font-size="12.5">8 JPEG frames / s</text>
+    <text x="135" y="168" text-anchor="middle" fill="#ffffff" font-size="17" font-weight="600">Lane + overhead</text>
+    <text x="135" y="192" text-anchor="middle" fill="#c9d4e3" font-size="12.5">2 × 960×540 RGB views</text>
+    <text x="135" y="210" text-anchor="middle" fill="#c9d4e3" font-size="12.5">shared frame ID · 8 Hz</text>
   </g>
   <g>
     <rect x="270" y="105" width="190" height="120" rx="14" fill="#10232b" stroke="#38d6bf" stroke-width="2"/>
     <text x="365" y="140" text-anchor="middle" fill="#5eead4" font-size="13" font-weight="700" letter-spacing="1.5">2 · INGEST</text>
-    <text x="365" y="168" text-anchor="middle" fill="#ffffff" font-size="17" font-weight="600">FastAPI queue</text>
-    <text x="365" y="192" text-anchor="middle" fill="#c9d4e3" font-size="12.5">2-frame bounded queue</text>
-    <text x="365" y="210" text-anchor="middle" fill="#c9d4e3" font-size="12.5">stale runs rejected</text>
+    <text x="365" y="168" text-anchor="middle" fill="#ffffff" font-size="17" font-weight="600">Group + queue</text>
+    <text x="365" y="192" text-anchor="middle" fill="#c9d4e3" font-size="12.5">2-group bounded queue</text>
+    <text x="365" y="210" text-anchor="middle" fill="#c9d4e3" font-size="12.5">camera / run / frame keys</text>
   </g>
   <g>
     <rect x="500" y="105" width="190" height="120" rx="14" fill="#141b33" stroke="#6aa8ff" stroke-width="2"/>
     <text x="595" y="140" text-anchor="middle" fill="#93c0ff" font-size="13" font-weight="700" letter-spacing="1.5">3 · SEE</text>
     <text x="595" y="168" text-anchor="middle" fill="#ffffff" font-size="17" font-weight="600">Detect + classify</text>
-    <text x="595" y="192" text-anchor="middle" fill="#c9d4e3" font-size="12.5">YOLO26n merchandise</text>
-    <text x="595" y="210" text-anchor="middle" fill="#c9d4e3" font-size="12.5">EfficientNet-B0 SKU</text>
+    <text x="595" y="192" text-anchor="middle" fill="#c9d4e3" font-size="12.5">YOLO + tracker per camera</text>
+    <text x="595" y="210" text-anchor="middle" fill="#c9d4e3" font-size="12.5">shared EfficientNet-B0 SKU</text>
   </g>
   <g>
     <rect x="730" y="105" width="190" height="120" rx="14" fill="#1f1733" stroke="#bd9aff" stroke-width="2"/>
-    <text x="825" y="140" text-anchor="middle" fill="#d2bcff" font-size="13" font-weight="700" letter-spacing="1.5">4 · TRACK</text>
+    <text x="825" y="140" text-anchor="middle" fill="#d2bcff" font-size="13" font-weight="700" letter-spacing="1.5">4 · FUSE</text>
     <text x="825" y="168" text-anchor="middle" fill="#ffffff" font-size="17" font-weight="600">Physical ledger</text>
-    <text x="825" y="192" text-anchor="middle" fill="#c9d4e3" font-size="12.5">BoT-SORT + identity</text>
-    <text x="825" y="210" text-anchor="middle" fill="#c9d4e3" font-size="12.5">zone crossings → events</text>
+    <text x="825" y="192" text-anchor="middle" fill="#c9d4e3" font-size="12.5">0.9 m carry-plane mapping</text>
+    <text x="825" y="210" text-anchor="middle" fill="#c9d4e3" font-size="12.5">identity + zone events</text>
   </g>
   <g>
     <rect x="960" y="105" width="200" height="120" rx="14" fill="#2b1a10" stroke="#ffbb71" stroke-width="2"/>
@@ -62,5 +62,5 @@
   <rect x="440" y="266" width="320" height="28" rx="14" fill="#0d1420"/>
   <text x="600" y="285" text-anchor="middle" fill="#ff9a66" font-size="13">scenario · run_id · pause   (Unity polls every 0.35 s)</text>
 
-  <text x="40" y="322" fill="#5b6b82" font-size="12">Offline only: Unity also exports masks and labels for training/evaluation. They never enter steps 2–5.</text>
+  <text x="40" y="322" fill="#8fa3bf" font-size="12">Offline only: product labels and masks. Fixed camera calibration supplies geometry; live product transforms never enter inference.</text>
 </svg>

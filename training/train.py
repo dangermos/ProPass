@@ -194,7 +194,11 @@ def classifier(args):
     prototypes = torch.stack([nn.functional.normalize(train_embeddings[train_labels==i].mean(0),dim=0)
                               for i in range(len(class_labels))])
     val_distance = 1-(val_embeddings*prototypes[val_labels]).sum(1)
-    max_distance = min(0.45,max(0.08,float(torch.quantile(val_distance,0.99))+0.05))
+    # The two camera views make each SKU's feature distribution multimodal.
+    # A fixed 0.45 cap over-rejects valid views; calibrate from known validation
+    # examples instead, independently of the explicit unknown classifier head.
+    known_distance = val_distance[val_labels < len(skus)]
+    max_distance = min(0.95,max(0.08,float(torch.quantile(known_distance,0.99))+0.05))
     test_metrics,test_logits,test_labels,test_embeddings = evaluate(loaders["test"],True)
     confusion = torch.zeros(len(class_labels),len(class_labels),dtype=torch.int64)
     for label,pred in zip(test_labels,test_logits.argmax(1)):

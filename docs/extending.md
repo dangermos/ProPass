@@ -12,12 +12,12 @@ mindmap
     🎬 New scenario
       ProPassScenario.cs
       store.py SCENARIOS
-      App.tsx
+      scenarios.ts
       re-record benchmark
     📷 New camera / angle
-      Unity camera
-      config.json zones
-      retrain if the view changes a lot
+      ProPassCameras.cs
+      cameras.json calibration
+      two-view data + retrain
     🧠 New model
       vision/engine.py
       training/train.py
@@ -32,9 +32,10 @@ mindmap
    ```json
    {"sku":"PEX-006","name":"Cordless Impact Driver","price":159.00,"class_index":5,"color":[0.95,0.55,0.10]}
    ```
-2. **Unity:** in [ProPassSceneBuilder.cs](../unity/Assets/ProPass/Editor/ProPassSceneBuilder.cs), extend `Colors`, `Names` and `Sizes`. Keep the gray *unenrolled* package **last**, then update the `"PEX-00"+(i+1)` and `i<5` logic and the loop counts. Also update the crop folders in [ProPassDatasetExporter.cs](../unity/Assets/ProPass/Editor/ProPassDatasetExporter.cs). Run **ProPass → Build checkout scene**.
-3. **Data and models:** re-export the dataset, then retrain **the classifier** (its output size and SKU order come from the catalog). The detector usually doesn't need retraining, because everything is still `merchandise`. Retrain it if the new package looks very different. See [training.md](training.md).
-4. **Check:** the engine refuses to load a classifier whose SKU order doesn't match the catalog, so a stale checkpoint fails loudly instead of mislabeling.
+2. **Unity:** in [ProPassSceneBuilder.cs](../unity/Assets/ProPass/Editor/ProPassSceneBuilder.cs), extend `Colors`, `Names` and `Sizes`. Keep the gray *unenrolled* package **last**, then update the `"PEX-00"+(i+1)` and `i<5` logic and known-product bounds. In [ProPassDatasetExporter.cs](../unity/Assets/ProPass/Editor/ProPassDatasetExporter.cs), update crop folders, known-product sampling/modulo bounds, crop eligibility and the gray-prefab index. Run **ProPass → Build checkout scene**.
+3. **Scenario indices:** move the `unknown` scenario's gray-prefab index in [ProPassScenario.cs](../unity/Assets/ProPass/Runtime/ProPassScenario.cs) after the new known products; otherwise the unknown demo would show the newly enrolled SKU.
+4. **Data and models:** export both camera perspectives, extract unknown crops, retrain **the classifier**, then rebuild its appearance bank with `training.calibrate_rejection` (see [training.md](training.md)). The classifier's SKU order and output size come from the catalog. Evaluate whether the merchandise detector needs retraining for the new package's appearance or geometry.
+5. **Check:** the engine refuses to load a classifier whose SKU order doesn't match the catalog, so a stale checkpoint fails loudly instead of mislabeling. Re-run static evaluation and the temporal benchmark, including two identical units of the new SKU.
 
 ## 🎬 Add a scenario
 
@@ -55,31 +56,33 @@ Then re-record and re-score the benchmark ([training.md](training.md#-scenario-b
 
 ## 📷 Change or add a camera
 
-The zone lines are **normalized image y-coordinates**, so they depend on the camera pose.
+The current lane uses **two views and one physical ledger**. The lane and overhead images project onto the same 0.9 m carry plane using [vision/cameras.json](../vision/cameras.json); checkout zones are world-space markers. Moving a camera requires new calibration, rather than adjusting two horizontal image lines.
 
-1. Move the `Checkout Camera` in the scene builder (or the scene).
-2. Play a single-item run and note the y-value (0 = top, 1 = bottom) where boxes pass the orange and teal floor markers. The dashboard overlay draws the current lines.
-3. Update `approach_y` and `commit_y` in [vision/config.json](../vision/config.json). The dashboard's overlay lines in `VideoCanvas` ([App.tsx](../web/src/App.tsx)) are hard-coded to 0.40 and 0.65 today, so update them to match.
-4. If the viewpoint changes a lot, re-export and retrain the detector so it sees the new perspective.
+1. Move the saved `Checkout Camera` in the scene or [ProPassSceneBuilder.cs](../unity/Assets/ProPass/Editor/ProPassSceneBuilder.cs). Change the overhead pose in [ProPassCameras.cs](../unity/Assets/ProPass/Runtime/ProPassCameras.cs), which creates that camera at runtime.
+2. Stop Play mode, open `Checkout.unity`, and use **ProPass → Export camera calibration**, saving to `vision/cameras.json`. The exporter forces the capture aspect before deriving point pairs and footprints. Camera IDs must match `cameras` in [vision/config.json](../vision/config.json).
+3. Restart the API, run a product through the lane, and inspect both image views and the coverage map. Confirm projections agree before adjusting `fuse_radius_m`; map-specific `world_ledger` settings use normalized map units, not pixels or meters.
+4. Export new training data from both perspectives and retrain/recalibrate when the view changes materially. Record new development and held-out benchmark runs into fresh folders so the prior camera recordings remain available.
 
-A **second camera** currently needs a second ledger, because each `VisionEngine` holds one lane's state. You'd also need a rule for fusing the two cameras' events. That's design work and is covered in the [roadmap](roadmap.md#-phase-c-multiple-cameras-and-a-coverage-map).
+For **single-view offline ablations**, keep the same dual-view recordings and use `training.benchmark --cameras lane` for world mode or `--image-mode` for the original lane image zones. Do not create a separate ledger per camera: observations fuse before the one lane ledger generates events.
+
+A **third camera** needs more than another ID in the config. Generalize `ProPassCameras`, capture/export/recording, and `_fuse`'s current two-view pairing into multi-view groups with at most one observation per camera. Test that one item remains one unit across all views and that duplicate items remain separate. The existing implementation is a two-camera lane, not arbitrary multi-camera tracking.
 
 ## 🧠 Swap in a different model
 
 The API only depends on the [`VisionEngine` interface](api.md#-vision-package-interface).
 
-- **A different detector** (another YOLO size, RT-DETR, and so on): change the loading and `self.detector.track(...)` in [vision/engine.py](../vision/engine.py). Keep the output `Observation`s the same.
+- **A different detector** (another YOLO size, RT-DETR, and so on): change per-camera model loading and `self.detectors[camera].track(...)` in [vision/engine.py](../vision/engine.py). Return the same `CameraObservation` fields; calibrated projection/fusion then produces ledger `Observation`s.
 - **A different tracker:** set `"tracker"` in [vision/config.json](../vision/config.json) (`botsort.yaml` is the default, `bytetrack.yaml` is faster), or plug in your own. The ledger already tolerates ID switches.
-- **A different classifier** (for example, a stronger embedding backbone): replace the EfficientNet block, but keep returning per-SKU probabilities, an L2-normalized embedding and an `unknown` flag.
-- Record the new checkpoint in [models/manifest.json](../models/manifest.json), and re-run `training.evaluate` and `training.replay` so results stay comparable.
+- **A different classifier** (for example, a stronger embedding backbone): update runtime, training, calibration and static evaluation together. Keep per-SKU probabilities, a normalized embedding and an `unknown` flag. Rebuild the appearance bank for the new feature dimension and SKU order.
+- Record the checkpoint in [models/manifest.json](../models/manifest.json), then re-run `training.evaluate` and `training.benchmark` with fixed seeds and camera modes so results stay comparable. Tune on development runs before opening the held-out split.
 
 ## 🌍 Use a real camera
 
-Any client that POSTs JPEGs works. [pipeline.md](pipeline.md#-feeding-the-pipeline-from-something-other-than-unity) has a 15-line webcam example. To get *correct* results you'll also need to:
+Any client can submit JPEGs with `camera_id` and shared capture metadata. [pipeline.md](pipeline.md#-feeding-the-pipeline-from-something-other-than-unity) has a webcam example. Recognition on real footage still needs its own measured dataset:
 
 1. Record and label a small consented real dataset of your own products.
 2. Fine-tune both models with synthetic + real data, and evaluate on a **held-out real session**.
-3. Recalibrate the zone lines for the real camera.
+3. For one webcam, configure `cameras: ["lane"]`, `world_mode: false` and appropriate image zones/lane polygon. For two real cameras, synchronize capture instants and build calibration for their actual placement and carrying plane. Never reuse Unity's homographies for physical cameras.
 
 ## 🧹 Conventions
 

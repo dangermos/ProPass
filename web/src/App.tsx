@@ -12,7 +12,7 @@ const tabs=[
   {id:'live',name:'Live lane',icon:'camera',hint:'Camera, overlays, cart and checkout'},
   {id:'decisions',name:'Decisions',icon:'list',hint:'Why each object is (or isn’t) in the cart'},
   {id:'models',name:'Models',icon:'chip',hint:'Detector, classifier and tracker results'},
-  {id:'benchmark',name:'Benchmark',icon:'chart',hint:'Pass rates on 70 held-out runs'},
+  {id:'benchmark',name:'Benchmark',icon:'chart',hint:'Held-out scenario pass rates'},
 ];
 
 // The hash keeps the current view on refresh: #/ is the title screen, #/lab/<tab> the lab.
@@ -73,7 +73,7 @@ export default function App(){
       </header>
       <nav className="tab-bar" role="tablist">{tabs.map(t=><button key={t.id} role="tab" aria-selected={tab===t.id} className={tab===t.id?'active':''} onClick={()=>go('lab',t.id)}><Icon name={t.icon} size={16}/>{t.name}{t.id==='decisions'&&snapshot?.review_required&&<span className="tab-alert" title="Something needs review"/>}</button>)}</nav>
       {(error||snapshot?.error)&&<div role="alert" className="error-banner"><Icon name="alert"/><span>{error||snapshot?.error}</span><button onClick={()=>setError(null)} aria-label="Dismiss error">×</button></div>}
-      {tab==='live'&&<LiveTab config={reports?.config} snapshot={snapshot} busy={busy} action={action} confirm={confirm} live={live} statusText={statusText}/>}
+      {tab==='live'&&<LiveTab config={reports?.config} geometry={snapshot?.geometry??reports?.geometry} snapshot={snapshot} busy={busy} action={action} confirm={confirm} live={live} statusText={statusText}/>}
       {tab==='decisions'&&<DecisionsTab snapshot={snapshot}/>}
       {tab==='models'&&<ModelsTab reports={reports}/>}
       {tab==='benchmark'&&<BenchmarkTab reports={reports} busy={busy} onRun={start}/>}

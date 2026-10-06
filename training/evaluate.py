@@ -5,6 +5,7 @@ of them. Report both classification on perfect crops and detected-crop results.
 """
 from pathlib import Path
 import argparse
+import hashlib
 import json
 import time
 
@@ -23,6 +24,7 @@ def main():
     import numpy as np
     from PIL import Image
     from vision.engine import VisionEngine
+    from vision.rejection import prototype_distance
     parser = argparse.ArgumentParser()
     parser.add_argument("--split",choices=["val","test"],default="test")
     args = parser.parse_args()
@@ -49,10 +51,12 @@ def main():
             features = engine.classifier.avgpool(engine.classifier.features(batch)).flatten(1)
             normalized = torch.nn.functional.normalize(features,dim=1)
             probabilities = (engine.classifier.classifier(features)/engine.temperature).softmax(1)
-            distances = 1-(normalized*engine.prototypes[probabilities.argmax(1)]).sum(1)
+            distances = prototype_distance(normalized, probabilities.argmax(1), engine.prototypes,
+                                           getattr(engine, "prototype_bank", None))
             scores,indices = probabilities.topk(2,dim=1)
             accepted = ((scores[:,0]>=0.85)&(scores[:,0]-scores[:,1]>=0.2)&
-                        (distances<=engine.max_prototype_distance)&(indices[:,0]<len(engine.skus)))
+                        ((distances<=engine.max_prototype_distance) if engine.prototype_rejection else True)&
+                        (indices[:,0]<len(engine.skus)))
         return [{"sku":engine.skus[int(index)] if int(index)<len(engine.skus) else None,"confidence":float(score),
                  "distance":float(distance),"accepted":bool(accept)}
                 for index,score,distance,accept in zip(indices[:,0].cpu(),scores[:,0].cpu(),
@@ -75,7 +79,8 @@ def main():
         objects = manifest["objects"]
         gt_boxes = [obj["bbox"] for obj in objects]
         started = time.perf_counter()
-        boxes = engine.detector.predict(image,imgsz=640,conf=0.20,iou=0.65,classes=[0],
+        boxes = engine.detector.predict(image,imgsz=engine.image_size,conf=engine.detector_conf,
+                                        iou=engine.detector_iou,classes=[0],
                                         device=engine.device,verbose=False)[0].boxes
         pred_boxes = boxes.xyxy.cpu().tolist() if boxes is not None else []
         prediction = classify(image,pred_boxes)
@@ -123,7 +128,13 @@ def main():
                          "missed":len(objects)-len(matched_gt),
                          "false_detections":len(pred_boxes)-len(matched_pred)})
     report = {"split":args.split,"domain":"Unity synthetic held-out randomized scenes",
-              "runtime_ground_truth":False,"operating_threshold":0.20,"totals":totals,
+              "runtime_ground_truth":False,"operating_threshold":engine.detector_conf,
+              "detector_iou":engine.detector_iou,"totals":totals,
+              "weights_sha256": {name: hashlib.sha256((ROOT/"models"/name).read_bytes()).hexdigest()
+                                 for name in ("detector.pt", "classifier.pt")},
+              "max_prototype_distance":engine.max_prototype_distance,
+              "prototype_rejection":engine.prototype_rejection,
+              "prototype_bank_clusters": int(engine.prototype_bank.shape[1]) if engine.prototype_bank is not None else None,
               "latency_ms": {"warmup_excluded":True,
                              "median":float(np.median(times[1:])),
                              "p95":float(np.percentile(times[1:],95))},

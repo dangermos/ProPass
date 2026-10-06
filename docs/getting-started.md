@@ -37,10 +37,10 @@ Weights are git-ignored. You need:
 
 ```text
 models/detector.pt     ← fine-tuned YOLO26n
-models/classifier.pt   ← fine-tuned EfficientNet-B0 + calibration
+models/classifier.pt   ← fine-tuned EfficientNet-B0 + rejection calibration
 ```
 
-Either copy them from a machine that already has them (check the SHA-256 against [models/manifest.json](../models/manifest.json)), or reproduce them with [training.md](training.md). Without them the API still starts, but `/api/health` reports `awaiting_checkpoints`. It never fakes predictions.
+Either copy them from a machine that already has them (check SHA-256 against [models/manifest.json](../models/manifest.json)), or reproduce them with [training.md](training.md), including appearance-bank calibration after classifier training. Without weights, the API still starts. Models initialize on the first accepted capture group; missing checkpoints then appear in `/api/health`. Predictions are never simulated.
 
 ## 3️⃣ Open the Unity project
 
@@ -50,7 +50,9 @@ The whole Unity project lives in this repo under [`unity/`](../unity), including
 2. Open it with **6000.6.4f1**. The first import takes a few minutes.
 3. Open `Assets/ProPass/Scenes/Checkout.unity`.
 
-If the scene is ever missing or broken, regenerate it from the menu with **ProPass → Build checkout scene**.
+The saved scene has the oblique **lane camera**. The **overhead camera** is created automatically when the simulation starts; no additional camera hardware or scene setup is needed. Each capture instant produces two 960×540 RGB images with one shared frame ID. The matching fixed calibration is [vision/cameras.json](../vision/cameras.json).
+
+If the scene is missing or broken, regenerate it with **ProPass → Build checkout scene**. If you change either camera's pose, stop Play mode and use **ProPass → Export camera calibration**, saving to `vision/cameras.json`, then restart the API. See [extending.md](extending.md#-change-or-add-a-camera).
 
 ## 4️⃣ Start the API and dashboard
 
@@ -69,9 +71,10 @@ Keep that terminal open, and press Ctrl+C to stop both services. Logs go to `art
 ## 5️⃣ Run a scenario
 
 1. In Unity, open **Checkout.unity** and press **▶ Play**. Make sure the Editor's Pause button is off.
-2. Open the dashboard. The **title screen** lists all 14 scenarios, each with a preview and its benchmark pass rate. **Identical products** is the best first demo.
+2. Open the dashboard. The **title screen** lists 15 scenarios, with previews and benchmark scores when reports are available. Start with **Identical products** to inspect two physical units of one SKU.
 3. Click a card. Unity switches to that scenario within about 0.35 s, and the dashboard opens the **Live lane** tab.
-4. Items join the cart when they cross the teal **COMMITTED** line inside the lane outline. After about 15 seconds, click **Review checkout**, then **Confirm demo checkout**.
+4. In **Live lane**, switch between **Lane camera** and **Overhead camera**. The view counter should show both images present. The coverage map shows the shared lane, orange approach marker and teal commit marker; one physical object has the same canonical ID across its image views and map dot.
+5. Items join the cart after an observed forward crossing with accepted SKU evidence. For the clean scenarios, wait about 15 seconds, then click **Review checkout** and **Confirm demo checkout** once evidence is resolved. Review pauses capture, drains accepted camera groups and freezes the cart version before confirmation.
 
 | Scenario | Expected after ~15 s |
 |---|---|
@@ -81,7 +84,8 @@ Keep that terminal open, and press Ctrl+C to stop both services. Logs go to `art
 | Temporary occlusion | 1 × drill kit after a brief disappearance |
 | Change of mind | Driver kit added, then removed on the way back (~29 s) |
 | Unknown product | Gray package tracked, checkout blocked for review |
-| Messy lanes (8) | Products vary by run. The **Decisions** tab explains every outcome. |
+| Messy lanes (9) | Products vary by run. The **Decisions** tab explains pending or reviewed evidence. |
+| Parked flatbed (messy) | The overhead view is intended to preserve evidence while the lane view is hidden for 7–9 seconds; inspect the measured report and both views. |
 
 ## 🖥️ Dashboard tour
 
@@ -89,10 +93,10 @@ Keep that terminal open, and press Ctrl+C to stop both services. Logs go to `art
 
 | Tab | What it's for |
 |---|---|
-| 🎥 **Live lane** | The processed camera frame with the lane outline, zone lines, boxes, track IDs and SKUs, plus the cart, the event timeline and the checkout buttons |
+| 🎥 **Live lane** | Camera switcher, frame-matched boxes/IDs/SKUs, calibrated coverage map and object trails, plus cart, timeline and checkout controls. World zones appear on the map; image-mode zones appear on the camera overlay. |
 | 🧾 **Decisions** | One card per physical object, with its state and a plain-language reason ("crossed into COMMIT with PEX-001 accepted at 97%"), its events, and exactly what is blocking checkout |
 | 🧠 **Models** | Detector, classifier and tracker settings and measured results, read live from `models/*.json` |
-| 📊 **Benchmark** | Pass rate per scenario against the Phase A baseline. **Run live** starts that scenario in Unity. |
+| 📊 **Benchmark** | Measured per-scenario results and the report's labeled comparison. **Run live** starts that scenario in Unity. |
 
 ![Decisions tab](images/decisions-tab.jpg)
 
@@ -109,4 +113,6 @@ The ◀ **Scenarios** button (or the **P** logo) goes back to the title screen. 
 | Review checkout says evidence is unresolved | Expected while an item is still mid-lane, or for the unknown product. Wait, or click **Resume**. |
 | Port 8000 or 5173 is already in use | Something else is running there. Stop it, or check `artifacts/logs/` |
 | Very slow, `dropped_frames` rising | You're on CPU. Lower `captureHz` on the Unity component |
-| Want to try PostgreSQL | See [architecture.md → Data model](architecture.md#️-data-model) |
+| Only one camera is present | Check Unity's upload status and configured camera IDs; the API processes available views, but shows missing evidence instead of an older image. |
+| Map dots disagree with the camera views | Export calibration after camera changes; check capture dimensions/aspect and carrying height. |
+| Want to try PostgreSQL | See [architecture.md → Data model](architecture.md#-data-model) |

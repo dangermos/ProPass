@@ -10,6 +10,7 @@ VisionEngine; ground truth is read afterwards, for scoring only.
 from __future__ import annotations
 import argparse
 from collections import Counter, defaultdict
+import hashlib
 import json
 from pathlib import Path
 import statistics
@@ -157,6 +158,8 @@ def markdown(summary, rows, chart_path, reference=None, reference_label=None):
         "A run **passes** when the final cart is exactly right *and* checkout is blocked only when it should be "
         "(the unknown package). Every run is synthetic and was rendered offline by Unity from a fixed seed, so it can be "
         "reproduced exactly. See [training.md](training.md#-scenario-benchmark) for how to record and score runs.", "",
+        f"Cameras: **{', '.join(summary['cameras'])}** · coordinates: **{'calibrated carry-height plane' if summary['world_mode'] else 'lane image'}** · seeds: **{', '.join(map(str, summary.get('seeds', [])))}**. "
+        "Model and source hashes are recorded in the JSON report. Identity switches, phantom counts and detection recall are scored against **lane-camera annotations only**; an overhead-only observation can therefore count as a phantom. Exact-cart and review scores use the complete fused output.", "",
         *([f"Compared with **{reference_label}** on the same recordings: "
            f"{reference['summary']['passed']} → {summary['passed']} runs passed. The gray bars and *was* column show the reference.", ""]
           if reference else []),
@@ -194,12 +197,22 @@ def main():
     parser.add_argument("--config", type=Path, default=ROOT / "vision" / "config.json")
     parser.add_argument("--output", type=Path, default=None, help="default: models/benchmark-<label>.json")
     parser.add_argument("--docs", action="store_true", help="also write docs/benchmark.md and its chart")
+    parser.add_argument("--models", type=Path, default=ROOT / "models", help="directory holding detector.pt and classifier.pt")
     parser.add_argument("--cameras", help="comma-separated camera ids (default: from the config)")
     parser.add_argument("--image-mode", action="store_true", help="ignore calibration: lane camera, image-space zones")
     parser.add_argument("--compare", type=Path, help="earlier benchmark JSON to show alongside (docs only)")
     args = parser.parse_args()
+    provenance = {"recording_root": str(args.root.resolve()),
+                  "weights_sha256": {name: hashlib.sha256((ROOT / "models" / name).read_bytes()).hexdigest()
+                                     for name in ("detector.pt", "classifier.pt")},
+                  "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+                                    for name in ("vision/engine.py", "vision/ledger.py", "vision/geometry.py", "vision/rejection.py",
+                                                 "vision/config.json", "vision/cameras.json")
+                                    if (ROOT / name).exists()},
+                  "config_path": str(args.config.resolve()),
+                  "config_sha256": hashlib.sha256(args.config.read_bytes()).hexdigest()}
     cameras = ["lane"] if args.image_mode else args.cameras.split(",") if args.cameras else None
-    engine = VisionEngine(ROOT / "catalog.json", ROOT / "models", args.config, cameras,
+    engine = VisionEngine(ROOT / "catalog.json", args.models, args.config, cameras,
                           world_mode=False if args.image_mode else None)
     if not engine.status()["ready"]:
         raise SystemExit(engine.status()["error"])
@@ -222,12 +235,15 @@ def main():
                "latency_ms_median": round(statistics.median(latencies), 1) if latencies else None,
                "domain": "Unity synthetic, offline-rendered seeded scenarios; RGB-only inference",
                "runtime_ground_truth": False, "cameras": engine.camera_ids,
-               "world_mode": engine.calibration is not None, "config": json.loads(args.config.read_text())}
+               "world_mode": engine.calibration is not None, "config": json.loads(args.config.read_text()),
+               "seeds": sorted({r["seed"] for r in runs}), "provenance": provenance}
     output = args.output or ROOT / "models" / f"benchmark-{args.label}.json"
     output.write_text(json.dumps({"summary": summary, "scenarios": rows, "runs": runs}, indent=2))
     print(json.dumps(summary, indent=2))
     if args.docs:
         reference = json.loads(args.compare.read_text()) if args.compare else None
+        if reference and {(r["run_id"], r["seed"]) for r in reference["runs"]} != {(r["run_id"], r["seed"]) for r in runs}:
+            raise SystemExit("Comparison requires the same recorded runs and seeds; report saved, docs not changed")
         ref_rates = {r["scenario"]: r["pass_rate"] for r in reference["scenarios"]} if reference else None
         ref_label = reference["summary"]["label"] if reference else None
         (ROOT / "docs" / "images" / "benchmark.svg").write_text(chart_svg(rows, f"Benchmark · {args.label}", ref_rates))

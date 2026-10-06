@@ -1,0 +1,278 @@
+{
+  "classifier": {
+    "checkpoint": "torchvision EfficientNet_B0_Weights.IMAGENET1K_V1",
+    "seconds": 78.78257703781128,
+    "sha256": "dd97aa91ba05190976bac4cc68d75e70f2da2335961b3df440511a8202f16c34",
+    "epochs": 12,
+    "head_epochs": 4,
+    "batch": 32,
+    "device": "cuda:0",
+    "crop_size": 224,
+    "temperature": 0.6526679992675781,
+    "maximum_prototype_distance": 0.45,
+    "dataset_sizes": {
+      "train": 4054,
+      "val": 631,
+      "test": 637
+    },
+    "val": {
+      "correct": 619,
+      "total": 631,
+      "accuracy": 0.9809825673534073,
+      "loss": 0.2296638086131182
+    },
+    "test": {
+      "correct": 622,
+      "total": 637,
+      "accuracy": 0.9764521193092621,
+      "loss": 0.23124479652152893
+    },
+    "test_confusion": [
+      [
+        122,
+        4,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        126,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        118,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        2,
+        1,
+        122,
+        2,
+        0
+      ],
+      [
+        0,
+        2,
+        0,
+        1,
+        120,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        14
+      ]
+    ],
+    "class_labels": [
+      "PEX-001",
+      "PEX-002",
+      "PEX-003",
+      "PEX-004",
+      "PEX-005",
+      "ZZZ-UNKNOWN"
+    ],
+    "test_accepted": 518,
+    "test_accepted_correct": 516,
+    "unknown_rejection": "Training-set outlier exposure (unenrolled gray package), validation-calibrated feature distance and confidence; broader unknown performance unverified",
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 1.093305917902421,
+        "val": {
+          "correct": 554,
+          "total": 631,
+          "accuracy": 0.8779714738510301,
+          "loss": 0.7404052729463049
+        }
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.6369027422458948,
+        "val": {
+          "correct": 570,
+          "total": 631,
+          "accuracy": 0.9033280507131537,
+          "loss": 0.5697956274598601
+        }
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.5337622762020433,
+        "val": {
+          "correct": 571,
+          "total": 631,
+          "accuracy": 0.9049128367670365,
+          "loss": 0.5089079706491267
+        }
+      },
+      {
+        "epoch": 4,
+        "train_loss": 0.47734589353534584,
+        "val": {
+          "correct": 575,
+          "total": 631,
+          "accuracy": 0.9112519809825673,
+          "loss": 0.4694780098088381
+        }
+      },
+      {
+        "epoch": 5,
+        "train_loss": 0.40674977591899913,
+        "val": {
+          "correct": 598,
+          "total": 631,
+          "accuracy": 0.9477020602218701,
+          "loss": 0.32284249207108223
+        }
+      },
+      {
+        "epoch": 6,
+        "train_loss": 0.30795664127436423,
+        "val": {
+          "correct": 606,
+          "total": 631,
+          "accuracy": 0.9603803486529319,
+          "loss": 0.28355347954338966
+        }
+      },
+      {
+        "epoch": 7,
+        "train_loss": 0.2744605851161639,
+        "val": {
+          "correct": 605,
+          "total": 631,
+          "accuracy": 0.9587955625990491,
+          "loss": 0.2807193876446332
+        }
+      },
+      {
+        "epoch": 8,
+        "train_loss": 0.24587056186320339,
+        "val": {
+          "correct": 618,
+          "total": 631,
+          "accuracy": 0.9793977812995246,
+          "loss": 0.24675001936083552
+        }
+      },
+      {
+        "epoch": 9,
+        "train_loss": 0.22814688711373396,
+        "val": {
+          "correct": 611,
+          "total": 631,
+          "accuracy": 0.9683042789223455,
+          "loss": 0.24327057529175905
+        }
+      },
+      {
+        "epoch": 10,
+        "train_loss": 0.21346999973896752,
+        "val": {
+          "correct": 619,
+          "total": 631,
+          "accuracy": 0.9809825673534073,
+          "loss": 0.2296638086131182
+        }
+      },
+      {
+        "epoch": 11,
+        "train_loss": 0.20591660047553711,
+        "val": {
+          "correct": 617,
+          "total": 631,
+          "accuracy": 0.9778129952456418,
+          "loss": 0.2281107223355071
+        }
+      },
+      {
+        "epoch": 12,
+        "train_loss": 0.19588683312552047,
+        "val": {
+          "correct": 618,
+          "total": 631,
+          "accuracy": 0.9793977812995246,
+          "loss": 0.22445861940905334
+        }
+      }
+    ],
+    "dataset": "Unity synthetic crop splits; no real-camera transfer claim"
+  },
+  "detector": {
+    "checkpoint": "YOLO26n COCO pretrained",
+    "architecture": "merchandise + person + cart (occluder-aware)",
+    "seconds": 350.1712658405304,
+    "sha256": "af8c712c417a992f3c021087ee92720ba2f8866b4b28e7bf712a6d60af8fc1e4",
+    "epochs_requested": 60,
+    "batch": 16,
+    "image_size": 640,
+    "device": "0",
+    "classes": [
+      "merchandise",
+      "person",
+      "cart"
+    ],
+    "test": {
+      "map50": 0.9830653568489544,
+      "map50_95": 0.8787240933838212,
+      "precision": 0.9847326683603423,
+      "recall": 0.9624435494080233
+    },
+    "dataset": "Unity synthetic scene splits; no real-camera transfer claim",
+    "train_images": 1600,
+    "val_images": 250,
+    "test_images": 250
+  },
+  "pipeline": {
+    "runtime_inputs": [
+      "RGB image",
+      "frame_id",
+      "capture timestamp",
+      "run_id"
+    ],
+    "runtime_ground_truth": false,
+    "tracker": "Ultralytics BoT-SORT on merchandise boxes (config: tracker)",
+    "object_identity": "canonical ledger: one-to-one re-attachment gated by motion path, clear-view appearance gallery and SKU; up to 6 s for occlusions; lane polygon",
+    "sku_identity": "five trained fictional SKU classes plus synthetic outlier-exposure reject output",
+    "zone_configuration": {
+      "image_size": 640,
+      "detector_conf": 0.2,
+      "device": "auto",
+      "ledger": {
+        "approach_y": 0.65,
+        "commit_y": 0.4,
+        "hysteresis": 0.025,
+        "dwell_seconds": 0.12,
+        "minimum_views": 3,
+        "sku_threshold": 0.85,
+        "sku_margin": 0.2,
+        "reattach_seconds": 1.8
+      }
+    },
+    "code_hashes": {
+      "vision/engine.py": "3f2277e8f74f9000b48ffb76b102c16c4e7e8b1592086ab13301cb53124c07f0",
+      "vision/ledger.py": "19ce8c4d3e6fa7bd9960b658f5a69362303e42948a597df216b8a98806fe9340"
+    },
+    "evaluation_status": "static, live (6 classic scenarios) and scenario benchmark (70 held-out runs) measured",
+    "known_limitations": [
+      "single-customer staged synthetic lane",
+      "visually distinct fictional packaging",
+      "gray-package rejection trained with outlier exposure; arbitrary unseen retail products unverified",
+      "no real-camera transfer measured"
+    ]
+  }
+}
