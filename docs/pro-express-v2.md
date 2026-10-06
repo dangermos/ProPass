@@ -148,28 +148,35 @@ Same discipline as before: seeded scenarios, tune on seeds 0–4, report once on
 3. **Barcode reader:** OK to `pip install zxing-cpp` into the project's `.venv`?
 4. **Characters:** please click **Add to My Assets** on the pack's Asset Store page while signed in, so it can be imported.
 
-## 📈 Results so far
+## 📈 Results
 
-Five products with barcode labels, lane + overhead + scan cameras, 15 scenarios × 5 seeds.
+Eight products (six boxed with barcode labels, including one locked-cage tool, plus two kinds of lumber with no barcode). Lane, overhead and scan cameras. 17 scenarios × 5 seeds.
 
-| | Old models on the new boxes | Retrained (dev seeds 0–4) | Retrained (**held-out seeds 5–9**) |
-|---|:-:|:-:|:-:|
-| Runs fully automatic and exactly right | 51 / 75 | 71 / 75 | **68 / 75** |
-| Items missed / wrongly charged | 2 / 0 | 0 / 0 | 2 / 1 |
-| Charged items identified by barcode | not measured | 89 of 100 | 88 of 98 |
-| Median time per frame, three cameras | 37 ms | 32 ms | 32 ms |
+| 85 runs each | Development seeds 0–4 | **Held-out seeds 5–9** |
+|---|:-:|:-:|
+| Runs fully automatic and exactly right | 78 | **78** |
+| Items wrongly charged | 0 | **0** |
+| Items missed | 0 | 1 |
+| Charged items identified by barcode | 96 of 114 | 96 of 114 |
+| Items handed to an associate | 17 | 14 |
+| Locked-cage tool routed to an associate | 5 of 5 runs | 5 of 5 runs |
+| Lumber runs (no barcode, recognized by look) | 3 of 5 | 4 of 5 |
+| Median time per frame, three cameras | 37 ms | 32 ms |
 
-- **Barcodes settle what looks couldn't.** Stacked identical boxes went from 60% (two cameras, no barcodes) to 100% on development seeds and 80% on held-out seeds.
-- **Where barcodes aren't read**, the system falls back to recognizing the box by look: the parked flatbed hides the scan camera's view too, and the reversed walk in *change of mind* turns the label away.
-- **The one wrongly charged item** is in an edge-of-frame run on the held-out seeds. That's the error that matters most and the first thing to trace.
-- The retraining mattered: the earlier models fragmented the new-look boxes (51 / 75), mostly on the photo-fronted Ridgid box.
+- **Nothing was wrongly charged on the held-out runs**, and one lumber board was missed.
+- **Barcodes settle what looks couldn't.** Stacked identical boxes pass 4 of 5 held-out runs. Without barcodes it was 3 of 5.
+- **Where barcodes aren't read**, the system falls back to recognizing the item by look: lumber has none, the parked flatbed hides the scan camera's view, and the reversed walk in *change of mind* turns the label away.
+- Of the 14 hand-offs, 10 are by design: the unknown-barcode package and the locked tool. The other 4 are single items in the shopper, flatbed, edge and stacked scenarios.
+- An earlier round with five products scored 68 of 75 on held-out seeds, with one wrongly charged item. That set of recordings is kept in `artifacts/benchmark-test-v2a`.
+- Retraining mattered: the pre-barcode models fragmented the new-look boxes (51 of 75 on development seeds).
 
 ## ✅ Progress
 
 - [ ] **E1 Catalog and barcodes**
   - [x] `barcode` field in `catalog.json`; `scripts/prepare_products.py` builds label and photo textures from `Barcodes/`
   - [x] Scene builder puts a Code 128 label (and the photo, when supplied) on every product prefab
-  - [ ] More products (needs photos and barcodes from Danny), a restricted item, lumber variants
+  - [x] A restricted locked-cage tool (PEX-006) and two lumber variants (PEX-007, PEX-008), with `locked` and `lumber` scenarios
+  - [ ] More boxed products (needs photos and barcodes from Danny)
 - [x] **E2 Scan cameras and reader**
   - [x] 3840×1080 scan camera over the lane entrance (`ProPassCameras.cs`), streamed and recorded with the others
   - [x] `VisionEngine._read_barcodes` / `_attach_barcodes` with zxing-cpp; text must match `SKU=<10 digits>`
@@ -179,7 +186,7 @@ Five products with barcode labels, lane + overhead + scan cameras, 15 scenarios 
   - [x] Ledger: barcode evidence outranks the classifier, ratings, restricted SKUs, assist list (`vision/ledger.py`, `tests/test_ledger_scanning.py`)
   - [x] API: `ASSIST` cart status, `POST /api/assist/add` and `/api/assist/dismiss`, line ratings (`api/`, `tests/test_api_assist.py`)
   - [x] Benchmark reports the barcode share of charged items and assist counts
-  - [ ] A catalog product marked `restricted`, with a scenario for it
+  - [x] A catalog product marked `restricted`, with a scenario for it
 - [x] **E5 Customer phone and associate view** (`web/src/CustomerPhone.tsx`, `AssociatePanel.tsx`), plus barcode outlines on the scan camera view
 - [ ] **E6 Characters** (waiting for the pack to be downloaded and imported in Unity)
 - [ ] **E7 Benchmark, docs, demo recording**

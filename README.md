@@ -10,7 +10,7 @@
 ![React](https://img.shields.io/badge/UI-React%20%2B%20Vite-61DAFB?logo=react&logoColor=black)
 ![Unity 6](https://img.shields.io/badge/Sim-Unity%206.6%20URP-000000?logo=unity&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-124%20passing-2EA043)
-![Benchmark](https://img.shields.io/badge/benchmark-68%2F75%20held--out-2EA043)
+![Benchmark](https://img.shields.io/badge/benchmark-78%2F85%20held--out-2EA043)
 ![Barcodes](https://img.shields.io/badge/SKU-barcode%20scan%20%2B%20visual%20fallback-f96302)
 ![Cameras](https://img.shields.io/badge/cameras-lane%20%2B%20overhead-6aa8ff)
 

@@ -1,10 +1,10 @@
 {
   "summary": {
-    "label": "Pro Express v2 \u00b7 barcodes + two cameras \u00b7 held-out seeds 5\u20139",
-    "runs": 75,
-    "passed": 68,
-    "pass_rate": 0.907,
-    "latency_ms_median": 31.7,
+    "label": "Pro Express v2 \u00b7 8 products \u00b7 held-out seeds 5\u20139",
+    "runs": 85,
+    "passed": 78,
+    "pass_rate": 0.918,
+    "latency_ms_median": 31.9,
     "domain": "Unity synthetic, offline-rendered seeded scenarios; RGB-only inference",
     "runtime_ground_truth": false,
     "cameras": [
@@ -71,8 +71,8 @@
     "provenance": {
       "recording_root": "/home/dangermos/Home Depot Internship Project/propass/artifacts/benchmark-test",
       "weights_sha256": {
-        "detector.pt": "464f88a8f806285a32238102897647f7aa1fa9fc2965c147265cd741891002fc",
-        "classifier.pt": "0819066a82e2fa47abb0f38d3b14c3199be96bef6bc04c5073e7787a7475dd75"
+        "detector.pt": "a389158de712aab4ff94e66fb7a3f0043b6f9e6fc3fe1b4684b86d3122991c80",
+        "classifier.pt": "fa334900cf13002100d095a5730803a7cb98127cc67dc2845172f53cc146b854"
       },
       "source_sha256": {
         "vision/engine.py": "9f1799ce8719663ab17c1d96b8d6d3b89a8729015317a3b6fd9cb0837c5274ea",
@@ -152,7 +152,7 @@
       "id_switches_per_run": 0.0,
       "phantom_objects_per_run": 0.0,
       "review_rate": 0.0,
-      "detection_recall": 0.994,
+      "detection_recall": 1.0,
       "top_review_reasons": []
     },
     {
@@ -196,69 +196,71 @@
       "group": "messy",
       "runs": 5,
       "description": "Hands repeatedly cover the products while they are carried",
-      "pass_rate": 0.8,
+      "pass_rate": 1.0,
       "exact_cart_rate": 1.0,
       "false_adds": 0,
       "missed_items": 0,
       "barcode_share": 1.0,
-      "assist_items": 1,
+      "assist_items": 0,
       "id_switches_per_run": 0.0,
-      "phantom_objects_per_run": 0.2,
-      "review_rate": 0.2,
-      "detection_recall": 1.0,
-      "top_review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ]
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.0,
+      "detection_recall": 0.999,
+      "top_review_reasons": []
     },
     {
       "scenario": "shopper",
       "group": "messy",
       "runs": 5,
       "description": "Another shopper walks across the lane in front of the camera",
-      "pass_rate": 1.0,
+      "pass_rate": 0.8,
       "exact_cart_rate": 1.0,
       "false_adds": 0,
       "missed_items": 0,
       "barcode_share": 1.0,
-      "assist_items": 0,
-      "id_switches_per_run": 0.0,
+      "assist_items": 1,
+      "id_switches_per_run": 0.2,
       "phantom_objects_per_run": 0.2,
-      "review_rate": 0.0,
-      "detection_recall": 0.994,
-      "top_review_reasons": []
+      "review_rate": 0.2,
+      "detection_recall": 0.991,
+      "top_review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal"
+      ]
     },
     {
       "scenario": "flatbed",
       "group": "messy",
       "runs": 5,
       "description": "A flatbed of lumber rolls between the camera and the products for several seconds",
-      "pass_rate": 1.0,
+      "pass_rate": 0.8,
       "exact_cart_rate": 1.0,
       "false_adds": 0,
       "missed_items": 0,
       "barcode_share": 0.667,
-      "assist_items": 0,
+      "assist_items": 1,
       "id_switches_per_run": 0.0,
-      "phantom_objects_per_run": 0.2,
-      "review_rate": 0.0,
-      "detection_recall": 0.958,
-      "top_review_reasons": []
+      "phantom_objects_per_run": 2.6,
+      "review_rate": 0.2,
+      "detection_recall": 0.95,
+      "top_review_reasons": [
+        "Product first observed beyond checkout boundary"
+      ]
     },
     {
       "scenario": "edge",
       "group": "messy",
       "runs": 5,
       "description": "Products enter from below the frame and hug the lane rail",
-      "pass_rate": 0.6,
-      "exact_cart_rate": 0.8,
-      "false_adds": 1,
-      "missed_items": 1,
-      "barcode_share": 1.0,
+      "pass_rate": 0.8,
+      "exact_cart_rate": 1.0,
+      "false_adds": 0,
+      "missed_items": 0,
+      "barcode_share": 0.875,
       "assist_items": 1,
-      "id_switches_per_run": 0.8,
+      "id_switches_per_run": 2.0,
       "phantom_objects_per_run": 0.0,
       "review_rate": 0.2,
-      "detection_recall": 0.856,
+      "detection_recall": 0.859,
       "top_review_reasons": [
         "Product first observed beyond checkout boundary"
       ]
@@ -269,25 +271,6 @@
       "runs": 5,
       "description": "One package carried on top of another",
       "pass_rate": 0.8,
-      "exact_cart_rate": 0.8,
-      "false_adds": 0,
-      "missed_items": 1,
-      "barcode_share": 1.0,
-      "assist_items": 2,
-      "id_switches_per_run": 0.0,
-      "phantom_objects_per_run": 0.0,
-      "review_rate": 0.2,
-      "detection_recall": 1.0,
-      "top_review_reasons": [
-        "Barcode disagrees with the product already recorded"
-      ]
-    },
-    {
-      "scenario": "distractors",
-      "group": "messy",
-      "runs": 5,
-      "description": "A phone, a coffee cup and a bag travel through the lane with the products",
-      "pass_rate": 0.8,
       "exact_cart_rate": 1.0,
       "false_adds": 0,
       "missed_items": 0,
@@ -296,10 +279,27 @@
       "id_switches_per_run": 0.0,
       "phantom_objects_per_run": 0.2,
       "review_rate": 0.2,
-      "detection_recall": 1.0,
+      "detection_recall": 0.995,
       "top_review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
+        "Product first observed beyond checkout boundary"
       ]
+    },
+    {
+      "scenario": "distractors",
+      "group": "messy",
+      "runs": 5,
+      "description": "A phone, a coffee cup and a bag travel through the lane with the products",
+      "pass_rate": 1.0,
+      "exact_cart_rate": 1.0,
+      "false_adds": 0,
+      "missed_items": 0,
+      "barcode_share": 1.0,
+      "assist_items": 0,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.0,
+      "detection_recall": 1.0,
+      "top_review_reasons": []
     },
     {
       "scenario": "bystander",
@@ -312,10 +312,10 @@
       "missed_items": 0,
       "barcode_share": 1.0,
       "assist_items": 0,
-      "id_switches_per_run": 0.0,
+      "id_switches_per_run": 0.4,
       "phantom_objects_per_run": 0.0,
       "review_rate": 0.0,
-      "detection_recall": 0.949,
+      "detection_recall": 0.883,
       "top_review_reasons": []
     },
     {
@@ -346,10 +346,46 @@
       "missed_items": 0,
       "barcode_share": 0.0,
       "assist_items": 0,
-      "id_switches_per_run": 0.8,
-      "phantom_objects_per_run": 0.4,
+      "id_switches_per_run": 1.4,
+      "phantom_objects_per_run": 0.8,
       "review_rate": 0.0,
-      "detection_recall": 0.722,
+      "detection_recall": 0.693,
+      "top_review_reasons": []
+    },
+    {
+      "scenario": "locked",
+      "group": "messy",
+      "runs": 5,
+      "description": "A locked-cage tool is carried through with an ordinary product",
+      "pass_rate": 1.0,
+      "exact_cart_rate": 1.0,
+      "false_adds": 0,
+      "missed_items": 0,
+      "barcode_share": 1.0,
+      "assist_items": 5,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 1.0,
+      "detection_recall": 0.999,
+      "top_review_reasons": [
+        "Restricted item: an associate must release it"
+      ]
+    },
+    {
+      "scenario": "lumber",
+      "group": "messy",
+      "runs": 5,
+      "description": "Lumber with no barcode: plain and pressure-treated boards, sometimes with a box",
+      "pass_rate": 0.8,
+      "exact_cart_rate": 0.8,
+      "false_adds": 0,
+      "missed_items": 1,
+      "barcode_share": 0.3,
+      "assist_items": 0,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.0,
+      "detection_recall": 0.662,
       "top_review_reasons": []
     }
   ],
@@ -378,9 +414,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.879,
+      "detection_recall": 0.855,
       "review_reasons": [],
-      "latency_ms_median": 31.52
+      "latency_ms_median": 32.12
     },
     {
       "scenario": "bystander",
@@ -406,9 +442,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 1.0,
+      "detection_recall": 0.955,
       "review_reasons": [],
-      "latency_ms_median": 34.86
+      "latency_ms_median": 32.65
     },
     {
       "scenario": "bystander",
@@ -434,9 +470,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.959,
+      "detection_recall": 0.879,
       "review_reasons": [],
-      "latency_ms_median": 35.07
+      "latency_ms_median": 32.13
     },
     {
       "scenario": "bystander",
@@ -460,11 +496,11 @@
         "barcode": 1
       },
       "assist_items": 0,
-      "id_switches": 0,
+      "id_switches": 2,
       "phantom_objects": 0,
-      "detection_recall": 1.0,
+      "detection_recall": 0.917,
       "review_reasons": [],
-      "latency_ms_median": 31.4
+      "latency_ms_median": 32.79
     },
     {
       "scenario": "bystander",
@@ -490,9 +526,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.907,
+      "detection_recall": 0.807,
       "review_reasons": [],
-      "latency_ms_median": 31.64
+      "latency_ms_median": 33.31
     },
     {
       "scenario": "distractors",
@@ -522,7 +558,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 31.84
+      "latency_ms_median": 32.02
     },
     {
       "scenario": "distractors",
@@ -537,22 +573,20 @@
         "PEX-003": 1
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 1
       },
-      "assist_items": 1,
+      "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 1,
+      "phantom_objects": 0,
       "detection_recall": 1.0,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 30.23
+      "review_reasons": [],
+      "latency_ms_median": 31.31
     },
     {
       "scenario": "distractors",
@@ -580,7 +614,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 30.9
+      "latency_ms_median": 32.26
     },
     {
       "scenario": "distractors",
@@ -608,7 +642,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 30.21
+      "latency_ms_median": 31.44
     },
     {
       "scenario": "distractors",
@@ -621,8 +655,8 @@
         "PEX-002": 1
       },
       "predicted_cart": {
-        "PEX-002": 1,
-        "PEX-005": 1
+        "PEX-005": 1,
+        "PEX-002": 1
       },
       "expected_review": false,
       "review_required": false,
@@ -638,7 +672,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 32.15
+      "latency_ms_median": 32.52
     },
     {
       "scenario": "duplicate",
@@ -666,7 +700,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 31.41
+      "latency_ms_median": 34.21
     },
     {
       "scenario": "duplicate",
@@ -694,7 +728,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 31.89
+      "latency_ms_median": 34.79
     },
     {
       "scenario": "duplicate",
@@ -722,7 +756,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 31.84
+      "latency_ms_median": 34.9
     },
     {
       "scenario": "duplicate",
@@ -750,7 +784,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 31.51
+      "latency_ms_median": 33.49
     },
     {
       "scenario": "duplicate",
@@ -778,7 +812,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 31.46
+      "latency_ms_median": 34.48
     },
     {
       "scenario": "edge",
@@ -806,9 +840,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.793,
+      "detection_recall": 0.789,
       "review_reasons": [],
-      "latency_ms_median": 30.62
+      "latency_ms_median": 32.64
     },
     {
       "scenario": "edge",
@@ -821,23 +855,27 @@
         "PEX-005": 1
       },
       "predicted_cart": {
-        "PEX-005": 2
+        "PEX-001": 1,
+        "PEX-005": 1
       },
       "expected_review": false,
-      "review_required": false,
-      "exact_cart": false,
+      "review_required": true,
+      "exact_cart": true,
       "passed": false,
-      "false_adds": 1,
-      "missed_items": 1,
+      "false_adds": 0,
+      "missed_items": 0,
       "sku_sources": {
-        "barcode": 2
+        "visual": 1,
+        "barcode": 1
       },
-      "assist_items": 0,
-      "id_switches": 2,
+      "assist_items": 1,
+      "id_switches": 8,
       "phantom_objects": 0,
-      "detection_recall": 0.728,
-      "review_reasons": [],
-      "latency_ms_median": 30.54
+      "detection_recall": 0.746,
+      "review_reasons": [
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 31.47
     },
     {
       "scenario": "edge",
@@ -854,22 +892,20 @@
         "PEX-003": 1
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 2
       },
-      "assist_items": 1,
-      "id_switches": 2,
+      "assist_items": 0,
+      "id_switches": 1,
       "phantom_objects": 0,
-      "detection_recall": 0.779,
-      "review_reasons": [
-        "Product first observed beyond checkout boundary"
-      ],
-      "latency_ms_median": 30.87
+      "detection_recall": 0.788,
+      "review_reasons": [],
+      "latency_ms_median": 32.14
     },
     {
       "scenario": "edge",
@@ -893,11 +929,11 @@
         "barcode": 1
       },
       "assist_items": 0,
-      "id_switches": 0,
+      "id_switches": 1,
       "phantom_objects": 0,
       "detection_recall": 0.991,
       "review_reasons": [],
-      "latency_ms_median": 30.05
+      "latency_ms_median": 30.64
     },
     {
       "scenario": "edge",
@@ -923,9 +959,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.991,
+      "detection_recall": 0.983,
       "review_reasons": [],
-      "latency_ms_median": 30.44
+      "latency_ms_median": 31.05
     },
     {
       "scenario": "flatbed",
@@ -944,20 +980,22 @@
         "PEX-004": 1
       },
       "expected_review": false,
-      "review_required": false,
+      "review_required": true,
       "exact_cart": true,
-      "passed": true,
+      "passed": false,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 3
       },
-      "assist_items": 0,
+      "assist_items": 1,
       "id_switches": 0,
-      "phantom_objects": 0,
-      "detection_recall": 0.968,
-      "review_reasons": [],
-      "latency_ms_median": 34.08
+      "phantom_objects": 5,
+      "detection_recall": 0.954,
+      "review_reasons": [
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 34.97
     },
     {
       "scenario": "flatbed",
@@ -982,10 +1020,10 @@
       },
       "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 0,
-      "detection_recall": 1.0,
+      "phantom_objects": 1,
+      "detection_recall": 0.979,
       "review_reasons": [],
-      "latency_ms_median": 30.88
+      "latency_ms_median": 31.34
     },
     {
       "scenario": "flatbed",
@@ -1010,10 +1048,10 @@
       },
       "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 0,
-      "detection_recall": 0.993,
+      "phantom_objects": 1,
+      "detection_recall": 0.986,
       "review_reasons": [],
-      "latency_ms_median": 30.51
+      "latency_ms_median": 31.86
     },
     {
       "scenario": "flatbed",
@@ -1040,10 +1078,10 @@
       },
       "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 0,
-      "detection_recall": 0.897,
+      "phantom_objects": 4,
+      "detection_recall": 0.9,
       "review_reasons": [],
-      "latency_ms_median": 32.49
+      "latency_ms_median": 33.25
     },
     {
       "scenario": "flatbed",
@@ -1071,10 +1109,10 @@
       },
       "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 1,
-      "detection_recall": 0.934,
+      "phantom_objects": 2,
+      "detection_recall": 0.931,
       "review_reasons": [],
-      "latency_ms_median": 31.36
+      "latency_ms_median": 33.6
     },
     {
       "scenario": "hands",
@@ -1102,9 +1140,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 1.0,
+      "detection_recall": 0.997,
       "review_reasons": [],
-      "latency_ms_median": 32.3
+      "latency_ms_median": 32.6
     },
     {
       "scenario": "hands",
@@ -1132,7 +1170,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 30.55
+      "latency_ms_median": 30.78
     },
     {
       "scenario": "hands",
@@ -1160,7 +1198,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 29.28
+      "latency_ms_median": 31.12
     },
     {
       "scenario": "hands",
@@ -1175,22 +1213,20 @@
         "PEX-002": 1
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 1
       },
-      "assist_items": 1,
+      "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 1,
+      "phantom_objects": 0,
       "detection_recall": 1.0,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 30.06
+      "review_reasons": [],
+      "latency_ms_median": 30.85
     },
     {
       "scenario": "hands",
@@ -1220,7 +1256,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 31.85
+      "latency_ms_median": 32.16
     },
     {
       "scenario": "hesitate",
@@ -1242,7 +1278,7 @@
       "phantom_objects": 0,
       "detection_recall": 0.992,
       "review_reasons": [],
-      "latency_ms_median": 29.53
+      "latency_ms_median": 29.85
     },
     {
       "scenario": "hesitate",
@@ -1264,7 +1300,7 @@
       "phantom_objects": 0,
       "detection_recall": 0.992,
       "review_reasons": [],
-      "latency_ms_median": 29.74
+      "latency_ms_median": 31.21
     },
     {
       "scenario": "hesitate",
@@ -1292,7 +1328,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 30.87
+      "latency_ms_median": 32.76
     },
     {
       "scenario": "hesitate",
@@ -1320,7 +1356,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 30.52
+      "latency_ms_median": 30.6
     },
     {
       "scenario": "hesitate",
@@ -1348,7 +1384,308 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 31.22
+      "latency_ms_median": 31.68
+    },
+    {
+      "scenario": "locked",
+      "seed": 5,
+      "run_id": "locked-seed05",
+      "description": "A locked-cage tool is carried through with an ordinary product",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-003": 1
+      },
+      "predicted_cart": {
+        "PEX-003": 1
+      },
+      "expected_review": true,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "sku_sources": {
+        "barcode": 1
+      },
+      "assist_items": 1,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [
+        "Restricted item: an associate must release it"
+      ],
+      "latency_ms_median": 33.71
+    },
+    {
+      "scenario": "locked",
+      "seed": 6,
+      "run_id": "locked-seed06",
+      "description": "A locked-cage tool is carried through with an ordinary product",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-005": 1
+      },
+      "predicted_cart": {
+        "PEX-005": 1
+      },
+      "expected_review": true,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "sku_sources": {
+        "barcode": 1
+      },
+      "assist_items": 1,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 0.997,
+      "review_reasons": [
+        "Restricted item: an associate must release it"
+      ],
+      "latency_ms_median": 32.99
+    },
+    {
+      "scenario": "locked",
+      "seed": 7,
+      "run_id": "locked-seed07",
+      "description": "A locked-cage tool is carried through with an ordinary product",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-002": 1
+      },
+      "predicted_cart": {
+        "PEX-002": 1
+      },
+      "expected_review": true,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "sku_sources": {
+        "barcode": 1
+      },
+      "assist_items": 1,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [
+        "Restricted item: an associate must release it"
+      ],
+      "latency_ms_median": 34.3
+    },
+    {
+      "scenario": "locked",
+      "seed": 8,
+      "run_id": "locked-seed08",
+      "description": "A locked-cage tool is carried through with an ordinary product",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-005": 1
+      },
+      "predicted_cart": {
+        "PEX-005": 1
+      },
+      "expected_review": true,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "sku_sources": {
+        "barcode": 1
+      },
+      "assist_items": 1,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [
+        "Restricted item: an associate must release it"
+      ],
+      "latency_ms_median": 34.01
+    },
+    {
+      "scenario": "locked",
+      "seed": 9,
+      "run_id": "locked-seed09",
+      "description": "A locked-cage tool is carried through with an ordinary product",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-002": 1
+      },
+      "predicted_cart": {
+        "PEX-002": 1
+      },
+      "expected_review": true,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "sku_sources": {
+        "barcode": 1
+      },
+      "assist_items": 1,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [
+        "Restricted item: an associate must release it"
+      ],
+      "latency_ms_median": 31.92
+    },
+    {
+      "scenario": "lumber",
+      "seed": 5,
+      "run_id": "lumber-seed05",
+      "description": "Lumber with no barcode: plain and pressure-treated boards, sometimes with a box",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-008": 2,
+        "PEX-004": 1
+      },
+      "predicted_cart": {
+        "PEX-004": 1,
+        "PEX-008": 2
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "sku_sources": {
+        "barcode": 1,
+        "visual": 2
+      },
+      "assist_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 0.825,
+      "review_reasons": [],
+      "latency_ms_median": 33.29
+    },
+    {
+      "scenario": "lumber",
+      "seed": 6,
+      "run_id": "lumber-seed06",
+      "description": "Lumber with no barcode: plain and pressure-treated boards, sometimes with a box",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-007": 1,
+        "PEX-008": 1
+      },
+      "predicted_cart": {
+        "PEX-007": 1,
+        "PEX-008": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "sku_sources": {
+        "visual": 2
+      },
+      "assist_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 0.583,
+      "review_reasons": [],
+      "latency_ms_median": 30.72
+    },
+    {
+      "scenario": "lumber",
+      "seed": 7,
+      "run_id": "lumber-seed07",
+      "description": "Lumber with no barcode: plain and pressure-treated boards, sometimes with a box",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-007": 2
+      },
+      "predicted_cart": {
+        "PEX-007": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": false,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 1,
+      "sku_sources": {
+        "visual": 1
+      },
+      "assist_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 0.5,
+      "review_reasons": [],
+      "latency_ms_median": 30.53
+    },
+    {
+      "scenario": "lumber",
+      "seed": 8,
+      "run_id": "lumber-seed08",
+      "description": "Lumber with no barcode: plain and pressure-treated boards, sometimes with a box",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-007": 1,
+        "PEX-002": 1
+      },
+      "predicted_cart": {
+        "PEX-002": 1,
+        "PEX-007": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "sku_sources": {
+        "barcode": 1,
+        "visual": 1
+      },
+      "assist_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 0.524,
+      "review_reasons": [],
+      "latency_ms_median": 31.72
+    },
+    {
+      "scenario": "lumber",
+      "seed": 9,
+      "run_id": "lumber-seed09",
+      "description": "Lumber with no barcode: plain and pressure-treated boards, sometimes with a box",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-008": 1,
+        "PEX-002": 1
+      },
+      "predicted_cart": {
+        "PEX-002": 1,
+        "PEX-008": 1
+      },
+      "expected_review": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
+      "false_adds": 0,
+      "missed_items": 0,
+      "sku_sources": {
+        "barcode": 1,
+        "visual": 1
+      },
+      "assist_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 0.879,
+      "review_reasons": [],
+      "latency_ms_median": 31.74
     },
     {
       "scenario": "mixed",
@@ -1380,7 +1717,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 32.61
+      "latency_ms_median": 35.93
     },
     {
       "scenario": "mixed",
@@ -1395,8 +1732,8 @@
       },
       "predicted_cart": {
         "PEX-005": 1,
-        "PEX-001": 1,
-        "PEX-003": 1
+        "PEX-003": 1,
+        "PEX-001": 1
       },
       "expected_review": false,
       "review_required": false,
@@ -1412,7 +1749,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 33.02
+      "latency_ms_median": 35.11
     },
     {
       "scenario": "mixed",
@@ -1426,8 +1763,8 @@
         "PEX-005": 1
       },
       "predicted_cart": {
-        "PEX-001": 1,
         "PEX-005": 1,
+        "PEX-001": 1,
         "PEX-003": 1
       },
       "expected_review": false,
@@ -1444,7 +1781,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 31.71
+      "latency_ms_median": 34.71
     },
     {
       "scenario": "mixed",
@@ -1458,8 +1795,8 @@
         "PEX-005": 1
       },
       "predicted_cart": {
-        "PEX-001": 1,
         "PEX-005": 1,
+        "PEX-001": 1,
         "PEX-003": 1
       },
       "expected_review": false,
@@ -1476,7 +1813,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 32.08
+      "latency_ms_median": 34.45
     },
     {
       "scenario": "mixed",
@@ -1491,8 +1828,8 @@
       },
       "predicted_cart": {
         "PEX-005": 1,
-        "PEX-001": 1,
-        "PEX-003": 1
+        "PEX-003": 1,
+        "PEX-001": 1
       },
       "expected_review": false,
       "review_required": false,
@@ -1508,7 +1845,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 33.86
+      "latency_ms_median": 35.26
     },
     {
       "scenario": "occlusion",
@@ -1534,9 +1871,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.993,
+      "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 29.56
+      "latency_ms_median": 30.39
     },
     {
       "scenario": "occlusion",
@@ -1562,9 +1899,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.993,
+      "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 30.84
+      "latency_ms_median": 30.68
     },
     {
       "scenario": "occlusion",
@@ -1590,9 +1927,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.993,
+      "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 30.54
+      "latency_ms_median": 29.97
     },
     {
       "scenario": "occlusion",
@@ -1618,9 +1955,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.993,
+      "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 30.48
+      "latency_ms_median": 29.95
     },
     {
       "scenario": "occlusion",
@@ -1648,7 +1985,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 32.09
+      "latency_ms_median": 29.41
     },
     {
       "scenario": "parked",
@@ -1673,10 +2010,10 @@
       },
       "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 0,
-      "detection_recall": 0.648,
+      "phantom_objects": 1,
+      "detection_recall": 0.628,
       "review_reasons": [],
-      "latency_ms_median": 29.68
+      "latency_ms_median": 29.54
     },
     {
       "scenario": "parked",
@@ -1701,10 +2038,10 @@
       },
       "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 0,
-      "detection_recall": 0.655,
+      "phantom_objects": 1,
+      "detection_recall": 0.634,
       "review_reasons": [],
-      "latency_ms_median": 31.05
+      "latency_ms_median": 29.54
     },
     {
       "scenario": "parked",
@@ -1730,9 +2067,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.828,
+      "detection_recall": 0.766,
       "review_reasons": [],
-      "latency_ms_median": 31.61
+      "latency_ms_median": 30.16
     },
     {
       "scenario": "parked",
@@ -1758,11 +2095,11 @@
         "visual": 2
       },
       "assist_items": 0,
-      "id_switches": 2,
-      "phantom_objects": 0,
-      "detection_recall": 0.745,
+      "id_switches": 5,
+      "phantom_objects": 2,
+      "detection_recall": 0.707,
       "review_reasons": [],
-      "latency_ms_median": 33.8
+      "latency_ms_median": 32.16
     },
     {
       "scenario": "parked",
@@ -1789,10 +2126,10 @@
       },
       "assist_items": 0,
       "id_switches": 2,
-      "phantom_objects": 2,
-      "detection_recall": 0.734,
+      "phantom_objects": 0,
+      "detection_recall": 0.731,
       "review_reasons": [],
-      "latency_ms_median": 33.62
+      "latency_ms_median": 31.77
     },
     {
       "scenario": "remove",
@@ -1814,7 +2151,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 31.24
+      "latency_ms_median": 29.74
     },
     {
       "scenario": "remove",
@@ -1836,7 +2173,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 29.06
+      "latency_ms_median": 30.87
     },
     {
       "scenario": "remove",
@@ -1858,7 +2195,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 30.23
+      "latency_ms_median": 29.85
     },
     {
       "scenario": "remove",
@@ -1880,7 +2217,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 30.98
+      "latency_ms_median": 29.59
     },
     {
       "scenario": "remove",
@@ -1902,7 +2239,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 31.08
+      "latency_ms_median": 29.42
     },
     {
       "scenario": "shopper",
@@ -1928,9 +2265,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 1.0,
+      "detection_recall": 0.993,
       "review_reasons": [],
-      "latency_ms_median": 33.87
+      "latency_ms_median": 32.46
     },
     {
       "scenario": "shopper",
@@ -1943,8 +2280,8 @@
         "PEX-003": 1
       },
       "predicted_cart": {
-        "PEX-001": 1,
-        "PEX-003": 1
+        "PEX-003": 1,
+        "PEX-001": 1
       },
       "expected_review": false,
       "review_required": false,
@@ -1960,7 +2297,7 @@
       "phantom_objects": 0,
       "detection_recall": 0.997,
       "review_reasons": [],
-      "latency_ms_median": 34.75
+      "latency_ms_median": 31.44
     },
     {
       "scenario": "shopper",
@@ -1977,20 +2314,22 @@
         "PEX-001": 1
       },
       "expected_review": false,
-      "review_required": false,
+      "review_required": true,
       "exact_cart": true,
-      "passed": true,
+      "passed": false,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 2
       },
-      "assist_items": 0,
-      "id_switches": 0,
+      "assist_items": 1,
+      "id_switches": 1,
       "phantom_objects": 0,
-      "detection_recall": 0.99,
-      "review_reasons": [],
-      "latency_ms_median": 34.82
+      "detection_recall": 0.986,
+      "review_reasons": [
+        "Entered merchandise disappeared before an observed checkout or reverse removal"
+      ],
+      "latency_ms_median": 32.8
     },
     {
       "scenario": "shopper",
@@ -2003,8 +2342,8 @@
         "PEX-005": 1
       },
       "predicted_cart": {
-        "PEX-005": 1,
-        "PEX-004": 1
+        "PEX-004": 1,
+        "PEX-005": 1
       },
       "expected_review": false,
       "review_required": false,
@@ -2018,9 +2357,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 1,
-      "detection_recall": 0.99,
+      "detection_recall": 0.986,
       "review_reasons": [],
-      "latency_ms_median": 35.07
+      "latency_ms_median": 33.02
     },
     {
       "scenario": "shopper",
@@ -2048,7 +2387,7 @@
       "phantom_objects": 0,
       "detection_recall": 0.993,
       "review_reasons": [],
-      "latency_ms_median": 32.01
+      "latency_ms_median": 30.78
     },
     {
       "scenario": "single",
@@ -2076,7 +2415,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 33.94
+      "latency_ms_median": 33.25
     },
     {
       "scenario": "single",
@@ -2104,7 +2443,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 34.47
+      "latency_ms_median": 31.31
     },
     {
       "scenario": "single",
@@ -2132,7 +2471,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 33.81
+      "latency_ms_median": 32.54
     },
     {
       "scenario": "single",
@@ -2160,7 +2499,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 35.45
+      "latency_ms_median": 32.19
     },
     {
       "scenario": "single",
@@ -2188,7 +2527,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 33.93
+      "latency_ms_median": 32.87
     },
     {
       "scenario": "stacked",
@@ -2216,9 +2555,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 1.0,
+      "detection_recall": 0.976,
       "review_reasons": [],
-      "latency_ms_median": 34.35
+      "latency_ms_median": 33.4
     },
     {
       "scenario": "stacked",
@@ -2231,6 +2570,38 @@
       },
       "predicted_cart": {
         "PEX-001": 2
+      },
+      "expected_review": false,
+      "review_required": true,
+      "exact_cart": true,
+      "passed": false,
+      "false_adds": 0,
+      "missed_items": 0,
+      "sku_sources": {
+        "barcode": 2
+      },
+      "assist_items": 1,
+      "id_switches": 0,
+      "phantom_objects": 1,
+      "detection_recall": 1.0,
+      "review_reasons": [
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 31.94
+    },
+    {
+      "scenario": "stacked",
+      "seed": 7,
+      "run_id": "stacked-seed07",
+      "description": "One package carried on top of another",
+      "frames": 145,
+      "expected_cart": {
+        "PEX-002": 1,
+        "PEX-004": 1
+      },
+      "predicted_cart": {
+        "PEX-002": 1,
+        "PEX-004": 1
       },
       "expected_review": false,
       "review_required": false,
@@ -2246,38 +2617,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 33.5
-    },
-    {
-      "scenario": "stacked",
-      "seed": 7,
-      "run_id": "stacked-seed07",
-      "description": "One package carried on top of another",
-      "frames": 145,
-      "expected_cart": {
-        "PEX-002": 1,
-        "PEX-004": 1
-      },
-      "predicted_cart": {
-        "PEX-004": 1
-      },
-      "expected_review": false,
-      "review_required": true,
-      "exact_cart": false,
-      "passed": false,
-      "false_adds": 0,
-      "missed_items": 1,
-      "sku_sources": {
-        "barcode": 1
-      },
-      "assist_items": 2,
-      "id_switches": 0,
-      "phantom_objects": 0,
-      "detection_recall": 1.0,
-      "review_reasons": [
-        "Barcode disagrees with the product already recorded"
-      ],
-      "latency_ms_median": 34.34
+      "latency_ms_median": 33.06
     },
     {
       "scenario": "stacked",
@@ -2305,7 +2645,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 34.03
+      "latency_ms_median": 32.13
     },
     {
       "scenario": "stacked",
@@ -2333,7 +2673,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 33.93
+      "latency_ms_median": 31.63
     },
     {
       "scenario": "unknown",
@@ -2357,7 +2697,7 @@
       "review_reasons": [
         "Barcode is not in the catalog"
       ],
-      "latency_ms_median": 33.7
+      "latency_ms_median": 29.9
     },
     {
       "scenario": "unknown",
@@ -2381,7 +2721,7 @@
       "review_reasons": [
         "Barcode is not in the catalog"
       ],
-      "latency_ms_median": 34.22
+      "latency_ms_median": 28.97
     },
     {
       "scenario": "unknown",
@@ -2405,7 +2745,7 @@
       "review_reasons": [
         "Barcode is not in the catalog"
       ],
-      "latency_ms_median": 34.28
+      "latency_ms_median": 30.99
     },
     {
       "scenario": "unknown",
@@ -2429,7 +2769,7 @@
       "review_reasons": [
         "Barcode is not in the catalog"
       ],
-      "latency_ms_median": 34.54
+      "latency_ms_median": 29.64
     },
     {
       "scenario": "unknown",
@@ -2453,7 +2793,7 @@
       "review_reasons": [
         "Barcode is not in the catalog"
       ],
-      "latency_ms_median": 34.28
+      "latency_ms_median": 29.61
     }
   ]
 }
