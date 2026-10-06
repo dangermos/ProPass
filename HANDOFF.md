@@ -22,6 +22,10 @@ Owner: Danny (GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants
 - **Tune on `artifacts/benchmark` (seeds 0–4), report on `artifacts/benchmark-test` (seeds 5–9).** Both hold two-camera recordings of 15 scenarios × 5 seeds. The older single-camera sets are `artifacts/benchmark-1cam` and `artifacts/benchmark-test-1cam`.
 - After moving a camera, re-export `vision/cameras.json` (Unity menu: ProPass → Export camera calibration) and restart the API.
 
+## What's next
+
+**[docs/pro-express-v2.md](docs/pro-express-v2.md)** is the current plan (Danny's brief from 2026-10-06): real product looks with barcodes, a barcode reader, ratings, restricted items, associate handoff and a customer phone view. Work it phase by phase and tick the checklist at its bottom. Danny's own product photos and barcodes are in `Barcodes/` (git-ignored).
+
 ## Open problems, in rough priority
 
 1. **Stacked identical boxes pass 60%.** Two copies pressed together look like one box from both cameras. Needs instance segmentation or a count-aware detector, or should stay a review case.

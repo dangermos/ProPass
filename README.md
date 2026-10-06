@@ -72,6 +72,7 @@ Nine more **messy scenarios** stress the tracker: busy hands, a crossing shopper
 | 🔌 [API reference](docs/api.md) | Look up endpoints, payloads and the snapshot shape |
 | 🧩 [Extending ProPass](docs/extending.md) | Add a product, scenario, camera or model |
 | 🗺️ [Roadmap](docs/roadmap.md) | See what's next: messy lanes, learned re-ID, multi-camera coverage |
+| 🧰 [Pro Express v2 plan](docs/pro-express-v2.md) | Read what's planned next: real product looks, barcode scanning, ratings, associate handoff, a customer phone view |
 | 📚 [Research](docs/research/README.md) | Read the original technical report and research notes |
 
 ## 🗂️ Project layout

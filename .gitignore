@@ -17,3 +17,6 @@ models/pretrained/
 .env
 
 models/ultralytics-settings/
+
+# Product photos and barcodes supplied by the owner (third-party images, not redistributed)
+Barcodes/
