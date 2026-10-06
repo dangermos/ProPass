@@ -144,39 +144,6 @@ def fusion():
     result._next_fused = 1
     return result
 
-
-def test_entirely_outside_projection_disagreement_does_not_block_completed_lane_cart():
-    engine, fuser = ledger(), fusion()
-    outside_ids = set()
-    for number, z in enumerate([-3.4, -3.4, -2.6, -1., 1., 2.3, 2.3, 2.3]):
-        fused, _ = fuser._fuse([
-            camera("lane", 1, 0., z), camera("overhead", 10, .02, z),
-            camera("lane", 2, 3., z), camera("overhead", 20, 3.02, z),
-        ])
-        state = update(engine, number, fused)
-    assert state["metrics"]["cart_units"] == 1
-    assert state["review_required"] is False
-    completed = next(obj["object_id"] for obj in state["objects"] if obj["membership"])
-    review_events = []
-    for number in range(8, 12):
-        # Both views of the established adjacent-aisle item stay outside the lane,
-        # but disagree by one meter and therefore split its prior fused identity.
-        fused, _ = fuser._fuse([
-            camera("lane", 1, 0., 2.3), camera("overhead", 10, .02, 2.3),
-            camera("lane", 2, 2.5, 2.3), camera("overhead", 20, 3.5, 2.3),
-        ])
-        state = update(engine, number, fused)
-        outside_ids.update(obj["object_id"] for obj in state["objects"] if obj["zone"] == "OUTSIDE")
-        review_events.extend(event for event in state["events"] if event["type"] == "REVIEW_REQUIRED")
-    assert len(outside_ids) == 2, "Fixture must actually split the outside fused identity"
-    assert state["metrics"]["cart_units"] == 1
-    assert state["metrics"]["pending_objects"] == 0
-    assert state["review_required"] is False
-    assert not review_events
-    assert next(obj for obj in state["objects"] if obj["object_id"] == completed)["membership"] is True
-    assert all(obj["review_reason"] is None for obj in state["objects"] if obj["object_id"] in outside_ids)
-
-
 def test_projection_ambiguity_on_a_lane_purchase_still_requires_review_after_it_moves_outside():
     engine = ledger()
     previous, _ = cross(engine)

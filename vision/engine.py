@@ -150,6 +150,7 @@ class VisionEngine:
                     tracker.reset()
         self._fused.clear()
         self._camera_evidence.clear()
+        self.__dict__.pop("_height_offsets", None)
         self._next_fused = 1
         self.processed_frames = 0
 
@@ -287,132 +288,89 @@ class VisionEngine:
         return observed
 
     def _fuse(self, seen: list[CameraObservation]):
-        """Merge boxes that different cameras see at the same spot on the lane map."""
-        seen = [o for o in seen if o.world is not None]
-        # A single mistaken crop must not split an established physical unit.
-        # Acquiring a pair still rejects immediate strong SKU disagreement;
-        # breaking an existing pair requires sustained camera-local evidence.
-        if not hasattr(self, "_camera_evidence"):
-            self._camera_evidence = {}
-        policy = getattr(getattr(self, "ledger", None), "config", LedgerConfig())
-        stable_skus = {}
-        for obs in seen:
-            key = (obs.camera, obs.track_id)
-            evidence = self._camera_evidence.setdefault(key, deque(maxlen=policy.evidence_window))
-            evidence.append(tuple(1.0/len(self.skus) for _ in self.skus)
-                            if obs.unknown or obs.quality < policy.minimum_quality else obs.probabilities)
-            if len(evidence) >= policy.minimum_views:
-                average = [sum(p[k] for p in evidence)/len(evidence) for k in range(len(self.skus))]
-                order = sorted(range(len(average)), key=average.__getitem__, reverse=True)
-                if (average[order[0]] >= policy.sku_threshold and
-                        average[order[0]] - average[order[1]] >= policy.sku_margin):
-                    stable_skus[key] = order[0]
-        present = {}
-        for obs in seen:
-            prior = self._fused.get((obs.camera, obs.track_id))
-            if prior is not None:
-                present.setdefault(prior, set()).add(obs.camera)
+        """Combine the cameras into one observation per physical box.
+
+        The first configured camera (the lane camera) is primary: only it can start an
+        object. Other cameras assist. A box they see at the same spot is merged into the
+        lane camera's observation, and once merged they keep the object alive while the
+        lane camera cannot see it. An assisting camera never starts an object on its own,
+        so its stray detections cannot block checkout.
+        """
+        primary_camera = self.camera_ids[0]
+        primary = [o for o in seen if o.world is not None and o.camera == primary_camera]
+        assist = [o for o in seen if o.world is not None and o.camera != primary_camera]
+        offsets = self.__dict__.setdefault("_height_offsets", {})
+
+        def confident_sku(o):
+            if o.unknown or not o.probabilities or max(o.probabilities) < 0.85:
+                return None
+            return max(range(len(o.probabilities)), key=o.probabilities.__getitem__)
+
+        def corrected(o):
+            # An item carried above or below the calibration plane lands at a shifted spot in
+            # the oblique lane camera. The shift is learned whenever an overhead view agrees.
+            dx, dz = offsets.get(self._fused.get((o.camera, o.track_id)), (0.0, 0.0))
+            return o.world[0] + dx, o.world[1] + dz
+
         pairs = []
-        for i, a in enumerate(seen):
-            for j in range(i + 1, len(seen)):
-                b = seen[j]
-                if a.camera == b.camera:
+        for i, a in enumerate(primary):
+            ax, az = corrected(a)
+            for j, b in enumerate(assist):
+                dx, dz = b.world[0] - ax, b.world[1] - az
+                # Height error moves the lane camera's estimate along the lane (z) far more
+                # than across it, so the gate is longer in z.
+                if abs(dx) > self.fuse_radius or abs(dz) > 2 * self.fuse_radius:
                     continue
-                distance = hypot(a.world[0]-b.world[0], a.world[1]-b.world[1])
-                if distance > self.fuse_radius:
-                    continue
-                previous_a = self._fused.get((a.camera, a.track_id))
-                previous_b = self._fused.get((b.camera, b.track_id))
-                same_identity = previous_a is not None and previous_a == previous_b
-                # A close projection alone cannot join confidently different
-                # products. Keeping separate evidence makes the uncertainty
-                # visible rather than contaminating a purchased object's SKU.
-                raw_conflict = (not a.unknown and not b.unknown and a.probabilities and b.probabilities
-                        and max(a.probabilities) >= .85 and max(b.probabilities) >= .85
-                        and max(range(len(a.probabilities)), key=a.probabilities.__getitem__)
-                        != max(range(len(b.probabilities)), key=b.probabilities.__getitem__))
-                stable_a = stable_skus.get((a.camera, a.track_id))
-                stable_b = stable_skus.get((b.camera, b.track_id))
-                sustained_conflict = stable_a is not None and stable_b is not None and stable_a != stable_b
-                if (sustained_conflict if same_identity else raw_conflict):
-                    continue
-                if (previous_a is not None and previous_b is not None and previous_a != previous_b
-                        and (len(present[previous_a]) > 1 or len(present[previous_b]) > 1)):
-                    # Their established partner is still observed elsewhere.
-                    # Projection disagreement is not evidence that two units
-                    # became one, even if this competing pair is closer.
-                    continue
-                # Keep a geometrically plausible established camera pair ahead
-                # of a nearer competing pair when products pass one another.
-                pairs.append((0 if same_identity else 1, distance, i, j))
-        pairs.sort()
-        groups, grouped = [], {}
-        for _, distance, i, j in pairs:
-            if distance > self.fuse_radius or i in grouped or j in grouped:
-                continue          # one-to-one: a camera never contributes two boxes to one object
-            grouped[i] = grouped[j] = len(groups)
-            groups.append([seen[i], seen[j]])
-        groups += [[o] for i, o in enumerate(seen) if i not in grouped]
-        original_ids = dict(self._fused)
-        identity_groups = {}
-        for index, group in enumerate(groups):
-            for obs in group:
-                previous = original_ids.get((obs.camera, obs.track_id))
-                if previous is not None:
-                    identity_groups.setdefault(previous, set()).add(index)
-        ambiguous_groups = {index for indices in identity_groups.values() if len(indices) > 1
-                            for index in indices}
-        observations, members = [], []
-        used = set()
-        for group_index, group in enumerate(groups):
+                sku_a, sku_b = confident_sku(a), confident_sku(b)
+                if sku_a is not None and sku_b is not None and sku_a != sku_b:
+                    continue        # two confidently different products are not one box
+                id_a, id_b = self._fused.get((a.camera, a.track_id)), self._fused.get((b.camera, b.track_id))
+                established = id_a is not None and id_a == id_b
+                pairs.append((0 if established else 1, hypot(dx, dz / 2), i, j))
+        partner, taken = {}, set()
+        for _, _, i, j in sorted(pairs):      # one-to-one, established pairs first
+            if i not in partner and j not in taken:
+                partner[i] = j
+                taken.add(j)
+        groups = [[a] + ([assist[partner[i]]] if i in partner else []) for i, a in enumerate(primary)]
+        # An assisting view alone continues an object it was already merged into.
+        groups += [[b] for j, b in enumerate(assist) if j not in taken and (b.camera, b.track_id) in self._fused]
+
+        observations, members, used = [], [], set()
+        for group in groups:
             keys = [(o.camera, o.track_id) for o in group]
-            # A fused identity follows whichever camera still sees the object, so a box
-            # hidden from one camera keeps its track through the other.
-            known = sorted({self._fused[k] for k in keys if k in self._fused and self._fused[k] not in used})
-            ledger = getattr(self, "ledger", None)
-            canonical_ids = {ledger.track_to_object[track_id] for track_id in known
-                             if ledger is not None and track_id in ledger.track_to_object}
-            conflicting_tracks = tuple(known) if len(canonical_ids) > 1 else ()
-            fused_id = known[0] if known else self._next_fused
-            if not known:
+            known = [self._fused[k] for k in keys if k in self._fused and self._fused[k] not in used]
+            if known:
+                fused_id = known[0]
+            elif group[0].camera != primary_camera:
+                continue            # its object is already represented this frame
+            else:
+                fused_id = self._next_fused
                 self._next_fused += 1
             used.add(fused_id)
-            # Joining previously independent camera tracks must redirect their
-            # aliases too, so losing either camera never resurrects the old ID.
-            merged = set(known)
-            if len(merged) > 1:
-                for key, previous in tuple(self._fused.items()):
-                    if previous in merged:
-                        self._fused[key] = fused_id
             for key in keys:
                 self._fused[key] = fused_id
+            lane_view = next((o for o in group if o.camera == primary_camera), None)
+            other_view = next((o for o in group if o.camera != primary_camera), None)
+            if other_view is not None:
+                x, z = other_view.world       # the overhead view has almost no height error
+                if lane_view is not None:
+                    old = offsets.get(fused_id, (x - lane_view.world[0], z - lane_view.world[1]))
+                    offsets[fused_id] = (0.7*old[0] + 0.3*(x - lane_view.world[0]),
+                                         0.7*old[1] + 0.3*(z - lane_view.world[1]))
+            else:
+                dx, dz = offsets.get(fused_id, (0.0, 0.0))
+                x, z = lane_view.world[0] + dx, lane_view.world[1] + dz
             clear = [o for o in group if not o.unknown] or group
-            strong = []
-            for obs in clear:
-                ranking = sorted(obs.probabilities, reverse=True)
-                if (not obs.unknown and obs.quality >= policy.minimum_quality and
-                        ranking and ranking[0] >= policy.sku_threshold and
-                        (len(ranking) == 1 or ranking[0]-ranking[1] >= policy.sku_margin)):
-                    strong.append(obs)
-            # A weak second view must not dilute a confident camera below the
-            # temporal SKU threshold or move its position to a partial crop.
-            clear = strong or clear
             weight = sum(o.quality for o in clear) or 1.0
             probabilities = tuple(sum(o.probabilities[k]*o.quality for o in clear)/weight
                                   for k in range(len(self.skus)))
-            # A rejected partial crop can have a shifted box center. When a
-            # clear view exists, use it for location as well as SKU evidence.
-            total = sum(o.quality for o in clear) or 1.0
-            x = sum(o.world[0]*o.quality for o in clear)/total
-            z = sum(o.world[1]*o.quality for o in clear)/total
             u, v = geometry.to_map(x, z)
             cx, cy, half = u*geometry.MAP_SIZE, v*geometry.MAP_SIZE, 20.0
-            best = max(clear, key=lambda o: o.quality)
+            appearance = lane_view if lane_view is not None and not lane_view.unknown else max(clear, key=lambda o: o.quality)
             observations.append(Observation(
                 fused_id, (cx-half, cy-half, cx+half, cy+half), max(o.confidence for o in group),
-                probabilities, best.embedding, max(o.quality for o in clear), all(o.unknown for o in group),
-                full_view=any(o.full_view for o in group), at_entry_edge=z <= geometry.ENTRY_EDGE_Z,
-                sized=False, ambiguous_identity=group_index in ambiguous_groups or bool(conflicting_tracks),
-                conflicting_tracks=conflicting_tracks))
+                probabilities, appearance.embedding, max(o.quality for o in clear), all(o.unknown for o in group),
+                full_view=any(o.full_view for o in group), at_entry_edge=z <= geometry.ENTRY_EDGE_Z, sized=False))
             members.append(group)
         return observations, members
