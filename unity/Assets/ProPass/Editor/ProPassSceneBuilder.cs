@@ -113,8 +113,50 @@ namespace ProPass.Editor
             label.transform.SetParent(root.transform,false);
             var model=Text(i<5?"MODEL "+(i+1)+" / DEMO":"UNENROLLED",new Vector3(0,-Sizes[i].y*.22f,-Sizes[i].z*.5f-.014f),Sizes[i].x*.027f,Colors[i],Quaternion.identity);
             model.transform.SetParent(root.transform,false);
+            // Real-life dressing from scripts/prepare_products.py: a barcode label on the front face, and the
+            // product photo when the owner supplied one. Without those files the box keeps its placeholder art.
+            float front=-Sizes[i].z*.5f-.016f;
+            float labelWidth=Mathf.Min(Sizes[i].x*.9f,.34f),labelHeight=labelWidth*330f/1110f;
+            bool labelled=Sticker(root,"Barcode label",Root+"/Products/"+p.sku+"_barcode.png",
+                new Vector3(0,-Sizes[i].y*.5f+labelHeight*.5f+.012f,front),new Vector2(labelWidth,labelHeight));
+            float photoHeight=Sizes[i].y-(labelled?labelHeight+.035f:.03f);
+            float photoWidth=Mathf.Min(Sizes[i].x*.92f,photoHeight*1.3f);
+            if(Sticker(root,"Product photo",Root+"/Products/"+p.sku+"_photo.png",
+                new Vector3(0,Sizes[i].y*.5f-photoHeight*.5f-.012f,front),new Vector2(photoWidth,photoWidth/1.3f)))
+            {
+                UnityEngine.Object.DestroyImmediate(brand);UnityEngine.Object.DestroyImmediate(label);
+                UnityEngine.Object.DestroyImmediate(model);UnityEngine.Object.DestroyImmediate(stripe);
+            }
+            else if(labelled)
+            {
+                // Keep the placeholder text clear of the label.
+                foreach(var text in new[]{brand,label,model,stripe})text.transform.localPosition+=new Vector3(0,labelHeight*.5f,0);
+            }
             string path=Root+"/Prefabs/Product"+i+".prefab";
             var prefab=PrefabUtility.SaveAsPrefabAsset(root,path);UnityEngine.Object.DestroyImmediate(root);return prefab;
+        }
+
+        // A flat, unlit, textured rectangle on a box face. Returns false when the texture file is absent.
+        static bool Sticker(GameObject root,string name,string texturePath,Vector3 position,Vector2 size)
+        {
+            if(!File.Exists(texturePath))return false;
+            AssetDatabase.ImportAsset(texturePath,ImportAssetOptions.ForceUpdate);
+            var importer=(TextureImporter)AssetImporter.GetAtPath(texturePath);
+            // Mipmaps and anisotropic filtering keep fine barcode bars legible at a distance.
+            importer.mipmapEnabled=true;importer.anisoLevel=8;importer.filterMode=FilterMode.Trilinear;
+            importer.textureCompression=TextureImporterCompression.Uncompressed;importer.wrapMode=TextureWrapMode.Clamp;
+            importer.npotScale=TextureImporterNPOTScale.None;importer.maxTextureSize=2048;importer.SaveAndReimport();
+            var texture=AssetDatabase.LoadAssetAtPath<Texture2D>(texturePath);
+            string materialPath=Root+"/Materials/"+Path.GetFileNameWithoutExtension(texturePath)+".mat";
+            var material=AssetDatabase.LoadAssetAtPath<Material>(materialPath);
+            if(material==null){material=new Material(Shader.Find("Universal Render Pipeline/Unlit"));AssetDatabase.CreateAsset(material,materialPath);}
+            material.mainTexture=texture;material.SetTexture("_BaseMap",texture);material.color=Color.white;
+            var quad=GameObject.CreatePrimitive(PrimitiveType.Quad);quad.name=name;
+            UnityEngine.Object.DestroyImmediate(quad.GetComponent<Collider>());
+            quad.GetComponent<Renderer>().sharedMaterial=material;
+            quad.transform.SetParent(root.transform,false);
+            quad.transform.localPosition=position;quad.transform.localScale=new Vector3(size.x,size.y,1);
+            return true;
         }
 
         static Material Mat(string name,Color color)

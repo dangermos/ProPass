@@ -36,17 +36,12 @@ namespace ProPass
         ProPassScenarioRunner runner;
         Light keyLight;
         Camera[] cameras;
-        RenderTexture captureTarget;
-        Texture2D capturePixels;
         long frameId;
         bool captureBusy;
 
         void Start()
         {
             Application.runInBackground = true;
-            captureTarget = new RenderTexture(captureWidth, captureHeight, 24, RenderTextureFormat.ARGB32);
-            captureTarget.antiAliasing = 1;
-            capturePixels = new Texture2D(captureWidth, captureHeight, TextureFormat.RGB24, false);
             foreach (var l in FindObjectsByType<Light>(FindObjectsSortMode.None)) if (l.type == LightType.Directional) keyLight = l;
             if (occluder != null) occluder.gameObject.SetActive(false);
             cameras = ProPassCameras.Ensure(checkoutCamera);
@@ -110,33 +105,13 @@ namespace ProPass
             }
         }
 
-        byte[] Capture(Camera source)
-        {
-            var originalTarget = source.targetTexture;
-            var originalActive = RenderTexture.active;
-            try
-            {
-                source.targetTexture = captureTarget;
-                source.Render();
-                RenderTexture.active = captureTarget;
-                capturePixels.ReadPixels(new Rect(0, 0, captureWidth, captureHeight), 0, 0);
-                capturePixels.Apply(false);
-                return capturePixels.EncodeToJPG(85);
-            }
-            finally
-            {
-                source.targetTexture = originalTarget;
-                RenderTexture.active = originalActive;
-            }
-        }
-
         IEnumerator SendFrame()
         {
             captureBusy = true;
             // Every camera is captured at the same instant and shares one frame_id.
             // Only JPEG pixels and source-frame timing are sent to the checkout API.
             var jpegs = new byte[cameras.Length][];
-            for (int i = 0; i < cameras.Length; i++) jpegs[i] = Capture(cameras[i]);
+            for (int i = 0; i < cameras.Length; i++) jpegs[i] = ProPassCameras.Render(cameras[i], i).EncodeToJPG(i == 2 ? 90 : 85);
             long currentFrame = ++frameId;
             string query = "/api/frames?frame_id=" + currentFrame + "&timestamp=" +
                 scenarioTime.ToString("F4", CultureInfo.InvariantCulture) + "&run_id=" + UnityWebRequest.EscapeURL(runId);
@@ -160,8 +135,6 @@ namespace ProPass
         {
             runner?.Dispose();
             ProPassCameras.Release();
-            if (captureTarget != null) { captureTarget.Release(); Destroy(captureTarget); }
-            if (capturePixels != null) Destroy(capturePixels);
         }
     }
 }

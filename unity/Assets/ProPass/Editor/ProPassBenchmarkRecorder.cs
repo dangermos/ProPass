@@ -67,10 +67,7 @@ namespace ProPass.Editor
             var cameras = ProPassCameras.Ensure(camera);
             var light = UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None).FirstOrDefault(l => l.type == LightType.Directional);
             if (simulation.occluder != null) simulation.occluder.gameObject.SetActive(false);
-            int width = simulation.captureWidth, height = simulation.captureHeight;
-            ProPassCameras.UseCaptureAspect(cameras, width, height);
-            var target = new RenderTexture(width, height, 24, RenderTextureFormat.ARGB32) { antiAliasing = 1 };
-            var pixels = new Texture2D(width, height, TextureFormat.RGB24, false);
+            int width = ProPassCameras.Sizes[0].x, height = ProPassCameras.Sizes[0].y;
             var customerStart = simulation.customer != null ? simulation.customer.position : Vector3.zero;
             int knownProducts = simulation.productPrefabs.Length - 1;
             int runs = 0, frames = 0;
@@ -91,15 +88,13 @@ namespace ProPass.Editor
                         for (float t = 0f; t <= plan.duration + 1e-4f; t += 1f / FrameRate)
                         {
                             runner.Apply(t);
-                            Render(camera, target, pixels, width, height);
                             string stem = (++frameId).ToString("D6");
-                            File.WriteAllBytes(Path.Combine(directory, stem + ".jpg"), pixels.EncodeToJPG(plan.jpegQuality));
-                            // Extra cameras share the frame number: 000001.jpg is the lane camera, 000001.overhead.jpg the overhead one.
+                            File.WriteAllBytes(Path.Combine(directory, stem + ".jpg"), ProPassCameras.Render(camera, 0).EncodeToJPG(plan.jpegQuality));
+                            // Extra cameras share the frame number: 000001.jpg is the lane camera,
+                            // 000001.overhead.jpg and 000001.scan.jpg the others.
                             for (int c = 1; c < cameras.Length; c++)
-                            {
-                                Render(cameras[c], target, pixels, width, height);
-                                File.WriteAllBytes(Path.Combine(directory, stem + "." + ProPassCameras.Ids[c] + ".jpg"), pixels.EncodeToJPG(plan.jpegQuality));
-                            }
+                                File.WriteAllBytes(Path.Combine(directory, stem + "." + ProPassCameras.Ids[c] + ".jpg"),
+                                    ProPassCameras.Render(cameras[c], c).EncodeToJPG(Mathf.Max(plan.jpegQuality, c == 2 ? 85 : 0)));
                             var truth = new List<TruthProduct>();
                             for (int i = 0; i < runner.Products.Count; i++)
                             {
@@ -134,20 +129,8 @@ namespace ProPass.Editor
             {
                 if (simulation.customer != null) simulation.customer.position = customerStart;
                 ProPassCameras.Release(camera);
-                target.Release(); UnityEngine.Object.DestroyImmediate(target); UnityEngine.Object.DestroyImmediate(pixels);
             }
             Debug.Log($"ProPass benchmark complete: {runs} runs, {frames} frames -> {output}");
-        }
-
-        static void Render(Camera camera, RenderTexture target, Texture2D pixels, int width, int height)
-        {
-            var originalTarget = camera.targetTexture; var originalActive = RenderTexture.active;
-            try
-            {
-                camera.targetTexture = target; camera.Render();
-                RenderTexture.active = target; pixels.ReadPixels(new Rect(0, 0, width, height), 0, 0); pixels.Apply(false);
-            }
-            finally { camera.targetTexture = originalTarget; RenderTexture.active = originalActive; }
         }
 
         // Projected (amodal) box of the whole package, in top-left pixel coordinates. It ignores

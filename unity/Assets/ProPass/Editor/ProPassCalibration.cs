@@ -28,7 +28,6 @@ namespace ProPass.Editor
         {
             var simulation = UnityEngine.Object.FindFirstObjectByType<ProPassSimulation>() ?? throw new InvalidOperationException("Open the Checkout scene first.");
             var cameras = ProPassCameras.Ensure(simulation.checkoutCamera);
-            ProPassCameras.UseCaptureAspect(cameras, simulation.captureWidth, simulation.captureHeight);
             var plane = new Plane(Vector3.up, new Vector3(0, ProPassCameras.CarryPlaneY, 0));
             string F(float v) => v.ToString("F5", CultureInfo.InvariantCulture);
             var json = new StringBuilder("{\n  \"plane_height\": " + F(ProPassCameras.CarryPlaneY) + ",\n");
@@ -57,7 +56,7 @@ namespace ProPass.Editor
                     footprint.Add($"[{F(Mathf.Clamp(hit.x, -Bound, Bound))}, {F(Mathf.Clamp(hit.z, -Bound, Bound))}]");
                 }
                 var p = camera.transform.position;
-                json.Append("    {\"id\": \"" + ProPassCameras.Ids[c] + "\", \"width\": " + simulation.captureWidth + ", \"height\": " + simulation.captureHeight +
+                json.Append("    {\"id\": \"" + ProPassCameras.Ids[c] + "\", \"width\": " + ProPassCameras.Sizes[c].x + ", \"height\": " + ProPassCameras.Sizes[c].y +
                     ", \"position\": [" + F(p.x) + ", " + F(p.y) + ", " + F(p.z) + "],\n      \"plane_to_image\": [" + string.Join(", ", pairs) +
                     "],\n      \"footprint\": [" + string.Join(", ", footprint) + "]}" + (c < cameras.Length - 1 ? ",\n" : "\n"));
             }
