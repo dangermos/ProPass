@@ -156,7 +156,7 @@ Five products with barcode labels, lane + overhead + scan cameras, 15 scenarios 
 |---|:-:|:-:|:-:|
 | Runs fully automatic and exactly right | 51 / 75 | 71 / 75 | **68 / 75** |
 | Items missed / wrongly charged | 2 / 0 | 0 / 0 | 2 / 1 |
-| Charged items identified by barcode | most | most | most (100% in 11 of 15 scenarios) |
+| Charged items identified by barcode | not measured | 89 of 100 | 88 of 98 |
 | Median time per frame, three cameras | 37 ms | 32 ms | 32 ms |
 
 - **Barcodes settle what looks couldn't.** Stacked identical boxes went from 60% (two cameras, no barcodes) to 100% on development seeds and 80% on held-out seeds.
