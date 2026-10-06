@@ -16,3 +16,4 @@ httpx==0.28.1
 pytest==9.1.1
 python-multipart
 psycopg[binary]
+zxing-cpp==3.1.1
