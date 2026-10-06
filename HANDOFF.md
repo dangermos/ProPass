@@ -6,8 +6,8 @@ For the next person or AI picking this up. Read this first, then [docs/roadmap.m
 
 | Branch | State |
 |---|---|
-| `main` | Phases A, B and C plus the dashboard. Verified on 2026-10-06: held-out 72/75 with two cameras, no barcodes. |
-| `pro-express-v2` | **Current work.** Barcode scanning, ratings, locked items, associate hand-off, customer phone view, eight products. Held-out: **78/85** fully automatic, nothing wrongly charged. 143 tests pass. Not merged yet: ask Danny. |
+| `main` | **Everything.** Phases A–C, the dashboard, and Pro Express v2: barcode scanning, ratings, locked items, associate hand-off, customer phone view, eight products. Held-out: **78/85** fully automatic, nothing wrongly charged. 143 tests pass. |
+| `pro-express-v2` | Merged into `main` on 2026-10-06 (Danny's request). |
 
 Owner: Danny (GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants real trained models, colorful visual docs, no bloat, and to be asked before deleting or restructuring. Commit and push often. He likes short progress updates as work goes on.
 
@@ -23,8 +23,7 @@ Owner: Danny (GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants
 ## Waiting on Danny
 
 - More product photo and barcode pairs in `Barcodes/` (git-ignored, two files per 10-digit SKU). Claude does not copy images from homedepot.com. Run `scripts/prepare_products.py`, add catalog entries, rebuild the scene, then retrain.
-- The Asset Store character pack: Danny has to Download and Import it in Unity's Package Manager. Keep it out of git. Then phase E6 in the plan.
-- Whether to merge `pro-express-v2` into `main`.
+- The character pack is imported at `unity/Assets/ithappy/` (git-ignored). Porting it is written up as its own task in **[HANDOFF-CHARACTERS.md](HANDOFF-CHARACTERS.md)**.
 
 ## Open problems, in rough priority
 

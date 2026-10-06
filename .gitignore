@@ -25,3 +25,9 @@ Barcodes/
 unity/Assets/ProPass/Products/
 unity/Assets/ProPass/Products.meta
 unity/Assets/ProPass/Materials/PEX-*_photo.mat*
+
+# Unity Asset Store content (licensed to the owner account, not redistributable)
+unity/Assets/ithappy/
+unity/Assets/ithappy.meta
+unity/Assets/_Recovery/
+unity/Assets/_Recovery.meta
