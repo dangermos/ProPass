@@ -522,7 +522,8 @@ class PhysicalLedger:
         if obj.sku is None:
             return None
         if obj.sku_source == "barcode":
-            return "verified"
+            # One read could be a fluke; two agreeing reads are treated as certain.
+            return "verified" if obj.barcode_reads >= 2 else "high"
         return "high" if (obj.accepted_confidence or 0) >= self.config.high_rating else "medium"
 
     def _serialize(self, obj: PhysicalObject):

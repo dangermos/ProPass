@@ -57,8 +57,9 @@ def test_barcode_outranks_a_visual_guess_made_before_the_item_is_in_the_cart():
     for frame in range(4):      # recognized by look as PEX-001 while still approaching
         engine.update([obs(1, 800, sku=0)], frame, frame * 0.1, RUN, (1000, 1000))
     result = engine.update([obs(1, 800, sku=0, barcode="PEX-004")], 4, 0.4, RUN, (1000, 1000))
-    assert item(result)["sku"] == "PEX-004" and item(result)["rating"] == "verified"
-    assert not result["assist"]
+    assert item(result)["sku"] == "PEX-004" and item(result)["rating"] == "high"    # one read so far
+    again = engine.update([obs(1, 800, sku=0, barcode="PEX-004")], 5, 0.5, RUN, (1000, 1000))
+    assert item(again)["rating"] == "verified" and not again["assist"]
 
 
 def test_barcode_that_contradicts_a_cart_member_goes_to_an_associate():

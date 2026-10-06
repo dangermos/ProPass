@@ -60,6 +60,9 @@ class VisionEngine:
         # Restricted products come from the catalog and always go to an associate.
         ledger["restricted_skus"] = tuple(p["sku"] for p in self.products if p.get("restricted"))
         self.fuse_radius = float(config.get("fuse_radius_m", 0.45))
+        # Scan cameras are read for barcodes only; they never detect or track.
+        self.scan_cameras = [c for c in config.get("scan_cameras", []) if self.calibration and c in self.calibration.cameras]
+        self.barcode_to_sku = {str(p["barcode"]): p["sku"] for p in self.products if p.get("barcode")}
         self.ledger = PhysicalLedger(self.skus, LedgerConfig(**ledger))
         self.image_size = int(config.get("image_size", 640))
         self.detector_conf = float(config.get("detector_conf", 0.20))
@@ -163,7 +166,7 @@ class VisionEngine:
                 "classifier": "EfficientNet-B0 5 SKU + enrolled-product rejection",
                 "prototype_rejection": self.prototype_rejection,
                 "tracker": f"{Path(self.tracker).stem} + canonical physical ledger",
-                "cameras": self.camera_ids, "world_mode": self.calibration is not None,
+                "cameras": self.camera_ids, "scan_cameras": self.scan_cameras, "world_mode": self.calibration is not None,
                 "error": self.error, "processed_frames": self.processed_frames,
                 "last_inference_ms": self.last_inference_ms,
                 "ground_truth_runtime": False}
@@ -183,6 +186,7 @@ class VisionEngine:
         """Process the images every camera captured for one frame_id."""
         if run_id != self.ledger.run_id:
             raise ValueError("Run ID mismatch: reset(run_id) must precede frame processing")
+        scans = {camera: image for camera, image in images.items() if camera in self.scan_cameras}
         images = {camera: image for camera, image in images.items() if camera in self.camera_ids}
         if not images:
             raise ValueError("No image from a configured camera")
@@ -199,8 +203,11 @@ class VisionEngine:
                     "reason": self.error}}
         start = time.perf_counter()
         seen = [obs for camera, image in images.items() for obs in self._observe(camera, image)]
+        barcodes = []
         if self.calibration:
             observations, members = self._fuse(seen)
+            barcodes = self._read_barcodes(scans)
+            observations = self._attach_barcodes(observations, barcodes)
         else:
             observations = [Observation(o.track_id, o.bbox, o.confidence, o.probabilities,
                                         o.embedding, o.quality, o.unknown) for o in seen]
@@ -220,10 +227,50 @@ class VisionEngine:
                 obj["world"] = [round(c, 3) for c in geometry.from_map(u, v)]
         self.last_inference_ms = (time.perf_counter()-start)*1000
         self.processed_frames += 1
-        output["cameras"] = list(images)
+        output["cameras"] = list(images) + list(scans)
+        output["barcodes"] = [{k: b[k] for k in ("camera", "text", "sku", "corners", "track_id")} for b in barcodes]
         output["metrics"].update({"inference_ms": self.last_inference_ms, "vision_ready": True,
                                    "device": self.device, "cameras": len(images)})
         return output
+
+    def _read_barcodes(self, scans: dict) -> list[dict]:
+        """Decode every Code 128 label visible to the scan cameras and place it on the lane map."""
+        import re
+        import zxingcpp
+        found = []
+        for camera, image in scans.items():
+            height, width = image.shape[:2]
+            for result in zxingcpp.read_barcodes(image[:, :, 1], formats=zxingcpp.BarcodeFormat.Code128):
+                # A damaged read can still pass the checksum, so the text must look like a store label.
+                match = re.fullmatch(r"SKU=(\d{10})", result.text)
+                if not match:
+                    continue
+                p = result.position
+                corners = [[c.x, c.y] for c in (p.top_left, p.top_right, p.bottom_right, p.bottom_left)]
+                cx, cy = sum(c[0] for c in corners)/4, sum(c[1] for c in corners)/4
+                found.append({"camera": camera, "text": result.text, "corners": corners, "track_id": None,
+                              # A code that is not in the catalog is still reported, as an unknown product.
+                              "sku": self.barcode_to_sku.get(match.group(1), f"unlisted:{match.group(1)}"),
+                              "world": self.calibration.cameras[camera].to_world(cx, cy, width, height)})
+        return found
+
+    def _attach_barcodes(self, observations, barcodes):
+        """Give each decoded label to the tracked box it sits on: the nearest one on the lane map."""
+        from dataclasses import replace
+        taken = {}
+        for barcode in barcodes:
+            best = None
+            for index, obs in enumerate(observations):
+                x, z = geometry.from_map(obs.center[0]/geometry.MAP_SIZE, obs.center[1]/geometry.MAP_SIZE)
+                dx, dz = abs(x - barcode["world"][0]), abs(z - barcode["world"][1])
+                # The label is on the box's front face and below the calibration height, so it
+                # projects a little off the box center, mostly along the lane.
+                if dx <= self.fuse_radius and dz <= 2*self.fuse_radius and (best is None or dx + dz/2 < best[0]):
+                    best = (dx + dz/2, index)
+            if best is not None and best[1] not in taken:
+                taken[best[1]] = barcode
+                barcode["track_id"] = observations[best[1]].track_id
+        return [replace(obs, barcode=taken[i]["sku"]) if i in taken else obs for i, obs in enumerate(observations)]
 
     def _observe(self, camera, image_bgr) -> list[CameraObservation]:
         """Detect, track and classify the merchandise in one camera's image."""

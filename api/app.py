@@ -233,7 +233,9 @@ def create_app(database_url=None, vision_factory: Callable | None = None, camera
     db_url = database_url or os.environ.get("PROPASS_DATABASE_URL", f"sqlite:///{ROOT / 'artifacts' / 'propass.db'}")
     (ROOT / "artifacts").mkdir(exist_ok=True)
     if camera_ids is None:
-        camera_ids = json.loads((ROOT / "vision" / "config.json").read_text()).get("cameras", ["lane"])
+        config = json.loads((ROOT / "vision" / "config.json").read_text())
+        # Tracking cameras first, then the barcode scan cameras: one capture group holds them all.
+        camera_ids = config.get("cameras", ["lane"]) + config.get("scan_cameras", [])
     if not camera_ids or len(set(camera_ids)) != len(camera_ids) or any(not isinstance(camera, str) or not camera for camera in camera_ids):
         raise ValueError("Configure a nonempty list of unique camera IDs")
     runtime = Runtime(Store(db_url, ROOT / "catalog.json"), vision_factory or default_vision_factory, camera_ids)

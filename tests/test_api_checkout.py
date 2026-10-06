@@ -236,5 +236,5 @@ def test_reports_endpoint_serves_measured_results_read_only(tmp_path):
         body = client.get("/api/reports").json()
     assert set(body) == {"manifest", "static", "live", "benchmark", "benchmark_reference", "config", "cameras", "geometry"}
     assert "ledger" in body["config"]
-    assert body["cameras"] == ["lane", "overhead"]
+    assert body["cameras"] == ["lane", "overhead", "scan"]
     assert [camera["id"] for camera in body["geometry"]["cameras"]] == body["cameras"]

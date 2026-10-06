@@ -54,7 +54,7 @@ def score_run(engine, run_dir):
     for path in files:
         record = json.loads(path.with_suffix(".json").read_text())
         images = {camera: cv2.imread(str(path if camera == "lane" else path.with_suffix(f".{camera}.jpg")))
-                  for camera in engine.camera_ids}
+                  for camera in engine.camera_ids + engine.scan_cameras}
         images = {camera: image for camera, image in images.items() if image is not None}
         started = time.perf_counter()
         output = engine.process_frames(images, record["frame_id"], record["timestamp"], info["run_id"])
@@ -82,6 +82,9 @@ def score_run(engine, run_dir):
         "exact_cart": exact, "passed": exact and output["review_required"] == info.get("expected_review", False),
         "false_adds": sum(max(0, predicted.get(s, 0) - expected.get(s, 0)) for s in skus),
         "missed_items": sum(max(0, expected.get(s, 0) - predicted.get(s, 0)) for s in skus),
+        # How each charged item's SKU was established: by barcode or by look.
+        "sku_sources": dict(Counter(o.get("sku_source") or "none" for o in output["objects"] if o["membership"])),
+        "assist_items": len(output.get("assist", [])),
         "id_switches": switches,
         "phantom_objects": len(phantoms),
         "detection_recall": round(sum(detected_frames.values()) / max(1, sum(seen_frames.values())), 3),
@@ -104,6 +107,9 @@ def summarize(runs):
             "pass_rate": round(sum(r["passed"] for r in rs) / len(rs), 3),
             "exact_cart_rate": round(sum(r["exact_cart"] for r in rs) / len(rs), 3),
             "false_adds": sum(r["false_adds"] for r in rs), "missed_items": sum(r["missed_items"] for r in rs),
+            "barcode_share": round(sum(r["sku_sources"].get("barcode", 0) for r in rs) /
+                                   max(1, sum(sum(r["sku_sources"].values()) for r in rs)), 3),
+            "assist_items": sum(r["assist_items"] for r in rs),
             "id_switches_per_run": round(sum(r["id_switches"] for r in rs) / len(rs), 2),
             "phantom_objects_per_run": round(sum(r["phantom_objects"] for r in rs) / len(rs), 2),
             "review_rate": round(sum(r["review_required"] for r in rs) / len(rs), 3),
