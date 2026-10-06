@@ -1,10 +1,10 @@
 {
   "summary": {
-    "label": "v2-dev-barcodes",
+    "label": "v2-dev-retrained",
     "runs": 75,
-    "passed": 51,
-    "pass_rate": 0.68,
-    "latency_ms_median": 36.6,
+    "passed": 71,
+    "pass_rate": 0.947,
+    "latency_ms_median": 32.0,
     "domain": "Unity synthetic, offline-rendered seeded scenarios; RGB-only inference",
     "runtime_ground_truth": false,
     "cameras": [
@@ -71,8 +71,8 @@
     "provenance": {
       "recording_root": "/home/dangermos/Home Depot Internship Project/propass/artifacts/benchmark",
       "weights_sha256": {
-        "detector.pt": "c944da1eff64e31b4863b9654f510bf478d3e860070799cbb0bdcd94da70dd13",
-        "classifier.pt": "2780ed6664f4bc79b73d0813d4875e3d1fcce232956d0117b95e299b375f50c5"
+        "detector.pt": "464f88a8f806285a32238102897647f7aa1fa9fc2965c147265cd741891002fc",
+        "classifier.pt": "0819066a82e2fa47abb0f38d3b14c3199be96bef6bc04c5073e7787a7475dd75"
       },
       "source_sha256": {
         "vision/engine.py": "9f1799ce8719663ab17c1d96b8d6d3b89a8729015317a3b6fd9cb0837c5274ea",
@@ -152,7 +152,7 @@
       "id_switches_per_run": 0.0,
       "phantom_objects_per_run": 0.0,
       "review_rate": 0.0,
-      "detection_recall": 0.986,
+      "detection_recall": 0.993,
       "top_review_reasons": []
     },
     {
@@ -160,19 +160,17 @@
       "group": "classic",
       "runs": 5,
       "description": "Driver kit carried in, then carried back out",
-      "pass_rate": 0.0,
+      "pass_rate": 1.0,
       "exact_cart_rate": 1.0,
       "false_adds": 0,
       "missed_items": 0,
       "barcode_share": 0.0,
-      "assist_items": 6,
-      "id_switches_per_run": 6.6,
-      "phantom_objects_per_run": 0.4,
-      "review_rate": 1.0,
+      "assist_items": 0,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.0,
       "detection_recall": 1.0,
-      "top_review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ]
+      "top_review_reasons": []
     },
     {
       "scenario": "unknown",
@@ -198,19 +196,18 @@
       "group": "messy",
       "runs": 5,
       "description": "Hands repeatedly cover the products while they are carried",
-      "pass_rate": 0.6,
+      "pass_rate": 0.8,
       "exact_cart_rate": 1.0,
       "false_adds": 0,
       "missed_items": 0,
       "barcode_share": 1.0,
-      "assist_items": 4,
-      "id_switches_per_run": 2.8,
-      "phantom_objects_per_run": 0.4,
-      "review_rate": 0.4,
-      "detection_recall": 0.963,
+      "assist_items": 1,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 0.2,
+      "review_rate": 0.2,
+      "detection_recall": 1.0,
       "top_review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal",
-        "Product first observed beyond checkout boundary"
+        "Entered merchandise disappeared before an observed checkout or reverse removal"
       ]
     },
     {
@@ -218,19 +215,17 @@
       "group": "messy",
       "runs": 5,
       "description": "Another shopper walks across the lane in front of the camera",
-      "pass_rate": 0.6,
+      "pass_rate": 1.0,
       "exact_cart_rate": 1.0,
       "false_adds": 0,
       "missed_items": 0,
       "barcode_share": 1.0,
-      "assist_items": 2,
-      "id_switches_per_run": 1.4,
+      "assist_items": 0,
+      "id_switches_per_run": 0.0,
       "phantom_objects_per_run": 0.0,
-      "review_rate": 0.4,
-      "detection_recall": 0.981,
-      "top_review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ]
+      "review_rate": 0.0,
+      "detection_recall": 0.991,
+      "top_review_reasons": []
     },
     {
       "scenario": "flatbed",
@@ -244,11 +239,11 @@
       "barcode_share": 0.7,
       "assist_items": 1,
       "id_switches_per_run": 0.0,
-      "phantom_objects_per_run": 1.4,
+      "phantom_objects_per_run": 0.2,
       "review_rate": 0.2,
-      "detection_recall": 0.922,
+      "detection_recall": 0.93,
       "top_review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
+        "Product first observed beyond checkout boundary"
       ]
     },
     {
@@ -262,10 +257,10 @@
       "missed_items": 0,
       "barcode_share": 1.0,
       "assist_items": 1,
-      "id_switches_per_run": 0.8,
+      "id_switches_per_run": 0.6,
       "phantom_objects_per_run": 0.0,
       "review_rate": 0.2,
-      "detection_recall": 0.938,
+      "detection_recall": 0.926,
       "top_review_reasons": [
         "Product first observed beyond checkout boundary"
       ]
@@ -275,99 +270,85 @@
       "group": "messy",
       "runs": 5,
       "description": "One package carried on top of another",
-      "pass_rate": 0.2,
-      "exact_cart_rate": 0.6,
+      "pass_rate": 1.0,
+      "exact_cart_rate": 1.0,
       "false_adds": 0,
-      "missed_items": 2,
+      "missed_items": 0,
       "barcode_share": 1.0,
-      "assist_items": 5,
-      "id_switches_per_run": 1.4,
-      "phantom_objects_per_run": 0.2,
-      "review_rate": 0.8,
+      "assist_items": 0,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.0,
       "detection_recall": 1.0,
-      "top_review_reasons": [
-        "Product first observed beyond checkout boundary",
-        "Barcode disagrees with the product already recorded"
-      ]
+      "top_review_reasons": []
     },
     {
       "scenario": "distractors",
       "group": "messy",
       "runs": 5,
       "description": "A phone, a coffee cup and a bag travel through the lane with the products",
-      "pass_rate": 0.4,
+      "pass_rate": 1.0,
       "exact_cart_rate": 1.0,
       "false_adds": 0,
       "missed_items": 0,
       "barcode_share": 1.0,
-      "assist_items": 6,
-      "id_switches_per_run": 5.8,
-      "phantom_objects_per_run": 0.6,
-      "review_rate": 0.6,
-      "detection_recall": 0.996,
-      "top_review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal",
-        "Product first observed beyond checkout boundary"
-      ]
+      "assist_items": 0,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.0,
+      "detection_recall": 1.0,
+      "top_review_reasons": []
     },
     {
       "scenario": "bystander",
       "group": "messy",
       "runs": 5,
       "description": "A shopper in the next aisle carries a product past the lane; it must not be charged",
-      "pass_rate": 0.6,
+      "pass_rate": 1.0,
       "exact_cart_rate": 1.0,
       "false_adds": 0,
       "missed_items": 0,
       "barcode_share": 1.0,
-      "assist_items": 3,
-      "id_switches_per_run": 5.6,
-      "phantom_objects_per_run": 0.6,
-      "review_rate": 0.4,
-      "detection_recall": 0.852,
-      "top_review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal",
-        "Product first observed beyond checkout boundary"
-      ]
+      "assist_items": 0,
+      "id_switches_per_run": 1.2,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.0,
+      "detection_recall": 0.911,
+      "top_review_reasons": []
     },
     {
       "scenario": "hesitate",
       "group": "messy",
       "runs": 5,
       "description": "The customer pauses mid-lane, steps back, then either finishes or turns around",
-      "pass_rate": 0.6,
+      "pass_rate": 0.8,
       "exact_cart_rate": 1.0,
       "false_adds": 0,
       "missed_items": 0,
       "barcode_share": 1.0,
-      "assist_items": 3,
-      "id_switches_per_run": 1.0,
-      "phantom_objects_per_run": 0.6,
-      "review_rate": 0.4,
+      "assist_items": 0,
+      "id_switches_per_run": 0.0,
+      "phantom_objects_per_run": 0.0,
+      "review_rate": 0.2,
       "detection_recall": 0.997,
-      "top_review_reasons": [
-        "Product first observed beyond checkout boundary",
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ]
+      "top_review_reasons": []
     },
     {
       "scenario": "parked",
       "group": "messy",
       "runs": 5,
       "description": "A flatbed stays between the lane camera and the products for most of the crossing",
-      "pass_rate": 0.6,
+      "pass_rate": 1.0,
       "exact_cart_rate": 1.0,
       "false_adds": 0,
       "missed_items": 0,
       "barcode_share": 0.0,
-      "assist_items": 3,
-      "id_switches_per_run": 1.0,
-      "phantom_objects_per_run": 1.6,
-      "review_rate": 0.4,
-      "detection_recall": 0.646,
-      "top_review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ]
+      "assist_items": 0,
+      "id_switches_per_run": 0.4,
+      "phantom_objects_per_run": 0.4,
+      "review_rate": 0.0,
+      "detection_recall": 0.658,
+      "top_review_reasons": []
     }
   ],
   "runs": [
@@ -384,23 +365,20 @@
         "PEX-002": 1
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 1
       },
-      "assist_items": 3,
-      "id_switches": 23,
-      "phantom_objects": 2,
+      "assist_items": 0,
+      "id_switches": 2,
+      "phantom_objects": 0,
       "detection_recall": 1.0,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal",
-        "Product first observed beyond checkout boundary"
-      ],
-      "latency_ms_median": 35.9
+      "review_reasons": [],
+      "latency_ms_median": 36.52
     },
     {
       "scenario": "bystander",
@@ -424,11 +402,11 @@
         "barcode": 1
       },
       "assist_items": 0,
-      "id_switches": 0,
+      "id_switches": 1,
       "phantom_objects": 0,
-      "detection_recall": 0.876,
+      "detection_recall": 0.959,
       "review_reasons": [],
-      "latency_ms_median": 35.67
+      "latency_ms_median": 33.58
     },
     {
       "scenario": "bystander",
@@ -452,11 +430,11 @@
         "barcode": 1
       },
       "assist_items": 0,
-      "id_switches": 0,
+      "id_switches": 1,
       "phantom_objects": 0,
-      "detection_recall": 0.831,
+      "detection_recall": 0.903,
       "review_reasons": [],
-      "latency_ms_median": 41.53
+      "latency_ms_median": 33.57
     },
     {
       "scenario": "bystander",
@@ -481,10 +459,10 @@
       },
       "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 1,
-      "detection_recall": 0.745,
+      "phantom_objects": 0,
+      "detection_recall": 0.786,
       "review_reasons": [],
-      "latency_ms_median": 41.72
+      "latency_ms_median": 32.75
     },
     {
       "scenario": "bystander",
@@ -499,23 +477,20 @@
         "PEX-005": 1
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 1
       },
       "assist_items": 0,
-      "id_switches": 5,
+      "id_switches": 2,
       "phantom_objects": 0,
-      "detection_recall": 0.807,
-      "review_reasons": [
-        "Ambiguous tracker fragmentation: physical identity needs review",
-        "Multiple lost identical products match a reappearing observation"
-      ],
-      "latency_ms_median": 42.58
+      "detection_recall": 0.907,
+      "review_reasons": [],
+      "latency_ms_median": 34.71
     },
     {
       "scenario": "distractors",
@@ -530,23 +505,20 @@
         "PEX-002": 1
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 1
       },
-      "assist_items": 3,
-      "id_switches": 17,
-      "phantom_objects": 1,
-      "detection_recall": 0.986,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal",
-        "Product first observed beyond checkout boundary"
-      ],
-      "latency_ms_median": 40.1
+      "assist_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 32.98
     },
     {
       "scenario": "distractors",
@@ -561,22 +533,20 @@
         "PEX-002": 1
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 1
       },
-      "assist_items": 2,
-      "id_switches": 12,
-      "phantom_objects": 1,
-      "detection_recall": 0.993,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 40.24
+      "assist_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 30.93
     },
     {
       "scenario": "distractors",
@@ -604,7 +574,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 39.23
+      "latency_ms_median": 31.03
     },
     {
       "scenario": "distractors",
@@ -621,22 +591,20 @@
         "PEX-005": 1
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 2
       },
-      "assist_items": 1,
+      "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 1,
+      "phantom_objects": 0,
       "detection_recall": 1.0,
-      "review_reasons": [
-        "Product first observed beyond checkout boundary"
-      ],
-      "latency_ms_median": 39.34
+      "review_reasons": [],
+      "latency_ms_median": 33.91
     },
     {
       "scenario": "distractors",
@@ -649,8 +617,8 @@
         "PEX-005": 1
       },
       "predicted_cart": {
-        "PEX-004": 1,
-        "PEX-005": 1
+        "PEX-005": 1,
+        "PEX-004": 1
       },
       "expected_review": false,
       "review_required": false,
@@ -666,7 +634,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 39.09
+      "latency_ms_median": 32.73
     },
     {
       "scenario": "duplicate",
@@ -694,7 +662,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 37.58
+      "latency_ms_median": 30.66
     },
     {
       "scenario": "duplicate",
@@ -722,7 +690,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 38.49
+      "latency_ms_median": 31.99
     },
     {
       "scenario": "duplicate",
@@ -750,7 +718,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 37.73
+      "latency_ms_median": 31.07
     },
     {
       "scenario": "duplicate",
@@ -778,7 +746,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 38.33
+      "latency_ms_median": 32.14
     },
     {
       "scenario": "duplicate",
@@ -806,7 +774,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 38.56
+      "latency_ms_median": 33.23
     },
     {
       "scenario": "edge",
@@ -834,9 +802,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.873,
+      "detection_recall": 0.864,
       "review_reasons": [],
-      "latency_ms_median": 38.28
+      "latency_ms_median": 32.94
     },
     {
       "scenario": "edge",
@@ -862,13 +830,13 @@
         "barcode": 2
       },
       "assist_items": 1,
-      "id_switches": 4,
+      "id_switches": 3,
       "phantom_objects": 0,
-      "detection_recall": 0.869,
+      "detection_recall": 0.817,
       "review_reasons": [
         "Product first observed beyond checkout boundary"
       ],
-      "latency_ms_median": 38.9
+      "latency_ms_median": 34.39
     },
     {
       "scenario": "edge",
@@ -896,7 +864,7 @@
       "phantom_objects": 0,
       "detection_recall": 0.983,
       "review_reasons": [],
-      "latency_ms_median": 35.26
+      "latency_ms_median": 30.78
     },
     {
       "scenario": "edge",
@@ -924,7 +892,7 @@
       "phantom_objects": 0,
       "detection_recall": 0.983,
       "review_reasons": [],
-      "latency_ms_median": 34.57
+      "latency_ms_median": 30.93
     },
     {
       "scenario": "edge",
@@ -952,7 +920,7 @@
       "phantom_objects": 0,
       "detection_recall": 0.982,
       "review_reasons": [],
-      "latency_ms_median": 34.09
+      "latency_ms_median": 30.99
     },
     {
       "scenario": "flatbed",
@@ -977,10 +945,10 @@
       },
       "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 2,
-      "detection_recall": 0.862,
+      "phantom_objects": 0,
+      "detection_recall": 0.869,
       "review_reasons": [],
-      "latency_ms_median": 36.33
+      "latency_ms_median": 31.98
     },
     {
       "scenario": "flatbed",
@@ -1010,7 +978,7 @@
       "phantom_objects": 0,
       "detection_recall": 0.959,
       "review_reasons": [],
-      "latency_ms_median": 38.35
+      "latency_ms_median": 34.93
     },
     {
       "scenario": "flatbed",
@@ -1038,10 +1006,10 @@
       },
       "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 1,
+      "phantom_objects": 0,
       "detection_recall": 0.948,
       "review_reasons": [],
-      "latency_ms_median": 37.98
+      "latency_ms_median": 34.6
     },
     {
       "scenario": "flatbed",
@@ -1058,22 +1026,20 @@
         "PEX-002": 1
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 2
       },
-      "assist_items": 1,
+      "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 2,
-      "detection_recall": 0.955,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 37.56
+      "phantom_objects": 0,
+      "detection_recall": 0.959,
+      "review_reasons": [],
+      "latency_ms_median": 33.75
     },
     {
       "scenario": "flatbed",
@@ -1087,26 +1053,28 @@
         "PEX-003": 1
       },
       "predicted_cart": {
+        "PEX-002": 1,
         "PEX-003": 1,
-        "PEX-001": 1,
-        "PEX-002": 1
+        "PEX-001": 1
       },
       "expected_review": false,
-      "review_required": false,
+      "review_required": true,
       "exact_cart": true,
-      "passed": true,
+      "passed": false,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
-        "visual": 1,
-        "barcode": 2
+        "barcode": 2,
+        "visual": 1
       },
-      "assist_items": 0,
+      "assist_items": 1,
       "id_switches": 0,
-      "phantom_objects": 2,
-      "detection_recall": 0.885,
-      "review_reasons": [],
-      "latency_ms_median": 38.32
+      "phantom_objects": 1,
+      "detection_recall": 0.917,
+      "review_reasons": [
+        "Product first observed beyond checkout boundary"
+      ],
+      "latency_ms_median": 35.32
     },
     {
       "scenario": "hands",
@@ -1134,7 +1102,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 35.16
+      "latency_ms_median": 32.36
     },
     {
       "scenario": "hands",
@@ -1162,7 +1130,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 36.1
+      "latency_ms_median": 33.18
     },
     {
       "scenario": "hands",
@@ -1185,15 +1153,14 @@
       "sku_sources": {
         "barcode": 1
       },
-      "assist_items": 2,
-      "id_switches": 5,
+      "assist_items": 1,
+      "id_switches": 0,
       "phantom_objects": 1,
       "detection_recall": 1.0,
       "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal",
-        "Product first observed beyond checkout boundary"
+        "Entered merchandise disappeared before an observed checkout or reverse removal"
       ],
-      "latency_ms_median": 35.3
+      "latency_ms_median": 31.51
     },
     {
       "scenario": "hands",
@@ -1210,22 +1177,20 @@
         "PEX-002": 1
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 2
       },
-      "assist_items": 2,
-      "id_switches": 9,
-      "phantom_objects": 1,
-      "detection_recall": 0.814,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 38.12
+      "assist_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 1.0,
+      "review_reasons": [],
+      "latency_ms_median": 34.06
     },
     {
       "scenario": "hands",
@@ -1238,8 +1203,8 @@
         "PEX-005": 1
       },
       "predicted_cart": {
-        "PEX-001": 1,
-        "PEX-005": 1
+        "PEX-005": 1,
+        "PEX-001": 1
       },
       "expected_review": false,
       "review_required": false,
@@ -1255,7 +1220,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 37.59
+      "latency_ms_median": 34.35
     },
     {
       "scenario": "hesitate",
@@ -1283,7 +1248,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 36.38
+      "latency_ms_median": 32.54
     },
     {
       "scenario": "hesitate",
@@ -1311,7 +1276,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 36.16
+      "latency_ms_median": 31.69
     },
     {
       "scenario": "hesitate",
@@ -1339,7 +1304,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 37.64
+      "latency_ms_median": 32.29
     },
     {
       "scenario": "hesitate",
@@ -1354,22 +1319,20 @@
         "PEX-001": 1
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 1
       },
-      "assist_items": 1,
+      "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 1,
+      "phantom_objects": 0,
       "detection_recall": 1.0,
-      "review_reasons": [
-        "Product first observed beyond checkout boundary"
-      ],
-      "latency_ms_median": 37.24
+      "review_reasons": [],
+      "latency_ms_median": 32.05
     },
     {
       "scenario": "hesitate",
@@ -1386,14 +1349,12 @@
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {},
-      "assist_items": 2,
-      "id_switches": 5,
-      "phantom_objects": 2,
+      "assist_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
       "detection_recall": 0.985,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 34.1
+      "review_reasons": [],
+      "latency_ms_median": 32.59
     },
     {
       "scenario": "mixed",
@@ -1407,8 +1368,8 @@
         "PEX-005": 1
       },
       "predicted_cart": {
-        "PEX-005": 1,
         "PEX-001": 1,
+        "PEX-005": 1,
         "PEX-003": 1
       },
       "expected_review": false,
@@ -1425,7 +1386,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 38.75
+      "latency_ms_median": 31.97
     },
     {
       "scenario": "mixed",
@@ -1457,7 +1418,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 37.71
+      "latency_ms_median": 32.32
     },
     {
       "scenario": "mixed",
@@ -1471,8 +1432,8 @@
         "PEX-005": 1
       },
       "predicted_cart": {
-        "PEX-005": 1,
         "PEX-001": 1,
+        "PEX-005": 1,
         "PEX-003": 1
       },
       "expected_review": false,
@@ -1489,7 +1450,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 38.11
+      "latency_ms_median": 32.02
     },
     {
       "scenario": "mixed",
@@ -1503,8 +1464,8 @@
         "PEX-005": 1
       },
       "predicted_cart": {
-        "PEX-005": 1,
         "PEX-001": 1,
+        "PEX-005": 1,
         "PEX-003": 1
       },
       "expected_review": false,
@@ -1521,7 +1482,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 39.15
+      "latency_ms_median": 33.04
     },
     {
       "scenario": "mixed",
@@ -1553,7 +1514,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 39.37
+      "latency_ms_median": 32.18
     },
     {
       "scenario": "occlusion",
@@ -1579,9 +1540,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.986,
+      "detection_recall": 0.993,
       "review_reasons": [],
-      "latency_ms_median": 36.26
+      "latency_ms_median": 29.9
     },
     {
       "scenario": "occlusion",
@@ -1607,9 +1568,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.986,
+      "detection_recall": 0.993,
       "review_reasons": [],
-      "latency_ms_median": 37.0
+      "latency_ms_median": 29.9
     },
     {
       "scenario": "occlusion",
@@ -1635,9 +1596,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.986,
+      "detection_recall": 0.993,
       "review_reasons": [],
-      "latency_ms_median": 35.55
+      "latency_ms_median": 30.05
     },
     {
       "scenario": "occlusion",
@@ -1663,9 +1624,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.986,
+      "detection_recall": 0.993,
       "review_reasons": [],
-      "latency_ms_median": 35.76
+      "latency_ms_median": 29.89
     },
     {
       "scenario": "occlusion",
@@ -1691,9 +1652,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.986,
+      "detection_recall": 0.993,
       "review_reasons": [],
-      "latency_ms_median": 36.64
+      "latency_ms_median": 29.43
     },
     {
       "scenario": "parked",
@@ -1708,22 +1669,20 @@
         "PEX-002": 1
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "visual": 1
       },
-      "assist_items": 2,
-      "id_switches": 1,
-      "phantom_objects": 1,
-      "detection_recall": 0.614,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 36.22
+      "assist_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
+      "detection_recall": 0.634,
+      "review_reasons": [],
+      "latency_ms_median": 31.74
     },
     {
       "scenario": "parked",
@@ -1748,10 +1707,10 @@
       },
       "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 3,
+      "phantom_objects": 0,
       "detection_recall": 0.669,
       "review_reasons": [],
-      "latency_ms_median": 34.01
+      "latency_ms_median": 30.52
     },
     {
       "scenario": "parked",
@@ -1779,9 +1738,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 1,
-      "detection_recall": 0.579,
+      "detection_recall": 0.583,
       "review_reasons": [],
-      "latency_ms_median": 34.83
+      "latency_ms_median": 32.3
     },
     {
       "scenario": "parked",
@@ -1809,9 +1768,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 1,
-      "detection_recall": 0.693,
+      "detection_recall": 0.697,
       "review_reasons": [],
-      "latency_ms_median": 36.65
+      "latency_ms_median": 32.68
     },
     {
       "scenario": "parked",
@@ -1828,22 +1787,20 @@
         "PEX-002": 1
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "visual": 2
       },
-      "assist_items": 1,
-      "id_switches": 4,
-      "phantom_objects": 2,
-      "detection_recall": 0.676,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 36.63
+      "assist_items": 0,
+      "id_switches": 2,
+      "phantom_objects": 0,
+      "detection_recall": 0.707,
+      "review_reasons": [],
+      "latency_ms_median": 32.18
     },
     {
       "scenario": "remove",
@@ -1854,20 +1811,18 @@
       "expected_cart": {},
       "predicted_cart": {},
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {},
-      "assist_items": 1,
-      "id_switches": 5,
+      "assist_items": 0,
+      "id_switches": 0,
       "phantom_objects": 0,
       "detection_recall": 1.0,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 36.23
+      "review_reasons": [],
+      "latency_ms_median": 30.21
     },
     {
       "scenario": "remove",
@@ -1878,20 +1833,18 @@
       "expected_cart": {},
       "predicted_cart": {},
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {},
-      "assist_items": 1,
-      "id_switches": 7,
+      "assist_items": 0,
+      "id_switches": 0,
       "phantom_objects": 0,
       "detection_recall": 1.0,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 36.67
+      "review_reasons": [],
+      "latency_ms_median": 30.63
     },
     {
       "scenario": "remove",
@@ -1902,20 +1855,18 @@
       "expected_cart": {},
       "predicted_cart": {},
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {},
-      "assist_items": 1,
-      "id_switches": 5,
+      "assist_items": 0,
+      "id_switches": 0,
       "phantom_objects": 0,
       "detection_recall": 1.0,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 35.56
+      "review_reasons": [],
+      "latency_ms_median": 29.5
     },
     {
       "scenario": "remove",
@@ -1926,20 +1877,18 @@
       "expected_cart": {},
       "predicted_cart": {},
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {},
-      "assist_items": 1,
-      "id_switches": 2,
-      "phantom_objects": 1,
+      "assist_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
       "detection_recall": 1.0,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 35.1
+      "review_reasons": [],
+      "latency_ms_median": 29.8
     },
     {
       "scenario": "remove",
@@ -1950,20 +1899,18 @@
       "expected_cart": {},
       "predicted_cart": {},
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {},
-      "assist_items": 2,
-      "id_switches": 14,
-      "phantom_objects": 1,
+      "assist_items": 0,
+      "id_switches": 0,
+      "phantom_objects": 0,
       "detection_recall": 1.0,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 35.88
+      "review_reasons": [],
+      "latency_ms_median": 29.7
     },
     {
       "scenario": "shopper",
@@ -1980,22 +1927,20 @@
         "PEX-002": 1
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 2
       },
-      "assist_items": 1,
-      "id_switches": 1,
+      "assist_items": 0,
+      "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.959,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 39.69
+      "detection_recall": 0.99,
+      "review_reasons": [],
+      "latency_ms_median": 32.15
     },
     {
       "scenario": "shopper",
@@ -2023,9 +1968,9 @@
       "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.997,
+      "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 38.81
+      "latency_ms_median": 34.53
     },
     {
       "scenario": "shopper",
@@ -2053,7 +1998,7 @@
       "phantom_objects": 0,
       "detection_recall": 0.986,
       "review_reasons": [],
-      "latency_ms_median": 35.63
+      "latency_ms_median": 30.99
     },
     {
       "scenario": "shopper",
@@ -2081,7 +2026,7 @@
       "phantom_objects": 0,
       "detection_recall": 0.986,
       "review_reasons": [],
-      "latency_ms_median": 35.26
+      "latency_ms_median": 30.68
     },
     {
       "scenario": "shopper",
@@ -2096,22 +2041,20 @@
         "PEX-002": 1
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 1
       },
-      "assist_items": 1,
-      "id_switches": 6,
+      "assist_items": 0,
+      "id_switches": 0,
       "phantom_objects": 0,
-      "detection_recall": 0.979,
-      "review_reasons": [
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 36.04
+      "detection_recall": 0.993,
+      "review_reasons": [],
+      "latency_ms_median": 30.31
     },
     {
       "scenario": "single",
@@ -2139,7 +2082,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 34.71
+      "latency_ms_median": 29.44
     },
     {
       "scenario": "single",
@@ -2167,7 +2110,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 36.39
+      "latency_ms_median": 29.46
     },
     {
       "scenario": "single",
@@ -2195,7 +2138,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 35.61
+      "latency_ms_median": 29.6
     },
     {
       "scenario": "single",
@@ -2223,7 +2166,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 35.77
+      "latency_ms_median": 29.75
     },
     {
       "scenario": "single",
@@ -2251,7 +2194,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 36.29
+      "latency_ms_median": 30.6
     },
     {
       "scenario": "stacked",
@@ -2264,25 +2207,24 @@
         "PEX-005": 1
       },
       "predicted_cart": {
-        "PEX-005": 1
+        "PEX-005": 1,
+        "PEX-001": 1
       },
       "expected_review": false,
-      "review_required": true,
-      "exact_cart": false,
-      "passed": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
       "false_adds": 0,
-      "missed_items": 1,
+      "missed_items": 0,
       "sku_sources": {
-        "barcode": 1
+        "barcode": 2
       },
-      "assist_items": 1,
+      "assist_items": 0,
       "id_switches": 0,
       "phantom_objects": 0,
       "detection_recall": 1.0,
-      "review_reasons": [
-        "Barcode disagrees with the product already recorded"
-      ],
-      "latency_ms_median": 38.07
+      "review_reasons": [],
+      "latency_ms_median": 35.01
     },
     {
       "scenario": "stacked",
@@ -2295,26 +2237,24 @@
         "PEX-003": 1
       },
       "predicted_cart": {
-        "PEX-003": 1
+        "PEX-003": 1,
+        "PEX-002": 1
       },
       "expected_review": false,
-      "review_required": true,
-      "exact_cart": false,
-      "passed": false,
+      "review_required": false,
+      "exact_cart": true,
+      "passed": true,
       "false_adds": 0,
-      "missed_items": 1,
+      "missed_items": 0,
       "sku_sources": {
-        "barcode": 1
+        "barcode": 2
       },
-      "assist_items": 2,
-      "id_switches": 2,
+      "assist_items": 0,
+      "id_switches": 0,
       "phantom_objects": 0,
       "detection_recall": 1.0,
-      "review_reasons": [
-        "Conflicting SKU evidence on the same physical object",
-        "Entered merchandise disappeared before an observed checkout or reverse removal"
-      ],
-      "latency_ms_median": 37.64
+      "review_reasons": [],
+      "latency_ms_median": 33.61
     },
     {
       "scenario": "stacked",
@@ -2329,22 +2269,20 @@
         "PEX-003": 2
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 2
       },
-      "assist_items": 1,
-      "id_switches": 5,
+      "assist_items": 0,
+      "id_switches": 0,
       "phantom_objects": 0,
       "detection_recall": 1.0,
-      "review_reasons": [
-        "Product first observed beyond checkout boundary"
-      ],
-      "latency_ms_median": 40.08
+      "review_reasons": [],
+      "latency_ms_median": 32.38
     },
     {
       "scenario": "stacked",
@@ -2372,7 +2310,7 @@
       "phantom_objects": 0,
       "detection_recall": 1.0,
       "review_reasons": [],
-      "latency_ms_median": 37.36
+      "latency_ms_median": 32.08
     },
     {
       "scenario": "stacked",
@@ -2387,22 +2325,20 @@
         "PEX-005": 2
       },
       "expected_review": false,
-      "review_required": true,
+      "review_required": false,
       "exact_cart": true,
-      "passed": false,
+      "passed": true,
       "false_adds": 0,
       "missed_items": 0,
       "sku_sources": {
         "barcode": 2
       },
-      "assist_items": 1,
+      "assist_items": 0,
       "id_switches": 0,
-      "phantom_objects": 1,
+      "phantom_objects": 0,
       "detection_recall": 1.0,
-      "review_reasons": [
-        "Product first observed beyond checkout boundary"
-      ],
-      "latency_ms_median": 37.23
+      "review_reasons": [],
+      "latency_ms_median": 32.42
     },
     {
       "scenario": "unknown",
@@ -2426,7 +2362,7 @@
       "review_reasons": [
         "Barcode is not in the catalog"
       ],
-      "latency_ms_median": 34.41
+      "latency_ms_median": 30.26
     },
     {
       "scenario": "unknown",
@@ -2450,7 +2386,7 @@
       "review_reasons": [
         "Barcode is not in the catalog"
       ],
-      "latency_ms_median": 34.76
+      "latency_ms_median": 30.28
     },
     {
       "scenario": "unknown",
@@ -2474,7 +2410,7 @@
       "review_reasons": [
         "Barcode is not in the catalog"
       ],
-      "latency_ms_median": 34.43
+      "latency_ms_median": 29.38
     },
     {
       "scenario": "unknown",
@@ -2498,7 +2434,7 @@
       "review_reasons": [
         "Barcode is not in the catalog"
       ],
-      "latency_ms_median": 34.25
+      "latency_ms_median": 30.21
     },
     {
       "scenario": "unknown",
@@ -2522,7 +2458,7 @@
       "review_reasons": [
         "Barcode is not in the catalog"
       ],
-      "latency_ms_median": 34.9
+      "latency_ms_median": 30.35
     }
   ]
 }
