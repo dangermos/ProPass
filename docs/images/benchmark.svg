@@ -1,113 +1,82 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 614" font-family="Segoe UI, Helvetica, Arial, sans-serif">
-<rect width="840" height="614" rx="16" fill="#0d1420"/>
-<text x="24" y="36" fill="#ffffff" font-size="18" font-weight="700">Benchmark · two cameras (held-out)</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 554" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="760" height="554" rx="16" fill="#0d1420"/>
+<text x="24" y="36" fill="#ffffff" font-size="18" font-weight="700">Benchmark · Pro Express v2 (held-out)</text>
 <text x="24" y="54" fill="#8fa3bf" font-size="12">Share of runs with the exact cart and the correct review decision</text>
 <circle cx="30" cy="76" r="4" fill="#ffbb71"/>
 <text x="42" y="80" fill="#c9d4e3" font-size="13">single</text>
 <rect x="150" y="67" width="520" height="18" rx="5" fill="#1b2638"/>
 <rect x="150" y="67" width="520" height="18" rx="5" fill="#2ea043"/>
 <text x="682" y="80" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="88" width="520" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="80" fill="#8fa3bf" font-size="12">was 100%</text>
-<circle cx="30" cy="110" r="4" fill="#ffbb71"/>
-<text x="42" y="114" fill="#c9d4e3" font-size="13">duplicate</text>
-<rect x="150" y="101" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="101" width="520" height="18" rx="5" fill="#2ea043"/>
-<text x="682" y="114" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="122" width="520" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="114" fill="#8fa3bf" font-size="12">was 100%</text>
-<circle cx="30" cy="144" r="4" fill="#ffbb71"/>
-<text x="42" y="148" fill="#c9d4e3" font-size="13">mixed</text>
-<rect x="150" y="135" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="135" width="520" height="18" rx="5" fill="#2ea043"/>
-<text x="682" y="148" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="156" width="520" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="148" fill="#8fa3bf" font-size="12">was 100%</text>
-<circle cx="30" cy="178" r="4" fill="#ffbb71"/>
-<text x="42" y="182" fill="#c9d4e3" font-size="13">occlusion</text>
-<rect x="150" y="169" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="169" width="520" height="18" rx="5" fill="#2ea043"/>
-<text x="682" y="182" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="190" width="520" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="182" fill="#8fa3bf" font-size="12">was 100%</text>
-<circle cx="30" cy="212" r="4" fill="#ffbb71"/>
-<text x="42" y="216" fill="#c9d4e3" font-size="13">remove</text>
-<rect x="150" y="203" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="203" width="520" height="18" rx="5" fill="#2ea043"/>
-<text x="682" y="216" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="224" width="520" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="216" fill="#8fa3bf" font-size="12">was 100%</text>
-<circle cx="30" cy="246" r="4" fill="#ffbb71"/>
-<text x="42" y="250" fill="#c9d4e3" font-size="13">unknown</text>
-<rect x="150" y="237" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="237" width="520" height="18" rx="5" fill="#2ea043"/>
-<text x="682" y="250" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="258" width="520" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="250" fill="#8fa3bf" font-size="12">was 100%</text>
-<circle cx="30" cy="280" r="4" fill="#bd9aff"/>
-<text x="42" y="284" fill="#c9d4e3" font-size="13">hands</text>
-<rect x="150" y="271" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="271" width="520" height="18" rx="5" fill="#2ea043"/>
-<text x="682" y="284" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="292" width="520" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="284" fill="#8fa3bf" font-size="12">was 100%</text>
-<circle cx="30" cy="314" r="4" fill="#bd9aff"/>
-<text x="42" y="318" fill="#c9d4e3" font-size="13">shopper</text>
-<rect x="150" y="305" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="305" width="520" height="18" rx="5" fill="#2ea043"/>
-<text x="682" y="318" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="326" width="520" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="318" fill="#8fa3bf" font-size="12">was 100%</text>
-<circle cx="30" cy="348" r="4" fill="#bd9aff"/>
-<text x="42" y="352" fill="#c9d4e3" font-size="13">flatbed</text>
-<rect x="150" y="339" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="339" width="520" height="18" rx="5" fill="#2ea043"/>
-<text x="682" y="352" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="360" width="520" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="352" fill="#8fa3bf" font-size="12">was 100%</text>
-<circle cx="30" cy="382" r="4" fill="#bd9aff"/>
-<text x="42" y="386" fill="#c9d4e3" font-size="13">edge</text>
-<rect x="150" y="373" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="373" width="416" height="18" rx="5" fill="#2ea043"/>
-<text x="682" y="386" fill="#ffffff" font-size="13" font-weight="600">80%</text>
-<rect x="150" y="394" width="416" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="386" fill="#8fa3bf" font-size="12">was 80%</text>
-<circle cx="30" cy="416" r="4" fill="#bd9aff"/>
-<text x="42" y="420" fill="#c9d4e3" font-size="13">stacked</text>
-<rect x="150" y="407" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="407" width="312" height="18" rx="5" fill="#d29922"/>
-<text x="682" y="420" fill="#ffffff" font-size="13" font-weight="600">60%</text>
-<rect x="150" y="428" width="312" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="420" fill="#8fa3bf" font-size="12">was 60%</text>
-<circle cx="30" cy="450" r="4" fill="#bd9aff"/>
-<text x="42" y="454" fill="#c9d4e3" font-size="13">distractors</text>
-<rect x="150" y="441" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="441" width="520" height="18" rx="5" fill="#2ea043"/>
-<text x="682" y="454" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="462" width="520" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="454" fill="#8fa3bf" font-size="12">was 100%</text>
-<circle cx="30" cy="484" r="4" fill="#bd9aff"/>
-<text x="42" y="488" fill="#c9d4e3" font-size="13">bystander</text>
-<rect x="150" y="475" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="475" width="520" height="18" rx="5" fill="#2ea043"/>
-<text x="682" y="488" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="496" width="520" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="488" fill="#8fa3bf" font-size="12">was 100%</text>
-<circle cx="30" cy="518" r="4" fill="#bd9aff"/>
-<text x="42" y="522" fill="#c9d4e3" font-size="13">hesitate</text>
-<rect x="150" y="509" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="509" width="520" height="18" rx="5" fill="#2ea043"/>
-<text x="682" y="522" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="530" width="520" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="522" fill="#8fa3bf" font-size="12">was 100%</text>
-<circle cx="30" cy="552" r="4" fill="#bd9aff"/>
-<text x="42" y="556" fill="#c9d4e3" font-size="13">parked</text>
-<rect x="150" y="543" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="543" width="520" height="18" rx="5" fill="#2ea043"/>
-<text x="682" y="556" fill="#ffffff" font-size="13" font-weight="600">100%</text>
-<rect x="150" y="564" width="416" height="5" rx="2" fill="#5b6b82"/>
-<text x="726" y="556" fill="#8fa3bf" font-size="12">was 80%</text>
-<circle cx="30" cy="592" r="4" fill="#ffbb71"/><text x="42" y="596" fill="#8fa3bf" font-size="12">classic scenario</text>
-<circle cx="170" cy="592" r="4" fill="#bd9aff"/><text x="182" y="596" fill="#8fa3bf" font-size="12">messy scenario</text>
-<rect x="300" y="589" width="24" height="5" rx="2" fill="#5b6b82"/><text x="332" y="596" fill="#8fa3bf" font-size="12">reference run</text>
+<circle cx="30" cy="106" r="4" fill="#ffbb71"/>
+<text x="42" y="110" fill="#c9d4e3" font-size="13">duplicate</text>
+<rect x="150" y="97" width="520" height="18" rx="5" fill="#1b2638"/>
+<rect x="150" y="97" width="520" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="110" fill="#ffffff" font-size="13" font-weight="600">100%</text>
+<circle cx="30" cy="136" r="4" fill="#ffbb71"/>
+<text x="42" y="140" fill="#c9d4e3" font-size="13">mixed</text>
+<rect x="150" y="127" width="520" height="18" rx="5" fill="#1b2638"/>
+<rect x="150" y="127" width="520" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="140" fill="#ffffff" font-size="13" font-weight="600">100%</text>
+<circle cx="30" cy="166" r="4" fill="#ffbb71"/>
+<text x="42" y="170" fill="#c9d4e3" font-size="13">occlusion</text>
+<rect x="150" y="157" width="520" height="18" rx="5" fill="#1b2638"/>
+<rect x="150" y="157" width="520" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="170" fill="#ffffff" font-size="13" font-weight="600">100%</text>
+<circle cx="30" cy="196" r="4" fill="#ffbb71"/>
+<text x="42" y="200" fill="#c9d4e3" font-size="13">remove</text>
+<rect x="150" y="187" width="520" height="18" rx="5" fill="#1b2638"/>
+<rect x="150" y="187" width="520" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="200" fill="#ffffff" font-size="13" font-weight="600">100%</text>
+<circle cx="30" cy="226" r="4" fill="#ffbb71"/>
+<text x="42" y="230" fill="#c9d4e3" font-size="13">unknown</text>
+<rect x="150" y="217" width="520" height="18" rx="5" fill="#1b2638"/>
+<rect x="150" y="217" width="520" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="230" fill="#ffffff" font-size="13" font-weight="600">100%</text>
+<circle cx="30" cy="256" r="4" fill="#bd9aff"/>
+<text x="42" y="260" fill="#c9d4e3" font-size="13">hands</text>
+<rect x="150" y="247" width="520" height="18" rx="5" fill="#1b2638"/>
+<rect x="150" y="247" width="416" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="260" fill="#ffffff" font-size="13" font-weight="600">80%</text>
+<circle cx="30" cy="286" r="4" fill="#bd9aff"/>
+<text x="42" y="290" fill="#c9d4e3" font-size="13">shopper</text>
+<rect x="150" y="277" width="520" height="18" rx="5" fill="#1b2638"/>
+<rect x="150" y="277" width="520" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="290" fill="#ffffff" font-size="13" font-weight="600">100%</text>
+<circle cx="30" cy="316" r="4" fill="#bd9aff"/>
+<text x="42" y="320" fill="#c9d4e3" font-size="13">flatbed</text>
+<rect x="150" y="307" width="520" height="18" rx="5" fill="#1b2638"/>
+<rect x="150" y="307" width="520" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="320" fill="#ffffff" font-size="13" font-weight="600">100%</text>
+<circle cx="30" cy="346" r="4" fill="#bd9aff"/>
+<text x="42" y="350" fill="#c9d4e3" font-size="13">edge</text>
+<rect x="150" y="337" width="520" height="18" rx="5" fill="#1b2638"/>
+<rect x="150" y="337" width="312" height="18" rx="5" fill="#d29922"/>
+<text x="682" y="350" fill="#ffffff" font-size="13" font-weight="600">60%</text>
+<circle cx="30" cy="376" r="4" fill="#bd9aff"/>
+<text x="42" y="380" fill="#c9d4e3" font-size="13">stacked</text>
+<rect x="150" y="367" width="520" height="18" rx="5" fill="#1b2638"/>
+<rect x="150" y="367" width="416" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="380" fill="#ffffff" font-size="13" font-weight="600">80%</text>
+<circle cx="30" cy="406" r="4" fill="#bd9aff"/>
+<text x="42" y="410" fill="#c9d4e3" font-size="13">distractors</text>
+<rect x="150" y="397" width="520" height="18" rx="5" fill="#1b2638"/>
+<rect x="150" y="397" width="416" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="410" fill="#ffffff" font-size="13" font-weight="600">80%</text>
+<circle cx="30" cy="436" r="4" fill="#bd9aff"/>
+<text x="42" y="440" fill="#c9d4e3" font-size="13">bystander</text>
+<rect x="150" y="427" width="520" height="18" rx="5" fill="#1b2638"/>
+<rect x="150" y="427" width="520" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="440" fill="#ffffff" font-size="13" font-weight="600">100%</text>
+<circle cx="30" cy="466" r="4" fill="#bd9aff"/>
+<text x="42" y="470" fill="#c9d4e3" font-size="13">hesitate</text>
+<rect x="150" y="457" width="520" height="18" rx="5" fill="#1b2638"/>
+<rect x="150" y="457" width="312" height="18" rx="5" fill="#d29922"/>
+<text x="682" y="470" fill="#ffffff" font-size="13" font-weight="600">60%</text>
+<circle cx="30" cy="496" r="4" fill="#bd9aff"/>
+<text x="42" y="500" fill="#c9d4e3" font-size="13">parked</text>
+<rect x="150" y="487" width="520" height="18" rx="5" fill="#1b2638"/>
+<rect x="150" y="487" width="520" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="500" fill="#ffffff" font-size="13" font-weight="600">100%</text>
+<circle cx="30" cy="532" r="4" fill="#ffbb71"/><text x="42" y="536" fill="#8fa3bf" font-size="12">classic scenario</text>
+<circle cx="170" cy="532" r="4" fill="#bd9aff"/><text x="182" y="536" fill="#8fa3bf" font-size="12">messy scenario</text>
 </svg>

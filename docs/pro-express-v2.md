@@ -148,6 +148,22 @@ Same discipline as before: seeded scenarios, tune on seeds 0–4, report once on
 3. **Barcode reader:** OK to `pip install zxing-cpp` into the project's `.venv`?
 4. **Characters:** please click **Add to My Assets** on the pack's Asset Store page while signed in, so it can be imported.
 
+## 📈 Results so far
+
+Five products with barcode labels, lane + overhead + scan cameras, 15 scenarios × 5 seeds.
+
+| | Old models on the new boxes | Retrained (dev seeds 0–4) | Retrained (**held-out seeds 5–9**) |
+|---|:-:|:-:|:-:|
+| Runs fully automatic and exactly right | 51 / 75 | 71 / 75 | **68 / 75** |
+| Items missed / wrongly charged | 2 / 0 | 0 / 0 | 2 / 1 |
+| Charged items identified by barcode | most | most | most (100% in 11 of 15 scenarios) |
+| Median time per frame, three cameras | 37 ms | 32 ms | 32 ms |
+
+- **Barcodes settle what looks couldn't.** Stacked identical boxes went from 60% (two cameras, no barcodes) to 100% on development seeds and 80% on held-out seeds.
+- **Where barcodes aren't read**, the system falls back to recognizing the box by look: the parked flatbed hides the scan camera's view too, and the reversed walk in *change of mind* turns the label away.
+- **The one wrongly charged item** is in an edge-of-frame run on the held-out seeds. That's the error that matters most and the first thing to trace.
+- The retraining mattered: the earlier models fragmented the new-look boxes (51 / 75), mostly on the photo-fronted Ridgid box.
+
 ## ✅ Progress
 
 - [ ] **E1 Catalog and barcodes**
@@ -158,7 +174,7 @@ Same discipline as before: seeded scenarios, tune on seeds 0–4, report once on
   - [x] 3840×1080 scan camera over the lane entrance (`ProPassCameras.cs`), streamed and recorded with the others
   - [x] `VisionEngine._read_barcodes` / `_attach_barcodes` with zxing-cpp; text must match `SKU=<10 digits>`
   - [x] Live: the mixed cart is charged entirely by barcode, all lines rated Verified
-- [ ] **E3 Retrain for the new look** (after the catalog grows)
+- [x] **E3 Retrain for the new look:** a lane pair and an overhead pair, each on its own camera's scenes (`training.train --camera`). Needs repeating when the catalog grows.
 - [x] **E4 Ratings, restricted items, assist flow**
   - [x] Ledger: barcode evidence outranks the classifier, ratings, restricted SKUs, assist list (`vision/ledger.py`, `tests/test_ledger_scanning.py`)
   - [x] API: `ASSIST` cart status, `POST /api/assist/add` and `/api/assist/dismiss`, line ratings (`api/`, `tests/test_api_assist.py`)
@@ -168,7 +184,8 @@ Same discipline as before: seeded scenarios, tune on seeds 0–4, report once on
 - [ ] **E6 Characters** (waiting for the pack to be downloaded and imported in Unity)
 - [ ] **E7 Benchmark, docs, demo recording**
   - [x] Development set re-recorded with labels and the scan camera (`artifacts/benchmark`; the earlier sets are `artifacts/benchmark-2cam*`)
-  - [ ] Held-out set, published results, the other docs brought up to date (api.md, vision.md, pipeline.md, getting-started.md)
+  - [x] Held-out set recorded and scored once; [benchmark.md](benchmark.md) regenerated
+  - [ ] The other docs brought up to date (vision.md, pipeline.md, getting-started.md, roadmap.md)
 
 ![Mixed cart, live: every line Verified by barcode, with the customer's phone on the right](images/v2-scanned.jpg)
 

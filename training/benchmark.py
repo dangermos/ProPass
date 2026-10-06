@@ -169,15 +169,16 @@ def markdown(summary, rows, chart_path, reference=None, reference_label=None):
         *([f"Compared with **{reference_label}** on the same recordings: "
            f"{reference['summary']['passed']} → {summary['passed']} runs passed. The gray bars and *was* column show the reference.", ""]
           if reference else []),
-        "| | Scenario | Pass | Exact cart | False adds | Missed | ID switches / run | Phantom objects / run | Blocked for review | Detection recall |",
-        "|:-:|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|",
+        "| | Scenario | Pass | Exact cart | False adds | Missed | ID switches / run | Phantom objects / run | Blocked for review | Detection recall | By barcode | Assist items |",
+        "|:-:|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|",
     ]
     before = {r["scenario"]: r["pass_rate"] for r in reference["scenarios"]} if reference else {}
     for r in rows:
         was = f" <sub>was {before[r['scenario']] * 100:.0f}%</sub>" if r["scenario"] in before else ""
         lines.append(f"| {dot(r['pass_rate'])} | **{r['scenario']}**<br><sub>{r['description']}</sub> | "
                      f"{r['pass_rate'] * 100:.0f}%{was} | {r['exact_cart_rate'] * 100:.0f}% | {r['false_adds']} | {r['missed_items']} | "
-                     f"{r['id_switches_per_run']} | {r['phantom_objects_per_run']} | {r['review_rate'] * 100:.0f}% | {r['detection_recall'] * 100:.0f}% |")
+                     f"{r['id_switches_per_run']} | {r['phantom_objects_per_run']} | {r['review_rate'] * 100:.0f}% | {r['detection_recall'] * 100:.0f}% | "
+                     f"{r.get('barcode_share', 0) * 100:.0f}% | {r.get('assist_items', 0)} |")
     lines += ["", "## 🔎 Why runs fail", "",
               "The most common review reasons the ledger reported, per scenario:", ""]
     for r in rows:
@@ -188,7 +189,9 @@ def markdown(summary, rows, chart_path, reference=None, reference_label=None):
               "| False adds / Missed | Units charged that weren't purchased / purchased units that weren't charged, summed over runs |",
               "| ID switches | Times a real box's matched canonical object ID changed. Lower means steadier identity. |",
               "| Phantom objects | Canonical objects that never matched a real product, usually distractors or occluders detected as merchandise |",
-              "| Blocked for review | Share of runs that ended with checkout blocked |",
+              "| Blocked for review | Share of runs that ended needing an associate or still waiting on an item |",
+              "| By barcode | Share of charged items whose SKU came from a decoded barcode. The rest were recognized by look. |",
+              "| Assist items | Items handed to an associate (unscanned, unknown barcode, conflicting evidence), summed over runs |",
               "| Detection recall | Share of frames where an in-frame product was matched to a tracked detection (amodal boxes, IoU ≥ 0.3), so heavy occlusion lowers it |",
               ""]
     return "\n".join(lines)
