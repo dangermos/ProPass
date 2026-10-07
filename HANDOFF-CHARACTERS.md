@@ -1,5 +1,7 @@
 # Handoff: put animated characters into the ProPass lane
 
+> ✅ **Done on 2026-10-07.** Result and what it took: [docs/pro-express-v2.md](docs/pro-express-v2.md#with-animated-characters). Held-out 71 / 85 with nothing wrongly charged, against 78 / 85 with capsule people. This file is kept as the record of the task.
+
 You are picking up one self-contained task in an existing project. Read this file fully, then `HANDOFF.md` and `docs/pro-express-v2.md` for wider context.
 
 ## The task

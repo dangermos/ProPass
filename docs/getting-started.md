@@ -56,6 +56,8 @@ This builds each product's barcode label, and its photo when you have put one in
 
 The whole Unity project lives in this repo under [`unity/`](../unity), including `Assets/`, `Packages/` and `ProjectSettings/`. Unity regenerates `Library/` and the other caches on first open, and they're git-ignored.
 
+> 🧍 **People are optional assets.** With the free [Creative Characters pack](https://assetstore.unity.com/packages/3d/characters/humanoids/creative-characters-free-animated-pack-304841) imported (Package Manager → My Assets, it lands in `unity/Assets/ithappy/`, which is git-ignored), **ProPass → Build checkout scene** uses animated characters. Without it, the same scenes run with capsule people. The published weights were trained with the characters.
+
 1. In **Unity Hub**, choose **Add → Add project from disk** and select the repo's `unity/` folder.
 2. Open it with **6000.6.4f1**. The first import takes a few minutes.
 3. Open `Assets/ProPass/Scenes/Checkout.unity`.

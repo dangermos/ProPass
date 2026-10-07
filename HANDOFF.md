@@ -6,7 +6,7 @@ For the next person or AI picking this up. Read this first, then [docs/roadmap.m
 
 | Branch | State |
 |---|---|
-| `main` | **Everything.** Phases A–C, the dashboard, and Pro Express v2: barcode scanning, ratings, locked items, associate hand-off, customer phone view, eight products. Held-out: **78/85** fully automatic, nothing wrongly charged. 143 tests pass. |
+| `main` | **Everything.** Phases A–C, the dashboard, and Pro Express v2: barcode scanning, ratings, locked items, associate hand-off, customer phone view, eight products. Animated characters, and a Training tab in the dashboard. Held-out with characters: **71/85** fully automatic, nothing wrongly charged (capsule people scored 78/85; those weights are in `models/v5/`). 149 tests pass. |
 | `pro-express-v2` | Merged into `main` on 2026-10-06 (Danny's request). |
 
 Owner: Danny (GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants real trained models, colorful visual docs, no bloat, and to be asked before deleting or restructuring. Commit and push often. He likes short progress updates as work goes on.
@@ -23,10 +23,12 @@ Owner: Danny (GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants
 ## Waiting on Danny
 
 - More product photo and barcode pairs in `Barcodes/` (git-ignored, two files per 10-digit SKU). Claude does not copy images from homedepot.com. Run `scripts/prepare_products.py`, add catalog entries, rebuild the scene, then retrain.
-- The character pack is imported at `unity/Assets/ithappy/` (git-ignored). Porting it is written up as its own task in **[HANDOFF-CHARACTERS.md](HANDOFF-CHARACTERS.md)**.
+- Whether to keep characters at 71/85 or go back to capsule people at 78/85 for the published numbers.
 
 ## Open problems, in rough priority
 
+1. **Lumber and the parked flatbed pass 1 of 5 held-out runs with characters** (4–5 of 5 with capsule people, and 3–4 of 5 on development seeds). Most reviews say a product was first seen beyond the checkout boundary. Work on development seeds only, then record fresh held-out seeds (10–14) to report, because seeds 5–9 have now been looked at.
+1. **Hats are switched off** (`ProPassCharacters.cs`). A straw hat above a carried box is read as a small yellow product. The flatbed's tan deck is also sometimes read as lumber when it waits off-lane.
 1. **Stacked identical boxes pass 60%.** Two copies pressed together look like one box from both cameras. Needs instance segmentation or a count-aware detector, or should stay a review case.
 2. **One edge-of-frame run fails**, and the two-camera run misses two items there that the lane camera alone gets. Worth tracing.
 3. **Roadmap leftovers:** thumbnail crops per event in the Decisions tab, a 60–90 s demo video, and real-camera data (nothing has been tested outside Unity).
@@ -34,6 +36,8 @@ Owner: Danny (GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants
 
 ## Working notes
 
+- The dashboard's **Training** tab (`/api/progress`) shows export, training, recording and scoring progress. Send training output to `artifacts/logs/train-*.log` so it can follow.
+- A `MaterialPropertyBlock` color on any renderer leaks into the exporter's mask render unless it is lifted first (`ProPassDatasetExporter` does this). Check a few crops by eye after any export.
 - Recording and exporting fail while the Editor is in Play mode, and Danny often leaves it playing. Check `unity command editor_status` first and ask before stopping it. `RecordDeferred` did not always fire when the Editor was unfocused: call `ProPassBenchmarkRecorder.Record(...)` through `eval` instead (the CLI times out after 5 s, but the recording continues).
 - Unity Editor is usually open on `propass/unity`. Drive it with the Unity CLI: `unity command recompile`, `recompile_status`, `eval --code '...'`, `editor_play`, `editor_stop`. Long work goes through `RecordDeferred` or `ProPassDatasetExporter.Begin` (both return at once). If the Editor is closed: `unity projects open "$PWD/unity"`.
 - Start services with `bash scripts/start.sh`, or separately: `nohup .venv/bin/python -m uvicorn api.app:app --host 127.0.0.1 --port 8000 --no-access-log > artifacts/logs/api.log 2>&1 &` and `npm run dev` in `web/`. To restart the API, kill the pid from `ss -ltnp 'sport = :8000'`.

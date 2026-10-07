@@ -1,0 +1,332 @@
+{
+  "classifier": {
+    "checkpoint": "torchvision EfficientNet_B0_Weights.IMAGENET1K_V1",
+    "seconds": 52.85691785812378,
+    "sha256": "fa334900cf13002100d095a5730803a7cb98127cc67dc2845172f53cc146b854",
+    "epochs": 12,
+    "head_epochs": 4,
+    "batch": 32,
+    "device": "cuda:0",
+    "crop_size": 224,
+    "temperature": 0.7374443411827087,
+    "maximum_prototype_distance": 0.6125132322311402,
+    "dataset_sizes": {
+      "train": 2521,
+      "val": 384,
+      "test": 408
+    },
+    "val": {
+      "correct": 374,
+      "total": 384,
+      "accuracy": 0.9739583333333334,
+      "loss": 0.2506147076686223
+    },
+    "test": {
+      "correct": 398,
+      "total": 408,
+      "accuracy": 0.9754901960784313,
+      "loss": 0.23484623607467203
+    },
+    "test_confusion": [
+      [
+        57,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        50,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        43,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        52,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        53,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        2,
+        0,
+        43,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        48,
+        1,
+        0
+      ],
+      [
+        1,
+        1,
+        0,
+        1,
+        0,
+        0,
+        2,
+        44,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        8
+      ]
+    ],
+    "class_labels": [
+      "PEX-001",
+      "PEX-002",
+      "PEX-003",
+      "PEX-004",
+      "PEX-005",
+      "PEX-006",
+      "PEX-007",
+      "PEX-008",
+      "ZZZ-UNKNOWN"
+    ],
+    "test_accepted": 377,
+    "test_accepted_correct": 374,
+    "unknown_rejection": "Training-set outlier exposure (unenrolled gray package), validation-calibrated feature distance and confidence; broader unknown performance unverified",
+    "history": [
+      {
+        "epoch": 1,
+        "train_loss": 1.2603737647123916,
+        "val": {
+          "correct": 317,
+          "total": 384,
+          "accuracy": 0.8255208333333334,
+          "loss": 0.8520707041025162
+        }
+      },
+      {
+        "epoch": 2,
+        "train_loss": 0.6630938039890881,
+        "val": {
+          "correct": 335,
+          "total": 384,
+          "accuracy": 0.8723958333333334,
+          "loss": 0.6231625005602837
+        }
+      },
+      {
+        "epoch": 3,
+        "train_loss": 0.50809735610626,
+        "val": {
+          "correct": 343,
+          "total": 384,
+          "accuracy": 0.8932291666666666,
+          "loss": 0.5267410551508268
+        }
+      },
+      {
+        "epoch": 4,
+        "train_loss": 0.43584301506229356,
+        "val": {
+          "correct": 347,
+          "total": 384,
+          "accuracy": 0.9036458333333334,
+          "loss": 0.48263944933811825
+        }
+      },
+      {
+        "epoch": 5,
+        "train_loss": 0.36125606731118215,
+        "val": {
+          "correct": 361,
+          "total": 384,
+          "accuracy": 0.9401041666666666,
+          "loss": 0.34576113894581795
+        }
+      },
+      {
+        "epoch": 6,
+        "train_loss": 0.28333692818891903,
+        "val": {
+          "correct": 368,
+          "total": 384,
+          "accuracy": 0.9583333333333334,
+          "loss": 0.3084196212391059
+        }
+      },
+      {
+        "epoch": 7,
+        "train_loss": 0.24530247079621512,
+        "val": {
+          "correct": 368,
+          "total": 384,
+          "accuracy": 0.9583333333333334,
+          "loss": 0.28566454847653705
+        }
+      },
+      {
+        "epoch": 8,
+        "train_loss": 0.22656719244126997,
+        "val": {
+          "correct": 372,
+          "total": 384,
+          "accuracy": 0.96875,
+          "loss": 0.27523061881462735
+        }
+      },
+      {
+        "epoch": 9,
+        "train_loss": 0.21052106640396587,
+        "val": {
+          "correct": 371,
+          "total": 384,
+          "accuracy": 0.9661458333333334,
+          "loss": 0.264757476747036
+        }
+      },
+      {
+        "epoch": 10,
+        "train_loss": 0.2050411358256985,
+        "val": {
+          "correct": 372,
+          "total": 384,
+          "accuracy": 0.96875,
+          "loss": 0.2579404016335805
+        }
+      },
+      {
+        "epoch": 11,
+        "train_loss": 0.19123941003827052,
+        "val": {
+          "correct": 371,
+          "total": 384,
+          "accuracy": 0.9661458333333334,
+          "loss": 0.25862666095296544
+        }
+      },
+      {
+        "epoch": 12,
+        "train_loss": 0.18521996221931053,
+        "val": {
+          "correct": 374,
+          "total": 384,
+          "accuracy": 0.9739583333333334,
+          "loss": 0.2506147076686223
+        }
+      }
+    ],
+    "dataset": "Unity synthetic crop splits; no real-camera transfer claim"
+  },
+  "detector": {
+    "checkpoint": "YOLO26n COCO pretrained",
+    "architecture": "merchandise + person + cart (occluder-aware)",
+    "seconds": 108.53647780418396,
+    "sha256": "a389158de712aab4ff94e66fb7a3f0043b6f9e6fc3fe1b4684b86d3122991c80",
+    "epochs_requested": 60,
+    "batch": 16,
+    "image_size": 640,
+    "device": "0",
+    "classes": [
+      "merchandise",
+      "person",
+      "cart"
+    ],
+    "test": {
+      "map50": 0.9725532897763567,
+      "map50_95": 0.8123885634241045,
+      "precision": 0.9639807549673055,
+      "recall": 0.930448717948718
+    },
+    "dataset": "Unity synthetic scene splits; no real-camera transfer claim",
+    "train_images": 2000,
+    "val_images": 320,
+    "test_images": 320
+  },
+  "pipeline": {
+    "runtime_inputs": [
+      "RGB image",
+      "frame_id",
+      "capture timestamp",
+      "run_id"
+    ],
+    "runtime_ground_truth": false,
+    "tracker": "Ultralytics BoT-SORT on merchandise boxes (config: tracker)",
+    "object_identity": "canonical ledger: one-to-one re-attachment gated by motion path, clear-view appearance gallery and SKU; up to 6 s for occlusions; lane polygon",
+    "sku_identity": "five trained fictional SKU classes plus synthetic outlier-exposure reject output",
+    "zone_configuration": {
+      "image_size": 640,
+      "detector_conf": 0.2,
+      "device": "auto",
+      "ledger": {
+        "approach_y": 0.65,
+        "commit_y": 0.4,
+        "hysteresis": 0.025,
+        "dwell_seconds": 0.12,
+        "minimum_views": 3,
+        "sku_threshold": 0.85,
+        "sku_margin": 0.2,
+        "reattach_seconds": 1.8
+      }
+    },
+    "code_hashes": {
+      "vision/engine.py": "3f2277e8f74f9000b48ffb76b102c16c4e7e8b1592086ab13301cb53124c07f0",
+      "vision/ledger.py": "19ce8c4d3e6fa7bd9960b658f5a69362303e42948a597df216b8a98806fe9340"
+    },
+    "evaluation_status": "static, live (6 classic scenarios) and scenario benchmark (70 held-out runs) measured",
+    "known_limitations": [
+      "single-customer staged synthetic lane",
+      "visually distinct fictional packaging",
+      "gray-package rejection trained with outlier exposure; arbitrary unseen retail products unverified",
+      "no real-camera transfer measured"
+    ]
+  }
+}

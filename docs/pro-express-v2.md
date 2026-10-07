@@ -167,6 +167,30 @@ Eight products (six boxed with barcode labels, including one locked-cage tool, p
 - **Barcodes settle what looks couldn't.** Stacked identical boxes pass 4 of 5 held-out runs. Without barcodes it was 3 of 5.
 - **Where barcodes aren't read**, the system falls back to recognizing the item by look: lumber has none, the parked flatbed hides the scan camera's view, and the reversed walk in *change of mind* turns the label away.
 - Of the 14 hand-offs, 10 are by design: the unknown-barcode package and the locked tool. The other 4 are single items in the shopper, flatbed, edge and stacked scenarios.
+### With animated characters
+
+The capsule people were replaced by animated characters, both camera model pairs were retrained on the new look, and both sets were re-recorded. Same 17 scenarios × 5 seeds.
+
+| 85 runs each | Development seeds 0–4 | **Held-out seeds 5–9** | Held-out with capsule people |
+|---|:-:|:-:|:-:|
+| Runs fully automatic and exactly right | 77 | **71** | 78 |
+| Items wrongly charged | 0 | **0** | 0 |
+| Items missed | 2 | 2 | 1 |
+| Charged items identified by barcode | 94 of 112 | 93 of 113 | 96 of 114 |
+| Items handed to an associate | 19 | 27 | 14 |
+| Locked-cage tool routed to an associate | 5 of 5 runs | 5 of 5 runs | 5 of 5 runs |
+| Lumber runs | 4 of 5 | 1 of 5 | 4 of 5 |
+| Parked flatbed runs | 3 of 5 | 1 of 5 | 5 of 5 |
+| Median time per frame, three cameras | 34 ms | 33 ms | 32 ms |
+
+- **Characters cost 7 held-out runs, and still nothing was wrongly charged.** Every lost run is the cautious kind: the cart is sent to an associate instead of closing on its own.
+- **The loss is in two scenarios:** lumber and the parked flatbed. The development seeds did not show it (77 of 85), so it was found only by the held-out score, which is what that set is for. It has not been tuned against.
+- **What had to change to get here:** the label exporter was putting people into every product's mask (a clothing tint leaked into the mask render), training scenes never showed the customer right behind a box, and lumber was being carried through the customer's body.
+- **Hats are left out of the cast.** A straw hat showing above a carried box was read as a small yellow product at the far end of the lane. With hats, development seeds scored 65 of 85. This is an open problem, not a fix.
+- The capsule-people weights are kept in `models/v5/`, their recordings in `artifacts/benchmark-v2b` and `artifacts/benchmark-test-v2b`, and their held-out report in `models/benchmark-v2-test-capsules.json`.
+
+### Earlier rounds
+
 - An earlier round with five products scored 68 of 75 on held-out seeds, with one wrongly charged item. That set of recordings is kept in `artifacts/benchmark-test-v2a`.
 - Retraining mattered: the pre-barcode models fragmented the new-look boxes (51 of 75 on development seeds).
 
@@ -188,7 +212,7 @@ Eight products (six boxed with barcode labels, including one locked-cage tool, p
   - [x] Benchmark reports the barcode share of charged items and assist counts
   - [x] A catalog product marked `restricted`, with a scenario for it
 - [x] **E5 Customer phone and associate view** (`web/src/CustomerPhone.tsx`, `AssociatePanel.tsx`), plus barcode outlines on the scan camera view
-- [ ] **E6 Characters** (waiting for the pack to be downloaded and imported in Unity)
+- [x] **E6 Characters:** animated customer and shoppers (`ProPassCharacters.cs`), capsules when the pack is absent, both model pairs retrained, both sets re-recorded and scored (see *With animated characters* above)
 - [ ] **E7 Benchmark, docs, demo recording**
   - [x] Development set re-recorded with labels and the scan camera (`artifacts/benchmark`; the earlier sets are `artifacts/benchmark-2cam*`)
   - [x] Held-out set recorded and scored once; [benchmark.md](benchmark.md) regenerated
