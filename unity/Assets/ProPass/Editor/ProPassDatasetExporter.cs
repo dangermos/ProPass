@@ -175,8 +175,12 @@ namespace ProPass.Editor
             var renderers=UnityEngine.Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None);
             var originalMaterials=renderers.Select(r=>r.sharedMaterials).ToArray();
             Color originalBackground=active.backgroundColor;
+            // A per-renderer color override (the characters' clothing tint) would also recolor the
+            // mask materials, putting people into every instance's mask. Lift it while masks render.
+            var originalBlocks=renderers.Select(r=>{var block=new MaterialPropertyBlock();r.GetPropertyBlock(block);return block;}).ToArray();
             try
             {
+                foreach(var renderer in renderers)renderer.SetPropertyBlock(null);
                 active.backgroundColor=Color.black;
                 var bounds=new BoundsPixels[instances.Count];
                 for(int k=0;k<instances.Count;k++)
@@ -217,7 +221,7 @@ namespace ProPass.Editor
             finally
             {
                 active.backgroundColor=originalBackground;
-                for(int i=0;i<renderers.Length;i++)if(renderers[i]!=null)renderers[i].sharedMaterials=originalMaterials[i];
+                for(int i=0;i<renderers.Length;i++)if(renderers[i]!=null){renderers[i].sharedMaterials=originalMaterials[i];renderers[i].SetPropertyBlock(originalBlocks[i].isEmpty?null:originalBlocks[i]);}
                 foreach(var go in current)if(go!=null)UnityEngine.Object.DestroyImmediate(go);current.Clear();
                 factory.DisposeCharacters();
             }
