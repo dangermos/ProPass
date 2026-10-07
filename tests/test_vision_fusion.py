@@ -111,3 +111,12 @@ def test_two_camera_crossing_adds_one_unit_even_while_the_lane_camera_is_blocked
     assert result["metrics"]["cart_units"] == 1
     assert len(result["objects"]) == 1
     assert not result["review_required"]
+
+
+def test_a_region_claimed_more_confidently_by_a_person_is_not_merchandise():
+    from vision.engine import merchandise_only
+    boxes = [(100, 100, 140, 140), (300, 300, 340, 340), (102, 101, 141, 143), (300, 302, 341, 340)]
+    # A box, a second box, a person over the first box's region, a weaker copy of the second box.
+    assert merchandise_only(boxes, [0, 0, 1, 0], [0.3, 0.9, 0.8, 0.6]) == [1]
+    # A person box that merely overlaps a product (someone standing behind it) removes nothing.
+    assert merchandise_only([(100, 100, 140, 140), (90, 40, 150, 200)], [0, 1], [0.6, 0.9]) == [0]

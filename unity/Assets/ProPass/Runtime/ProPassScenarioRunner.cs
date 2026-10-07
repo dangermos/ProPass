@@ -54,7 +54,7 @@ namespace ProPass
         public void Apply(float t)
         {
             t = Mathf.Clamp(t, 0f, Plan.duration);
-            Vector3 lead = Vector3.zero, leadVelocity = Vector3.zero; bool hasLead = false;
+            Vector3 lead = Vector3.zero, leadVelocity = Vector3.zero; bool hasLead = false, longLead = false;
             for (int i = 0; i < actorObjects.Length; i++)
             {
                 var go = actorObjects[i];
@@ -66,10 +66,13 @@ namespace ProPass
                 if (actor.kind == ActorKind.Shopper) actors.Pose(go, position, Velocity(i, t), t);
                 else go.transform.position = position;
                 if (actor.kind == ActorKind.Product && !hasLead && Mathf.Abs(position.x) <= ScenarioPlan.LaneHalfWidth && actor.follow < 0)
-                { lead = position; leadVelocity = Velocity(i, t); hasLead = true; }
+                { lead = position; leadVelocity = Velocity(i, t); hasLead = true; longLead = actor.productIndex >= ProPassScenarios.Lumber; }
             }
             // The scene's customer proxy walks just behind the first product in the lane.
-            if (customer != null && hasLead) customer.position = new Vector3(lead.x * .3f, 0f, lead.z + .65f);
+            // A board is carried at the customer's side. Nobody walks through their own lumber.
+            if (customer != null && hasLead) customer.position = longLead
+                ? new Vector3(lead.x - .5f, 0f, lead.z + .2f)
+                : new Vector3(lead.x * .3f, 0f, lead.z + .65f);
             if (customer != null) actors.Pose(avatar, customer.position, hasLead ? leadVelocity : Vector3.zero, t);
             if (camera != null && Plan.cameraShake > 0f)
             {

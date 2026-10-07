@@ -36,6 +36,30 @@ class CameraObservation:
     world: tuple[float, float] | None = None
 
 
+def box_iou(a, b):
+    w = min(a[2], b[2]) - max(a[0], b[0])
+    h = min(a[3], b[3]) - max(a[1], b[1])
+    if w <= 0 or h <= 0:
+        return 0.0
+    return float(w * h / ((a[2] - a[0]) * (a[3] - a[1]) + (b[2] - b[0]) * (b[3] - b[1]) - w * h))
+
+
+def merchandise_only(xyxy, classes, confidences, same_region_iou=0.5):
+    """Indices of merchandise boxes, minus any whose region a more confident box already claims.
+
+    The detector has no suppression step of its own, so it can report one region twice:
+    as a person and a product, or as two nearly identical products.
+    """
+    keep = []
+    for i, cls in enumerate(classes):
+        if cls != 0:
+            continue
+        rivals = (j for j in range(len(classes)) if j != i and confidences[j] > confidences[i])
+        if not any(box_iou(xyxy[i], xyxy[j]) >= same_region_iou for j in rivals):
+            keep.append(i)
+    return keep
+
+
 class VisionEngine:
     def __init__(self, catalog_path, models_dir, config_path=None, cameras=None, world_mode=None):
         self.catalog_path = Path(catalog_path)
@@ -67,6 +91,7 @@ class VisionEngine:
         self.image_size = int(config.get("image_size", 640))
         self.detector_conf = float(config.get("detector_conf", 0.20))
         self.detector_iou = float(config.get("detector_iou", 0.65))
+        self.same_region_iou = float(config.get("same_region_iou", 0.5))
         self.prototype_rejection = bool(config.get("prototype_rejection", True))
         self.device_request = config.get("device", os.environ.get("PROPASS_DEVICE", "auto"))
         self.tracker = config.get("tracker", "bytetrack.yaml")
@@ -276,11 +301,12 @@ class VisionEngine:
         """Detect, track and classify the merchandise in one camera's image."""
         from PIL import Image
         torch = self.torch
-        # Class 0 is merchandise; people and carts are learned so they stop being
-        # mistaken for merchandise, but only merchandise enters the tracker.
+        # Class 0 is merchandise. People and carts are tracked too, so that a region the
+        # detector reads more confidently as a person (a hat showing above a carried box)
+        # is not also counted as a product. Only merchandise goes on to the classifier.
         results = self.detectors[camera].track(image_bgr, persist=True, tracker=self.tracker,
                                                imgsz=self.image_size, conf=self.detector_conf,
-                                               iou=self.detector_iou, classes=[0], device=self.device, verbose=False)
+                                               iou=self.detector_iou, device=self.device, verbose=False)
         boxes = results[0].boxes
         height, width = image_bgr.shape[:2]
         if boxes is None or boxes.id is None:
@@ -288,6 +314,9 @@ class VisionEngine:
         xyxy = boxes.xyxy.cpu().numpy()
         ids = boxes.id.int().cpu().tolist()
         confs = boxes.conf.cpu().tolist()
+        classes = boxes.cls.int().cpu().tolist() if getattr(boxes, "cls", None) is not None else [0] * len(ids)
+        keep = merchandise_only(xyxy, classes, confs, getattr(self, "same_region_iou", 0.5))
+        xyxy, ids, confs = xyxy[keep], [ids[i] for i in keep], [confs[i] for i in keep]
         crops, valid = [], []
         for i, bbox in enumerate(xyxy):
             x1,y1,x2,y2 = bbox

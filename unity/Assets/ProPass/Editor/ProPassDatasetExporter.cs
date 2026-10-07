@@ -125,9 +125,17 @@ namespace ProPass.Editor
             if(simulation.customer!=null)
             {
                 simulation.customer.position=new Vector3(R(-.8f,.8f),0,R(-2.8f,3.8f));
+                // Most of the time the customer walks right behind a product, as in the lane:
+                // from the lane camera only the head and shoulders then show above the box.
+                bool carrying=products.Count>0&&Chance(.6);
+                if(carrying)
+                {
+                    var carried=products[rng.Next(products.Count)].transform.position;
+                    simulation.customer.position=new Vector3(carried.x+R(-.2f,.2f),0,carried.z+R(.45f,.9f));
+                }
                 // An animated character stands in for the capsule customer when the pack is present.
                 var customer=factory.CustomerAvatar(simulation.customer,seed);
-                if(customer!=null)factory.Pose(customer,simulation.customer.position,Chance(.7)?new Vector3(R(-.2f,.2f),0,R(.4f,1.2f)*(Chance(.85)?1:-1)):Vector3.zero,R(0,20),R(-40,40));
+                if(customer!=null)factory.Pose(customer,simulation.customer.position,Chance(carrying?.85:.7)?new Vector3(R(-.2f,.2f),0,R(.4f,1.2f)*(Chance(carrying?1:.85)?1:-1)):Vector3.zero,R(0,20),carrying?R(-10,10):R(-40,40));
                 instances.Add((customer??simulation.customer.gameObject,1));
             }
             if(Chance(.35))
