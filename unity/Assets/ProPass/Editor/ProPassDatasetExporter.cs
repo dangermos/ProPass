@@ -105,15 +105,54 @@ namespace ProPass.Editor
 
             int count=rng.Next(1,5);
             if(splitIndex%30==0)count=0;
+            var classes=new int[count];
             for(int i=0;i<count;i++)
             {
                 // Every enrolled product in turn; prefab 5 is the unenrolled package.
-                int classIndex=Enrolled[(splitIndex+i)%Enrolled.Length];
+                classes[i]=Enrolled[(splitIndex+i)%Enrolled.Length];
                 // Unenrolled objects are still merchandise for generic localization.
-                if(splitIndex%17==0 && i==0)classIndex=5;
-                float x=count==1?R(-1.45f,1.45f):Mathf.Lerp(-1.4f,1.4f,(float)i/(count-1))+R(-.12f,.12f);
-                // z down to -5 places some packages partly below the frame edge.
-                var product=Product(classIndex,new Vector3(x,R(.65f,1.2f),R(-5f,3.9f)),rng);
+                if(splitIndex%17==0 && i==0)classes[i]=5;
+            }
+            // Most scenes have a cart with the first products on it, as in the lane.
+            Transform cart=null;CartKind kind=CartKind.None;var loaded=new List<int>();
+            if(count>0&&Chance(.75))
+            {
+                bool boardFirst=ProPassCarts.IsBoard(classes[0]);
+                kind=boardFirst?(Chance(.75)?CartKind.Lumber:CartKind.Flat):Chance(.45)?CartKind.Shopping:Chance(.8)?CartKind.Flat:CartKind.Lumber;
+                int boxes=0,boards=0;float depth=0;
+                for(int i=0;i<count;i++)
+                {
+                    bool board=ProPassCarts.IsBoard(classes[i]);
+                    bool fits=kind==CartKind.Lumber?(board?boards<3:boxes<1)
+                        :kind==CartKind.Shopping?!board&&boxes<2&&depth+ProPassCarts.ProductSizes[classes[i]].z<.8f
+                        :board==boardFirst&&(board?boards<2:boxes<3);
+                    if(!fits)continue;
+                    loaded.Add(i);if(board)boards++;else{boxes++;depth+=ProPassCarts.ProductSizes[classes[i]].z+.03f;}
+                }
+                var cartObject=Place(ProPassCarts.Build(factory,kind),new Vector3(R(-.7f,.7f),0,R(-4.4f,3.5f)),R(-8f,8f)+(Chance(.1)?180f:0f));
+                cart=cartObject.transform;instances.Add((cartObject,2));
+            }
+            var slots=ProPassCarts.Slots(kind==CartKind.None?CartKind.Flat:kind,loaded.Select(i=>classes[i]).ToArray());
+            for(int i=0;i<count;i++)
+            {
+                int slot=loaded.IndexOf(i);
+                GameObject product;
+                if(slot>=0)
+                {
+                    bool board=ProPassCarts.IsBoard(classes[i]);
+                    product=Product(classes[i],cart.TransformPoint(slots[slot]+new Vector3(R(-.02f,.02f),0,R(-.02f,.02f))),rng);
+                    // Labels mostly face the way the cart is going; sometimes a box is turned.
+                    float turn=board?R(-4f,4f)+(Chance(.5)?180f:0f):180f+R(-14f,14f)+(Chance(.15)?90f*rng.Next(1,4):0f);
+                    product.transform.rotation=cart.rotation*Quaternion.Euler(0,turn,0);
+                    product.transform.localScale=Vector3.one*R(.96f,1.04f);
+                }
+                else
+                {
+                    float x=count==1?R(-1.45f,1.45f):Mathf.Lerp(-1.4f,1.4f,(float)i/(count-1))+R(-.12f,.12f);
+                    // z down to -5 places some packages at the far edge of the frame.
+                    product=Product(classes[i],new Vector3(x,R(.65f,1.2f),R(-5f,3.9f)),rng);
+                    product.transform.rotation*=Quaternion.Euler(0,180f,0);
+                }
                 products.Add(product);instances.Add((product,0));
             }
             if(products.Count>0&&Chance(.25))
@@ -125,17 +164,27 @@ namespace ProPass.Editor
             if(simulation.customer!=null)
             {
                 simulation.customer.position=new Vector3(R(-.8f,.8f),0,R(-2.8f,3.8f));
-                // Most of the time the customer walks right behind a product, as in the lane:
-                // from the lane camera only the head and shoulders then show above the box.
-                bool carrying=products.Count>0&&Chance(.6);
-                if(carrying)
+                // Mostly the customer is where they are in the lane: behind the cart's handle, or
+                // right behind a product they carry, so the main camera sees them above it.
+                bool pushing=cart!=null&&Chance(.9);
+                bool carrying=!pushing&&products.Count>0&&Chance(.6);
+                float facing=R(-40,40);
+                if(pushing)
+                {
+                    simulation.customer.position=cart.TransformPoint(new Vector3(R(-.08f,.08f),0,-ProPassCarts.PushDistance(kind)+R(-.08f,.12f)));
+                    facing=cart.eulerAngles.y+R(-6,6);
+                }
+                else if(carrying)
                 {
                     var carried=products[rng.Next(products.Count)].transform.position;
-                    simulation.customer.position=new Vector3(carried.x+R(-.2f,.2f),0,carried.z+R(.45f,.9f));
+                    simulation.customer.position=new Vector3(carried.x+R(-.2f,.2f),0,carried.z-R(.45f,.9f));
+                    facing=R(-10,10);
                 }
                 // An animated character stands in for the capsule customer when the pack is present.
                 var customer=factory.CustomerAvatar(simulation.customer,seed);
-                if(customer!=null)factory.Pose(customer,simulation.customer.position,Chance(carrying?.85:.7)?new Vector3(R(-.2f,.2f),0,R(.4f,1.2f)*(Chance(carrying?1:.85)?1:-1)):Vector3.zero,R(0,20),carrying?R(-10,10):R(-40,40));
+                bool walking=Chance(pushing||carrying?.85:.7);
+                var heading=Quaternion.Euler(0,facing,0)*Vector3.forward*R(.4f,1.2f)*(pushing||carrying||Chance(.85)?1:-1);
+                if(customer!=null)factory.Pose(customer,simulation.customer.position,walking?heading:Vector3.zero,R(0,20),facing);
                 instances.Add((customer??simulation.customer.gameObject,1));
             }
             if(Chance(.35))
@@ -150,8 +199,10 @@ namespace ProPass.Editor
             if(products.Count>0&&Chance(.35))
             {
                 var near=products[rng.Next(products.Count)].transform.position;
-                instances.Add((Place(factory.Arm(new Color(.08f,.1f,.14f)*R(.8f,2.5f)),near+new Vector3(R(-.2f,.2f),R(.1f,.25f),R(-.35f,-.2f)),R(-40,40)),1));
+                instances.Add((Place(factory.Arm(new Color(.08f,.1f,.14f)*R(.8f,2.5f)),near+new Vector3(R(-.2f,.2f),R(.1f,.25f),R(.2f,.35f)),R(-40,40)),1));
             }
+            // Someone else's cart, empty, parked or passing nearby.
+            if(Chance(.25)) instances.Add((Place(ProPassCarts.Build(factory,(CartKind)rng.Next(1,4)),new Vector3((Chance(.5)?-1:1)*R(1.9f,3.4f),0,R(-4.5f,4f)),R(0,360)),2));
             if(Chance(.2)) instances.Add((Place(factory.Flatbed(new Color(.82f,.68f,.46f)*R(.85f,1.1f)),new Vector3(R(-2.5f,2.5f),0,R(-3.5f,3f)),R(-15,15)),2));
             foreach(var prop in new[]{"phone","cup","bag"})
             {

@@ -25,7 +25,7 @@ def test_world_map_round_trip_preserves_meters_and_forward_direction(x, z):
 
 def test_exported_camera_point_pairs_project_to_the_carry_height_plane(calibration):
     exported = json.loads(CALIBRATION_PATH.read_text())
-    assert calibration.plane_height == pytest.approx(0.9)
+    assert calibration.plane_height == pytest.approx(0.6)
     assert set(calibration.cameras) == {"lane", "overhead", "scan"}
     for camera_data in exported["cameras"]:
         camera = calibration.cameras[camera_data["id"]]
