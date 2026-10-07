@@ -189,6 +189,25 @@ The capsule people were replaced by animated characters, both camera model pairs
 - **Hats are left out of the cast.** A straw hat showing above a carried box was read as a small yellow product at the far end of the lane. With hats, development seeds scored 65 of 85. This is an open problem, not a fix.
 - The capsule-people weights are kept in `models/v5/`, their recordings in `artifacts/benchmark-v2b` and `artifacts/benchmark-test-v2b`, and their held-out report in `models/benchmark-v2-test-capsules.json`.
 
+### Carts (in progress, 2026-10-07)
+
+Danny asked for the three carts a Home Depot customer uses, pushed by the customer.
+
+![The three carts](images/carts.jpg)
+
+| Cart | Holds | Used in |
+|---|---|---|
+| 🛒 Shopping cart | one or two boxes in a wire basket | single, occlusion, change of mind, and by seed in the messy scenarios |
+| 🟧 Flat cart | up to three boxes on a low deck | identical products, mixed cart, unknown product, and by seed elsewhere |
+| 🪵 Lumber cart | boards along one side of a divider, a box at the back | lumber |
+
+- Carts are built in `ProPassCarts.cs`, which also says where products sit on each. `ProPassScenarios.LoadCart` moves a plan's products onto a cart and the runner walks the customer behind its handle. *Edge of frame* stays hand-carried.
+- **The tracking camera moved above the exit gate and looks back down the lane.** Seen from behind, the person pushing hid most of their own cart. The exit gate itself moved to z = 4.6, past where carts stop.
+- **The barcode camera faces oncoming carts** from a bar 2.3 m up, and labels face forward. Stated assumption: customers load boxes label-forward. A box behind another box is not scanned and falls back to recognition by look.
+- Calibration is now on a plane 0.6 m up (cart loads), not 0.9 m (hand carry).
+- Label text is depth-tested (`Shaders/Text3D.shader`): it used to show through a box in front.
+- **Still to do:** retrain both model pairs on cart scenes (export running), re-record both sets, score, then refresh thumbnails, the live check and the other docs. Until that is done the weights in `models/` do not match the scene. The pre-cart character weights are in `models/v6/`, their recordings in `artifacts/benchmark-nocart` and `artifacts/benchmark-test-nocart`.
+
 ### Earlier rounds
 
 - An earlier round with five products scored 68 of 75 on held-out seeds, with one wrongly charged item. That set of recordings is kept in `artifacts/benchmark-test-v2a`.
