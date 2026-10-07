@@ -43,6 +43,7 @@ namespace ProPass
                     case ActorKind.Shopper: go = actors.Shopper(actor.tint, plan.seed * 31 + i + 1); break;
                     case ActorKind.Hand: go = actor.prop == "slab" ? actors.Slab(actor.tint) : actors.Arm(actor.tint); break;
                     case ActorKind.Flatbed: go = actors.Flatbed(actor.tint); break;
+                    case ActorKind.Cart: go = ProPassCarts.Build(actors, plan.cart); break;
                     default: go = actors.Prop(actor.prop, actor.tint); break;
                 }
                 if (actor.kind != ActorKind.Product) spawned.Add(go);
@@ -68,12 +69,20 @@ namespace ProPass
                 if (actor.kind == ActorKind.Product && !hasLead && Mathf.Abs(position.x) <= ScenarioPlan.LaneHalfWidth && actor.follow < 0)
                 { lead = position; leadVelocity = Velocity(i, t); hasLead = true; longLead = actor.productIndex >= ProPassScenarios.Lumber; }
             }
-            // The scene's customer proxy walks just behind the first product in the lane.
-            // A board is carried at the customer's side. Nobody walks through their own lumber.
-            if (customer != null && hasLead) customer.position = longLead
-                ? new Vector3(lead.x - .5f, 0f, lead.z + .2f)
-                : new Vector3(lead.x * .3f, 0f, lead.z + .65f);
-            if (customer != null) actors.Pose(avatar, customer.position, hasLead ? leadVelocity : Vector3.zero, t);
+            // Without a cart, the customer carries the first product in front of them
+            // (a board at their side: nobody walks through their own lumber).
+            if (customer != null && hasLead && Plan.cartActor < 0) customer.position = longLead
+                ? new Vector3(lead.x - .5f, 0f, lead.z - .2f)
+                : new Vector3(lead.x, 0f, lead.z - .6f);
+            // With a cart, the customer walks behind its handle and keeps facing the way the cart points.
+            bool pushing = customer != null && Plan.cartActor >= 0;
+            if (pushing)
+            {
+                var cart = Plan.Position(Plan.cartActor, t);
+                customer.position = new Vector3(cart.x, 0f, cart.z - ProPassCarts.PushDistance(Plan.cart));
+                actors.Pose(avatar, customer.position, Velocity(Plan.cartActor, t), t, 0f, true);
+            }
+            else if (customer != null) actors.Pose(avatar, customer.position, hasLead ? leadVelocity : Vector3.zero, t);
             if (camera != null && Plan.cameraShake > 0f)
             {
                 float s = Plan.cameraShake, k = Plan.seed * .37f;

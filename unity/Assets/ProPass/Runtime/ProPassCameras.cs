@@ -4,10 +4,10 @@ using UnityEngine;
 namespace ProPass
 {
     // The lane has three cameras, captured together for every frame. Ids match vision/cameras.json.
-    //   lane      oblique tracking camera, saved in the scene
+    //   lane      tracking camera above the exit gate, looking back down the lane; saved in the scene
     //   overhead  looks straight down from the ceiling, for tracking through occlusion
-    //   scan      a wide, high-resolution strip from a bar over the lane entrance, aimed at the
-    //             box faces as they pass, so printed barcodes are large enough to decode
+    //   scan      a wide, high-resolution strip from a bar ahead of the commit line, aimed at the
+    //             front faces of oncoming products, so printed barcodes are large enough to decode
     // The overhead and scan cameras are created on demand, so the scene asset stays unchanged.
     public static class ProPassCameras
     {
@@ -15,8 +15,8 @@ namespace ProPass
         public static readonly Vector2Int[] Sizes = { new Vector2Int(960, 540), new Vector2Int(960, 540), new Vector2Int(3840, 1080) };
         public const string OverheadName = "Overhead Camera";
         public const string ScanName = "Scan Camera";
-        // Products are carried near this height; calibration maps image points onto this plane.
-        public const float CarryPlaneY = .9f;
+        // Products ride on carts near this height; calibration maps image points onto this plane.
+        public const float CarryPlaneY = .6f;
 
         static readonly Dictionary<Vector2Int, RenderTexture> targets = new Dictionary<Vector2Int, RenderTexture>();
         static readonly Dictionary<Vector2Int, Texture2D> buffers = new Dictionary<Vector2Int, Texture2D>();
@@ -33,9 +33,9 @@ namespace ProPass
             var scan = Find(ScanName, lane);
             if (scan.fieldOfView != 18.9f)
             {
-                // About 1,200 pixels per meter where boxes pass, 2.5-3 m ahead of the bar.
-                scan.transform.position = new Vector3(0f, 2.4f, -1.8f);
-                scan.transform.LookAt(new Vector3(0f, .95f, .6f));
+                // About 1,600 pixels per meter where products pass, some 2.4 m from the bar.
+                scan.transform.position = new Vector3(0f, 2.3f, 1.9f);
+                scan.transform.LookAt(new Vector3(0f, .5f, .4f));
                 scan.fieldOfView = 18.9f;
             }
             var cameras = new[] { lane, overhead, scan };

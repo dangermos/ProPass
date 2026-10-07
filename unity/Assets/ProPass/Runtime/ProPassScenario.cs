@@ -7,7 +7,7 @@ namespace ProPass
     // A scenario is a deterministic plan: every actor's position is a pure function of
     // (scenario, seed, time). Live Play mode and the offline benchmark recorder both
     // execute the same plan, so a benchmark run can be reproduced exactly.
-    public enum ActorKind { Product, Shopper, Hand, Flatbed, Prop }
+    public enum ActorKind { Product, Shopper, Hand, Flatbed, Prop, Cart }
 
     public struct Waypoint
     {
@@ -57,6 +57,9 @@ namespace ProPass
         public float cameraShake;
         public int jpegQuality = 85;
         public readonly List<ActorPlan> actors = new List<ActorPlan>();
+        // The cart the customer pushes, if any, and the actor that is the cart.
+        public CartKind cart = CartKind.None;
+        public int cartActor = -1;
 
         public const float LaneHalfWidth = 1.6f;
         public const float ApproachZ = -2.0f;   // orange floor marker
@@ -117,6 +120,8 @@ namespace ProPass
         public static IEnumerable<string> All { get { foreach (var s in Classic) yield return s; foreach (var s in Messy) yield return s; } }
 
         const float CarryY = .9f, StartZ = -3.4f, EndZ = 3.8f;
+        // Labels face the gate, where the barcode camera is.
+        const float Forward = 180f;
 
         public static ScenarioPlan Build(string name, int seed)
         {
@@ -132,15 +137,16 @@ namespace ProPass
 
             ActorPlan Walk(int product, float x, float t0, float walk, float z0 = StartZ, float z1 = EndZ, float y = CarryY)
             {
-                var a = new ActorPlan { kind = ActorKind.Product, productIndex = product, yaw = R(-12f, 12f),
+                var a = new ActorPlan { kind = ActorKind.Product, productIndex = product, yaw = Forward + R(-12f, 12f),
                     sway = messy ? R(0f, .08f) : 0f, bob = messy ? R(0f, .03f) : 0f, phase = R(0f, 6.28f) };
                 return a.At(0, x, y, z0).At(t0, x, y, z0).At(t0 + walk, x, y, z1);
             }
             int[] Distinct(int n) { var all = new List<int> { 0, 1, 2, 3, 4 }; var r = new int[n]; for (int i = 0; i < n; i++) { int k = Pick(all.Count); r[i] = all[k]; all.RemoveAt(k); } return r; }
-            ActorPlan Hand(int follow, float from, float to) => new ActorPlan { kind = ActorKind.Hand, follow = follow, visibleFrom = from, visibleTo = to, tint = new Color(.08f, .1f, .14f) }.At(0, 0, .15f, -.25f);
+            ActorPlan Hand(int follow, float from, float to) => new ActorPlan { kind = ActorKind.Hand, follow = follow, visibleFrom = from, visibleTo = to, tint = new Color(.08f, .1f, .14f) }.At(0, 0, .15f, .25f);
             Color Shirt() => Color.HSVToRGB(R(0f, 1f), R(.3f, .8f), R(.35f, .85f));
 
             float start = R(1.4f, 2f), walkTime = messy ? R(10f, 14f) : 12f;
+            int crossing = -1;   // a shopper who walks across the lane behind the customer
             switch (name)
             {
                 case "single":
@@ -197,6 +203,7 @@ namespace ProPass
                     float z = Mathf.Lerp(StartZ, EndZ, (cross - start) / walkTime) - R(.8f, 1.4f);
                     plan.Add(new ActorPlan { kind = ActorKind.Shopper, tint = Shirt(), bob = .03f }
                         .At(0, side * 4.5f, 0, z).At(cross - 4f / speed, side * 4.5f, 0, z).At(cross + 4f / speed, -side * 4.5f, 0, z));
+                    crossing = plan.actors.Count - 1;
                     break;
                 }
                 case "flatbed":
@@ -262,7 +269,7 @@ namespace ProPass
                     plan.description = "One package carried on top of another";
                     int bottom = Pick(5), top = Pick(2) == 0 ? bottom : Pick(5);
                     int b = plan.Add(Walk(bottom, R(-.4f, .4f), start, walkTime, StartZ, EndZ, .78f));
-                    var stackedTop = new ActorPlan { kind = ActorKind.Product, productIndex = top, follow = b, yaw = R(-20f, 20f) };
+                    var stackedTop = new ActorPlan { kind = ActorKind.Product, productIndex = top, follow = b, yaw = Forward + R(-20f, 20f) };
                     plan.Add(stackedTop.At(0, R(-.06f, .06f), .46f, R(-.04f, .04f)));
                     break;
                 }
@@ -294,7 +301,7 @@ namespace ProPass
                     bool forward = Pick(2) == 0;
                     int person = plan.Add(new ActorPlan { kind = ActorKind.Shopper, tint = Shirt(), bob = .03f }
                         .At(0, x, 0, forward ? StartZ : EndZ).At(t0, x, 0, forward ? StartZ : EndZ).At(t0 + walk, x, 0, forward ? EndZ : StartZ));
-                    plan.Add(new ActorPlan { kind = ActorKind.Product, productIndex = products[1], follow = person, yaw = R(-15f, 15f) }.At(0, -side * .45f, CarryY, -.5f));
+                    plan.Add(new ActorPlan { kind = ActorKind.Product, productIndex = products[1], follow = person, yaw = Forward + R(-15f, 15f) }.At(0, -side * .45f, CarryY, .5f));
                     plan.duration = Mathf.Max(plan.duration, t0 + walk + 3f);
                     break;
                 }
@@ -304,7 +311,7 @@ namespace ProPass
                     int product = Pick(5);
                     bool completes = rng.NextDouble() < .6;
                     float x = R(-.4f, .4f), mid = R(-.8f, .6f), back = R(-2.9f, -2.5f), t = start;
-                    var a = new ActorPlan { kind = ActorKind.Product, productIndex = product, yaw = R(-12f, 12f), sway = R(0f, .06f), phase = R(0f, 6.28f) };
+                    var a = new ActorPlan { kind = ActorKind.Product, productIndex = product, yaw = Forward + R(-12f, 12f), sway = R(0f, .06f), phase = R(0f, 6.28f) };
                     a.At(0, x, CarryY, StartZ).At(t, x, CarryY, StartZ);
                     a.At(t += R(4f, 6f), x, CarryY, mid);
                     a.At(t += R(1f, 2.5f), x, CarryY, mid);
@@ -319,11 +326,68 @@ namespace ProPass
                     throw new ArgumentException("Unknown ProPass scenario: " + name);
             }
             if (plan.description == null) plan.description = name;
+            LoadCart(plan, name, seed, crossing);
             // Hold the final state long enough for the tracker to settle after the last crossing.
             float last = 0f;
             foreach (var actor in plan.actors) if (actor.path.Count > 0) last = Mathf.Max(last, actor.path[actor.path.Count - 1].t);
             plan.duration = Mathf.Max(plan.duration, last + 2.5f);
             return plan;
+        }
+
+        // Puts the customer's products on a cart. Products that move through the lane together are
+        // moved onto the cart's slots; the cart follows the first of them, and the customer pushes it.
+        static void LoadCart(ScenarioPlan plan, string name, int seed, int crossing)
+        {
+            if (name == "edge") return;     // the one scenario where products are carried by hand
+            var carried = new List<int>();
+            for (int i = 0; i < plan.actors.Count; i++)
+                if (plan.actors[i].kind == ActorKind.Product && plan.actors[i].follow < 0) carried.Add(i);
+            if (carried.Count == 0) return;
+            var products = new int[carried.Count];
+            bool boards = false;
+            for (int i = 0; i < carried.Count; i++) { products[i] = plan.actors[carried[i]].productIndex; boards |= ProPassCarts.IsBoard(products[i]); }
+
+            // Its own generator, so adding carts leaves every other random choice in the plan as it was.
+            var rng = new System.Random(seed * 104729 + name.GetStableHash() + 17);
+            CartKind kind = boards ? CartKind.Lumber
+                : carried.Count > ProPassCarts.Capacity(CartKind.Shopping) || name == "duplicate" || name == "unknown" ? CartKind.Flat
+                : Array.IndexOf(Classic, name) >= 0 ? CartKind.Shopping
+                : rng.Next(2) == 0 ? CartKind.Shopping : CartKind.Flat;
+
+            float cartX = 0f;
+            foreach (int i in carried) cartX += plan.actors[i].path[0].x / carried.Count;
+            cartX = Mathf.Clamp(cartX, -.45f, .45f);
+            var slots = ProPassCarts.Slots(kind, products);
+            for (int k = 0; k < carried.Count; k++)
+            {
+                var actor = plan.actors[carried[k]];
+                float oldY = actor.path[0].y, newY = slots[k].y;
+                for (int w = 0; w < actor.path.Count; w++)
+                    actor.path[w] = new Waypoint(actor.path[w].t, cartX + slots[k].x, newY, actor.path[w].z + slots[k].z);
+                // Things on a cart ride with it: boards lie along it, and nothing sways.
+                if (ProPassCarts.IsBoard(products[k])) actor.yaw = (actor.yaw - Forward) * .25f;
+                actor.sway = 0f; actor.bob = 0f;
+                foreach (var other in plan.actors)
+                {
+                    if (other.follow != carried[k]) continue;
+                    for (int w = 0; w < other.path.Count; w++)
+                    {
+                        var p = other.path[w];
+                        if (other.kind == ActorKind.Flatbed)      // stays on the floor, and passes behind the person pushing
+                            other.path[w] = new Waypoint(p.t, p.x, -newY, p.z - ProPassCarts.PushDistance(kind) - .9f);
+                        else if (other.kind == ActorKind.Prop)    // carried by the person, so it keeps its height
+                            other.path[w] = new Waypoint(p.t, p.x, p.y + oldY - newY, p.z - ProPassCarts.PushDistance(kind));
+                    }
+                }
+            }
+            if (crossing >= 0)
+            {
+                var shopper = plan.actors[crossing];
+                for (int w = 0; w < shopper.path.Count; w++)
+                    shopper.path[w] = new Waypoint(shopper.path[w].t, shopper.path[w].x, shopper.path[w].y, shopper.path[w].z - ProPassCarts.PushDistance(kind) - .3f);
+            }
+            plan.cart = kind;
+            plan.cartActor = plan.Add(new ActorPlan { kind = ActorKind.Cart, follow = carried[0] }.At(0, -slots[0].x, -slots[0].y, -slots[0].z));
         }
 
         public static int GetStableHash(this string value)

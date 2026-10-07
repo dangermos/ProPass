@@ -97,12 +97,13 @@ namespace ProPass
 
         public void Face(float yawDegrees) => facing = yawDegrees;
 
-        public void Pose(Vector3 position, Vector3 velocity, float t)
+        // keepFacing: walk without turning toward the direction of travel (pushing or pulling a cart).
+        public void Pose(Vector3 position, Vector3 velocity, float t, bool keepFacing = false)
         {
             velocity.y = 0f;
             float speed = velocity.magnitude;
             bool moving = speed > .08f;
-            if (moving) facing = Mathf.Atan2(velocity.x, velocity.z) * Mathf.Rad2Deg;
+            if (moving && !keepFacing) facing = Mathf.Atan2(velocity.x, velocity.z) * Mathf.Rad2Deg;
             Root.transform.SetPositionAndRotation(new Vector3(position.x, 0f, position.z), Quaternion.Euler(0f, facing, 0f));
             mixer.SetInputWeight(0, moving ? 1f : 0f);
             mixer.SetInputWeight(1, moving ? 0f : 1f);

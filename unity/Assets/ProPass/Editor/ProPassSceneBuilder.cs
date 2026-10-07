@@ -21,9 +21,7 @@ namespace ProPass.Editor
             "ROTARY HAMMER", "2x4 STUD", "2x4 TREATED" };
         static readonly string[] Skus = { "PEX-001", "PEX-002", "PEX-003", "PEX-004", "PEX-005", "UNKNOWN", "PEX-006", "PEX-007", "PEX-008" };
         static readonly int[] ClassIndex = { 0, 1, 2, 3, 4, -1, 5, 6, 7 };
-        static readonly Vector3[] Sizes = { new Vector3(.67f,.48f,.39f),new Vector3(.61f,.45f,.34f),
-            new Vector3(.36f,.34f,.18f),new Vector3(.45f,.36f,.29f),new Vector3(.45f,.4f,.2f),new Vector3(.52f,.4f,.3f),
-            new Vector3(.58f,.42f,.3f),new Vector3(.09f,.04f,1.2f),new Vector3(.09f,.04f,1.2f) };
+        static readonly Vector3[] Sizes = ProPassCarts.ProductSizes;
 
         [MenuItem("ProPass/Build checkout scene")]
         public static void Build()
@@ -58,17 +56,19 @@ namespace ProPass.Editor
             Cube("Approach marker",new Vector3(0,.03f,-2),new Vector3(3.1f,.025f,.09f),orange);
             Cube("Commit marker",new Vector3(0,.035f,1.6f),new Vector3(3.1f,.025f,.09f),teal);
             for(int i=0;i<5;i++) Cube("Directional marker",new Vector3(0,.026f,-3+i*1.35f),new Vector3(.04f,.012f,.4f),white);
-            Cube("Portal left",new Vector3(-1.9f,1.65f,2),new Vector3(.2f,3.3f,.3f),orange);
-            Cube("Portal right",new Vector3(1.9f,1.65f,2),new Vector3(.2f,3.3f,.3f),orange);
-            Cube("Portal header",new Vector3(0,3.2f,2),new Vector3(4,.35f,.3f),dark);
-            Text("PROPASS",new Vector3(0,3.2f,1.82f),.2f,Color.white,Quaternion.identity);
+            Cube("Portal left",new Vector3(-1.9f,1.65f,4.6f),new Vector3(.2f,3.3f,.3f),orange);
+            Cube("Portal right",new Vector3(1.9f,1.65f,4.6f),new Vector3(.2f,3.3f,.3f),orange);
+            Cube("Portal header",new Vector3(0,3.2f,4.6f),new Vector3(4,.35f,.3f),dark);
+            Text("PROPASS",new Vector3(0,3.2f,4.42f),.2f,Color.white,Quaternion.identity);
 
             var cameraObject = new GameObject("Checkout Camera",typeof(Camera),typeof(UniversalAdditionalCameraData));
             cameraObject.tag="MainCamera";
             var camera=cameraObject.GetComponent<Camera>();
-            camera.transform.position=new Vector3(0,7.5f,-8f);
-            camera.transform.LookAt(new Vector3(0,.75f,.25f));
-            camera.fieldOfView=49;
+            // Above the exit gate, looking back down the lane: customers walk toward it behind
+            // their carts, so the person pushing never hides what is on the cart.
+            camera.transform.position=new Vector3(0,8f,4.6f);
+            camera.transform.LookAt(new Vector3(0,.6f,.3f));
+            camera.fieldOfView=56;
             camera.nearClipPlane=.05f; camera.farClipPlane=60;
             camera.clearFlags=CameraClearFlags.SolidColor; camera.backgroundColor=new Color(.055f,.073f,.098f);
             camera.allowHDR=false; camera.allowMSAA=false;
@@ -219,7 +219,19 @@ namespace ProPass.Editor
         {
             var go=new GameObject(value,typeof(TextMesh));go.transform.position=position;go.transform.rotation=rotation;
             var text=go.GetComponent<TextMesh>();text.text=value;text.fontSize=64;text.characterSize=size*.4f;
-            text.anchor=TextAnchor.MiddleCenter;text.alignment=TextAlignment.Center;text.color=color;return go;
+            text.anchor=TextAnchor.MiddleCenter;text.alignment=TextAlignment.Center;text.color=color;
+            // The default text material draws through everything in front of it.
+            var font=text.font!=null?text.font:Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            string path=Root+"/Materials/Text3D.mat";
+            var material=AssetDatabase.LoadAssetAtPath<Material>(path);
+            var shader=Shader.Find("ProPass/Text3D");
+            if(shader!=null&&font!=null)
+            {
+                if(material==null){material=new Material(shader){name="Text3D"};AssetDatabase.CreateAsset(material,path);}
+                material.shader=shader;material.mainTexture=font.material.mainTexture;
+                text.font=font;go.GetComponent<MeshRenderer>().sharedMaterial=material;
+            }
+            return go;
         }
     }
 }

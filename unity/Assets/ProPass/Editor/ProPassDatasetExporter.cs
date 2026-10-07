@@ -171,7 +171,7 @@ namespace ProPass.Editor
             else
             {
                 camera.transform.position=originalCameraPosition+new Vector3(R(-.18f,.18f),R(-.25f,.25f),R(-.25f,.25f));
-                camera.transform.LookAt(new Vector3(R(-.12f,.12f),.75f,R(.1f,.4f)));
+                camera.transform.LookAt(new Vector3(R(-.12f,.12f),.6f,R(.1f,.5f)));
                 camera.fieldOfView=originalFov+R(-2f,2f);
             }
             if(light!=null){light.intensity=R(1.15f,2.6f);light.color=Color.Lerp(Color.white,new Color(1f,.86f,.7f),R(0,.6f));}

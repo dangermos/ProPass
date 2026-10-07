@@ -37,12 +37,12 @@ namespace ProPass
         }
 
         // Moves a person. Characters also face their direction of travel and get the walk or idle pose for time t.
-        public void Pose(GameObject go, Vector3 position, Vector3 velocity, float t, float? standingYaw = null)
+        public void Pose(GameObject go, Vector3 position, Vector3 velocity, float t, float? standingYaw = null, bool keepFacing = false)
         {
             if (go == null) return;
             if (!characters.TryGetValue(go, out var character)) { go.transform.position = position; return; }
             if (standingYaw.HasValue) character.Face(standingYaw.Value);
-            character.Pose(position, velocity, t);
+            character.Pose(position, velocity, t, keepFacing);
         }
 
         public void DisposeCharacters()
