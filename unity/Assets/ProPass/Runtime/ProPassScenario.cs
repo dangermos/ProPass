@@ -146,7 +146,6 @@ namespace ProPass
             Color Shirt() => Color.HSVToRGB(R(0f, 1f), R(.3f, .8f), R(.35f, .85f));
 
             float start = R(1.4f, 2f), walkTime = messy ? R(10f, 14f) : 12f;
-            int crossing = -1;   // a shopper who walks across the lane behind the customer
             switch (name)
             {
                 case "single":
@@ -189,7 +188,7 @@ namespace ProPass
                 }
                 case "shopper":
                 {
-                    plan.description = "Another shopper walks across the lane in front of the camera";
+                    plan.description = "Another shopper walks across the lane just ahead of the cart";
                     var products = Distinct(1 + Pick(2));
                     int lead = -1;
                     for (int i = 0; i < products.Length; i++)
@@ -200,15 +199,15 @@ namespace ProPass
                         if (lead < 0) lead = p;
                     }
                     float cross = start + walkTime * R(.3f, .65f), side = Pick(2) == 0 ? -1f : 1f, speed = R(1f, 1.5f);
-                    float z = Mathf.Lerp(StartZ, EndZ, (cross - start) / walkTime) - R(.8f, 1.4f);
+                    // Ahead of the cart, between it and the gate camera.
+                    float z = Mathf.Lerp(StartZ, EndZ, (cross - start) / walkTime) + R(1.3f, 1.9f);
                     plan.Add(new ActorPlan { kind = ActorKind.Shopper, tint = Shirt(), bob = .03f }
                         .At(0, side * 4.5f, 0, z).At(cross - 4f / speed, side * 4.5f, 0, z).At(cross + 4f / speed, -side * 4.5f, 0, z));
-                    crossing = plan.actors.Count - 1;
                     break;
                 }
                 case "flatbed":
                 {
-                    plan.description = "A flatbed of lumber rolls between the camera and the products for several seconds";
+                    plan.description = "A flatbed of lumber rolls across just ahead of the cart for several seconds";
                     var products = Distinct(1 + Pick(3));
                     int lead = -1;
                     for (int i = 0; i < products.Length; i++)
@@ -224,7 +223,7 @@ namespace ProPass
                 }
                 case "parked":
                 {
-                    plan.description = "A flatbed stays between the lane camera and the products for most of the crossing";
+                    plan.description = "A flatbed stays between the gate camera and the cart for most of the crossing";
                     var products = Distinct(1 + Pick(2));
                     int lead = -1;
                     for (int i = 0; i < products.Length; i++)
@@ -257,7 +256,7 @@ namespace ProPass
                 }
                 case "edge":
                 {
-                    plan.description = "Products enter from below the frame and hug the lane rail";
+                    plan.description = "Products are carried by hand from the far end of the frame, hugging the lane rail";
                     var products = Distinct(1 + Pick(2));
                     float side = Pick(2) == 0 ? -1f : 1f;
                     for (int i = 0; i < products.Length; i++)
@@ -326,7 +325,7 @@ namespace ProPass
                     throw new ArgumentException("Unknown ProPass scenario: " + name);
             }
             if (plan.description == null) plan.description = name;
-            LoadCart(plan, name, seed, crossing);
+            LoadCart(plan, name, seed);
             // Hold the final state long enough for the tracker to settle after the last crossing.
             float last = 0f;
             foreach (var actor in plan.actors) if (actor.path.Count > 0) last = Mathf.Max(last, actor.path[actor.path.Count - 1].t);
@@ -336,7 +335,7 @@ namespace ProPass
 
         // Puts the customer's products on a cart. Products that move through the lane together are
         // moved onto the cart's slots; the cart follows the first of them, and the customer pushes it.
-        static void LoadCart(ScenarioPlan plan, string name, int seed, int crossing)
+        static void LoadCart(ScenarioPlan plan, string name, int seed)
         {
             if (name == "edge") return;     // the one scenario where products are carried by hand
             var carried = new List<int>();
@@ -373,18 +372,12 @@ namespace ProPass
                     for (int w = 0; w < other.path.Count; w++)
                     {
                         var p = other.path[w];
-                        if (other.kind == ActorKind.Flatbed)      // stays on the floor, and passes behind the person pushing
-                            other.path[w] = new Waypoint(p.t, p.x, -newY, p.z - ProPassCarts.PushDistance(kind) - .9f);
+                        if (other.kind == ActorKind.Flatbed)      // stays on the floor, and rolls across just ahead of the cart
+                            other.path[w] = new Waypoint(p.t, p.x, -newY, .2f - p.z);
                         else if (other.kind == ActorKind.Prop)    // carried by the person, so it keeps its height
                             other.path[w] = new Waypoint(p.t, p.x, p.y + oldY - newY, p.z - ProPassCarts.PushDistance(kind));
                     }
                 }
-            }
-            if (crossing >= 0)
-            {
-                var shopper = plan.actors[crossing];
-                for (int w = 0; w < shopper.path.Count; w++)
-                    shopper.path[w] = new Waypoint(shopper.path[w].t, shopper.path[w].x, shopper.path[w].y, shopper.path[w].z - ProPassCarts.PushDistance(kind) - .3f);
             }
             plan.cart = kind;
             plan.cartActor = plan.Add(new ActorPlan { kind = ActorKind.Cart, follow = carried[0] }.At(0, -slots[0].x, -slots[0].y, -slots[0].z));
