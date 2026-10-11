@@ -39,10 +39,17 @@ namespace ProPass
         Camera[] cameras;
         long frameId;
         bool captureBusy;
+        // 1 in the Editor. In the browser, capturing and encoding three cameras is slower than captureHz,
+        // so the scene slows down until the vision system still receives one frame every 1/captureHz of scene time.
+        float playbackSpeed = 1f;
 
         void Start()
         {
             Application.runInBackground = true;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            // In the browser the API is reached through the page's own origin (the dashboard proxies /api).
+            serverUrl = new Uri(Application.absoluteURL).GetLeftPart(UriPartial.Authority);
+#endif
             foreach (var l in FindObjectsByType<Light>(FindObjectsSortMode.None)) if (l.type == LightType.Directional) keyLight = l;
             if (occluder != null) occluder.gameObject.SetActive(false);
             cameras = ProPassCameras.Ensure(checkoutCamera);
@@ -67,7 +74,12 @@ namespace ProPass
         void Update()
         {
             if (paused || runner == null) return;
+#if UNITY_WEBGL && !UNITY_EDITOR
+            // deltaTime is capped when a capture stalls the page; the real elapsed time keeps scene time in step with the frames sent.
+            scenarioTime += Time.unscaledDeltaTime * playbackSpeed;
+#else
             scenarioTime += Time.deltaTime;
+#endif
             runner.Apply(scenarioTime);
         }
 
@@ -100,9 +112,17 @@ namespace ProPass
         {
             while (true)
             {
+                float started = Time.realtimeSinceStartup;
                 if (!paused && !captureBusy && checkoutCamera != null)
                     yield return SendFrame();
-                yield return new WaitForSecondsRealtime(1f / Mathf.Max(1f, captureHz));
+                float interval = 1f / Mathf.Max(1f, captureHz);
+#if UNITY_WEBGL && !UNITY_EDITOR
+                float took = Time.realtimeSinceStartup - started;
+                playbackSpeed = Mathf.Lerp(playbackSpeed, Mathf.Clamp(interval / Mathf.Max(took, interval), .02f, 1f), .5f);
+                if (took < interval) yield return new WaitForSecondsRealtime(interval - took);
+#else
+                yield return new WaitForSecondsRealtime(interval);
+#endif
             }
         }
 

@@ -55,7 +55,13 @@ bash scripts/start.sh                       # API on :8000, dashboard on :5173
 
 The dashboard's **Models** and **Benchmark** tabs now show the measured reports. Re-scoring the benchmark needs the recorded runs, which are rendered by Unity ([docs/training.md](docs/training.md#-scenario-benchmark)).
 
-### 3. Run a scene live in Unity
+### 3. Run a scene live in the browser (experimental)
+
+The checkout scene is also built for WebGL and committed in `web/public/unity`, so a live lane needs no Unity install. With the API running (step 2), open the dashboard, go to **Open the lab**, and press **Run the scene live in this browser**. A small window renders the scene and streams all three cameras to the local API; pick scenarios in the dashboard as usual and watch the **Live lane** tab.
+
+Capturing and encoding three cameras in a browser is slower than in the Editor, so the scene runs in **slow motion**: it slows itself until the models still get one frame per 1/8 s of scene time. Keep the scene window visible, because browsers pause hidden pages. Rebuild it with **ProPass → Build for the browser (WebGL)** in the Editor.
+
+### 4. Run a scene live in Unity
 
 Needs Unity **6000.6.4f1** (URP 17.6).
 

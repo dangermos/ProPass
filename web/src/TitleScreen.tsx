@@ -23,6 +23,8 @@ function Card({s,index,score,active,disabled,live,onStart}:{s:ScenarioInfo;index
 export default function TitleScreen({snapshot,connected,live,reports,busy,onStart,onWatch,onResume,onOpen,onHome}:Props){
   const score=(id:string)=>reports?.benchmark?.scenarios.find(r=>r.scenario===id)?.pass_rate;
   const bench=reports?.benchmark?.summary;
+  // The WebGL build of the scene (unity/ → web/public/unity). It streams frames to the local API like the Editor does.
+  const openScene=()=>{window.open('/unity/index.html','propass-scene','width=1000,height=660');};
   const groups:[string,string,'classic'|'messy'][]=[
     ['Classic demos','Clean runs that show each core idea on its own.','classic'],
     ['Messy lanes','Real-world clutter: occlusion, partial views, distractors, other shoppers.','messy']];
@@ -32,7 +34,7 @@ export default function TitleScreen({snapshot,connected,live,reports,busy,onStar
       <button className="wordmark wordmark-link" onClick={onHome} title="About the project">Pro<span>Pass</span><small>VISION CHECKOUT LAB</small></button>
       <div className="title-status">
         <span className={`status-chip ${connected?'ok':''}`}><span className="dot"/>{connected?'API connected':'API offline'}</span>
-        <span className={`status-chip ${live?'ok':''}`}><span className="dot"/>{live?'Unity streaming':'Unity not streaming'}</span>
+        <span className={`status-chip ${live?'ok':''}`}><span className="dot"/>{live?'Scene streaming':'No scene streaming'}</span>
         <span className={`status-chip ${snapshot?.vision.ready?'ok':''}`}><span className="dot"/>{snapshot?.vision.ready?'Models ready':'Models load on first frame'}</span>
       </div>
     </header>
@@ -42,12 +44,13 @@ export default function TitleScreen({snapshot,connected,live,reports,busy,onStar
       <p>Unity renders the lane, a YOLO detector and an EfficientNet classifier read the pixels, and a physical-object ledger builds the cart. Every decision can be inspected.</p>
       <div className="title-actions">
         <button className="primary-button" onClick={()=>onWatch('single')}><Icon name="play" size={17}/> Watch the recorded tour <span className="muted">· 17 scenes, no setup</span></button>
+        {!live&&<button className="secondary-button" onClick={openScene} title="Opens the Unity scene in a small window. Keep it visible: browsers pause hidden pages."><Icon name="camera" size={16}/> Run the scene live in this browser</button>}
         {snapshot&&live&&<button className="secondary-button" onClick={onResume}><Icon name="camera" size={17}/> Resume live lane <span className="muted">· {scenarioName(snapshot.simulator.scenario)}</span></button>}
         <button className="secondary-button" onClick={()=>onOpen('benchmark')}><Icon name="chart" size={16}/> Benchmark{bench?` · ${bench.passed}/${bench.runs} runs pass`:''}</button>
         <button className="secondary-button" onClick={()=>onOpen('models')}><Icon name="chip" size={16}/> Models</button>
         <button className="secondary-button" onClick={()=>onOpen('training')}><Icon name="pulse" size={16}/> Training</button>
       </div>
-      {!live&&<p className="title-hint"><Icon name="alert" size={14}/> Unity is not streaming, so each card plays a <b>recorded run</b> with the decisions the trained models made. To run a scene live, open <code>unity/</code> in Unity, load <code>Checkout.unity</code> and press <b>Play</b>.</p>}
+      {!live&&<p className="title-hint"><Icon name="alert" size={14}/> No scene is streaming, so each card plays a <b>recorded run</b> with the decisions the trained models made. For a live lane, press <b>Run the scene live in this browser</b> (needs the API and weights; the scene plays in slow motion so the models get every frame), or press <b>Play</b> on <code>Checkout.unity</code> in the Unity Editor.</p>}
     </section>
     {groups.map(([title,blurb,group])=><section className="title-group" key={group}>
       <div className="title-group-head"><h2>{title}</h2><p>{blurb}</p></div>
