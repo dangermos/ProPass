@@ -44,7 +44,8 @@ namespace ProPass.Editor
         static int validationCount;
         static int testingCount;
 
-        public static void Begin(string directory,int train=450,int validation=90,int test=60)
+        // startAt resumes an interrupted export: scenes are seeded by index, so earlier ones are kept as they are.
+        public static void Begin(string directory,int train=450,int validation=90,int test=60,int startAt=0)
         {
             if(Running) throw new InvalidOperationException("Dataset export already running.");
             if(EditorApplication.isPlaying) throw new InvalidOperationException("Stop Play mode before exporting training data.");
@@ -58,7 +59,7 @@ namespace ProPass.Editor
             originalLightIntensity=light!=null?light.intensity:1;originalLightColor=light!=null?light.color:Color.white;
             originalCustomerPosition=simulation.customer!=null?simulation.customer.position:Vector3.zero;
             trainingCount=train;validationCount=validation;testingCount=test;
-            Requested=train+validation+test;Completed=0;LastError=null;OutputRoot=directory;
+            Requested=train+validation+test;Completed=Mathf.Clamp(startAt,0,Requested);LastError=null;OutputRoot=directory;
             target=new RenderTexture(960,540,24,RenderTextureFormat.ARGB32){antiAliasing=1};
             pixels=new Texture2D(960,540,TextureFormat.RGB24,false);
             var shader=Shader.Find("Universal Render Pipeline/Unlit");
