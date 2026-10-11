@@ -8,6 +8,7 @@ import DecisionsTab from './DecisionsTab';
 import ModelsTab from './ModelsTab';
 import BenchmarkTab from './BenchmarkTab';
 import TrainingTab from './TrainingTab';
+import Tour from './Tour';
 
 const tabs=[
   {id:'live',name:'Live lane',icon:'camera',hint:'Camera, overlays, cart and checkout'},
@@ -17,8 +18,8 @@ const tabs=[
   {id:'training',name:'Training',icon:'pulse',hint:'Progress of data export, training, recording and scoring'},
 ];
 
-// The hash keeps the current view on refresh: #/ is the title screen, #/lab/<tab> the lab.
-function readRoute(){const [,view,tab]=location.hash.replace(/^#/,'').split('/');return view==='lab'?{view:'lab',tab:tabs.some(t=>t.id===tab)?tab:'live'}:{view:'title',tab:'live'};}
+// The hash keeps the current view on refresh: #/ is the title screen, #/lab/<tab> the lab, #/tour/<scenario> a recorded run.
+function readRoute(){const [,view,tab]=location.hash.replace(/^#/,'').split('/');if(view==='tour')return {view:'tour',tab:tab||'single'};return view==='lab'?{view:'lab',tab:tabs.some(t=>t.id===tab)?tab:'live'}:{view:'title',tab:'live'};}
 
 export default function App(){
   const [snapshot,setSnapshot]=useState<Snapshot|null>(null);
@@ -31,7 +32,7 @@ export default function App(){
   const lastUpdate=useRef(Date.now());
   const confirmationKey=useRef<{cart:string;version:number;key:string}|null>(null);
   const update=(s:Snapshot)=>{setSnapshot(s);lastUpdate.current=Date.now();};
-  const go=(view:string,tab='live')=>{location.hash=view==='lab'?`/lab/${tab}`:'/';};
+  const go=(view:string,tab='live')=>{location.hash=view==='lab'?`/lab/${tab}`:view==='tour'?`/tour/${tab}`:'/';};
   useEffect(()=>{const onHash=()=>setRoute(readRoute());window.addEventListener('hashchange',onHash);return()=>window.removeEventListener('hashchange',onHash);},[]);
   useEffect(()=>{fetch('/api/reports').then(r=>r.ok?r.json():Promise.reject()).then(setReports).catch(()=>{});},[connected]);
   useEffect(()=>{
@@ -55,8 +56,9 @@ export default function App(){
   const statusText=confirmed?'Confirmed':reviewing?'Ready to confirm':snapshot?.simulator.paused?'Capture paused':live?'Observing lane':'Awaiting camera';
   function confirm(){if(!cart)return;if(!confirmationKey.current||confirmationKey.current.cart!==cart.id||confirmationKey.current.version!==cart.version)confirmationKey.current={cart:cart.id,version:cart.version,key:crypto.randomUUID()};void action('cart/confirm',{version:cart.version,idempotency_key:confirmationKey.current.key});}
 
+  if(route.view==='tour') return <Tour id={route.tab} onPick={id=>go('tour',id)} onBack={()=>go('title')}/>;
   if(route.view==='title') return <TitleScreen snapshot={snapshot} connected={connected} live={live} reports={reports} busy={busy}
-    onStart={start} onResume={()=>go('lab','live')} onOpen={tab=>go('lab',tab)}/>;
+    onStart={start} onWatch={id=>go('tour',id)} onResume={()=>go('lab','live')} onOpen={tab=>go('lab',tab)}/>;
 
   const tab=route.tab;
   return <div className="app-shell">

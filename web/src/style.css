@@ -264,3 +264,37 @@ button.brand-mark{background:none;border:0;cursor:pointer}
 .stage em{font-style:normal;font-size:11px;color:#8597ab;white-space:nowrap}
 .stage.state-waiting{opacity:.55}
 @media(max-width:600px){.progress-grid{grid-template-columns:1fr}.stage{grid-template-columns:1fr}}
+
+/* ---------- Recorded tour ---------- */
+.tour{min-height:100vh;padding:0 40px 30px;background:radial-gradient(ellipse at 70% -10%,#1b2b45 0,transparent 55%),#080e18}
+.tour-top{min-height:90px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.tour-top h1{margin:0;font:800 24px 'Manrope',sans-serif;letter-spacing:-.8px;color:#eef4fb}
+.tour-top .eyebrow{display:block;margin-bottom:4px}
+.tour-nav{margin-left:auto;display:flex;gap:8px}
+.tour-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+@media(max-width:1000px){.tour-grid{grid-template-columns:1fr}.tour{padding:0 16px 24px}}
+.tour-stage video{display:block;width:100%;aspect-ratio:1280/450;background:#05090f;border:1px solid #1f2e41;border-radius:14px}
+.tour-caption{font-size:13px;line-height:1.6;color:#91a3b8;margin:12px 2px 0}
+.tour-caption b{color:#dde6f2}
+.tour-caption .k{font-weight:700}.tour-caption .k.add{color:#22c55e}.tour-caption .k.see{color:#6aa8ff}.tour-caption .k.ask{color:#f96302}
+.tour-side{display:grid;gap:14px}
+.tour-panel{border:1px solid #1f2e41;background:#0e1724;border-radius:14px;padding:14px 16px}
+.tour-panel h2{margin:0 0 10px;font:700 11px 'Manrope',sans-serif;letter-spacing:1.2px;text-transform:uppercase;color:#71849a}
+.tour-line{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px solid #172334}
+.tour-line:first-of-type{border-top:0}
+.tour-line .qty{font:700 14px monospace;color:#38d6bf;min-width:26px}
+.tour-line strong{display:block;font-size:13px;color:#eef4fb}
+.tour-line small{font-size:11px;color:#8fa3bf}
+.tour-empty{margin:0;font-size:12px;color:#5d7389}
+.tour-expected{margin:10px 0 0;padding-top:10px;border-top:1px dashed #23344a;font-size:11px;line-height:1.5;color:#71849a}
+.tour-notes{list-style:none;margin:0;padding:0;max-height:230px;overflow:auto;display:grid;gap:7px}
+.tour-notes li{font-size:12px;line-height:1.45;color:#c4d3e2}
+.tour-notes time{display:inline-block;min-width:46px;font:600 10px monospace;color:#5d7389}
+.tour-outcome strong{display:block;font-size:14px;margin-bottom:4px}
+.tour-outcome p{margin:0;font-size:12px;line-height:1.5;color:#91a3b8}
+.tour-outcome.pass{border-color:#1f6b45}.tour-outcome.pass strong{color:#4ade80}
+.tour-outcome.assist{border-color:#8a4a12}.tour-outcome.assist strong{color:#ffa45e}
+.tour-outcome.fail{border-color:#7a2a36}.tour-outcome.fail strong{color:#ff8293}
+.tour-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tour-strip button{flex:0 0 132px;height:74px;border:1px solid #1f2e41;border-radius:10px;background-size:cover;background-position:center;color:#c4d3e2;font-size:10px;font-weight:600;display:flex;align-items:flex-end;padding:6px 8px;text-align:left}
+.tour-strip button.on{border-color:#38d6bf;color:#fff;box-shadow:0 0 0 1px #38d6bf55}

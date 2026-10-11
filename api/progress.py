@@ -88,7 +88,9 @@ def progress(root: Path, scenarios: int):
     export = _json(root / "training" / "data" / "export-progress.json") or {}
     expected = scenarios * 5
     models = _models(root)
-    scores = [_score(root, "benchmark-v2-dev.json"), _score(root, "benchmark-v2-test.json")]
+    # The newest round that has a report: v3 is carts, v2 is characters.
+    scores = [next((s for s in (_score(root, f"benchmark-{v}-{split}.json") for v in ("v3", "v2")) if s["available"]),
+                   _score(root, f"benchmark-v2-{split}.json")) for split in ("dev", "test")]
     trained = min((m["age_seconds"] for m in models if m["age_seconds"] is not None), default=None)
     for score in scores:
         # A score written before the newest weights describes the previous models.

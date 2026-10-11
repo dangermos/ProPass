@@ -14,7 +14,7 @@
 ![Barcodes](https://img.shields.io/badge/SKU-barcode%20scan%20%2B%20visual%20fallback-f96302)
 ![Cameras](https://img.shields.io/badge/cameras-lane%20%2B%20overhead-6aa8ff)
 
-![ProPass title screen: choose a scenario and inspect its measured pass rate](docs/images/title-screen.jpg)
+![ProPass title screen: every scenario card plays a recorded run, with its measured held-out pass rate](docs/images/title-screen.jpg)
 
 ![Live lane tab during the next-aisle scenario: the lane product is charged, the other shopper's product is tracked as outside the lane](docs/images/dashboard.jpg)
 
@@ -25,20 +25,43 @@
 
 ## ⚡ Quickstart
 
-You need Python 3.12, Node.js, Unity **6000.6.4f1** (URP 17.6), and ideally a CUDA GPU (CPU works, just more slowly).
+### 1. Watch it: two minutes, no GPU, no Unity
+
+Only Node.js is needed. Every one of the 17 scenes plays in the browser from all three cameras, with the cart and the decisions the trained models made beside it.
+
+```bash
+git clone https://github.com/dangermos/ProPass && cd ProPass/web
+npm ci && npm run dev          # then open http://127.0.0.1:5173
+```
+
+Click **Watch the recorded tour**, or any scenario card. Each scene is seed 2 of that scenario from the development recordings, whether it passed or not, so some end in a hand-off to an associate. The videos are rebuilt from the recordings by [scripts/build_tour.py](scripts/build_tour.py).
+
+![The recorded tour: three camera views with the system's boxes, the cart it built, and what it decided](docs/images/tour.jpg)
+
+### 2. Run the models yourself
+
+Needs Python 3.12 and ideally a CUDA GPU (CPU works, more slowly). The weights are not in git; they are a release asset.
 
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements-vision.txt -r requirements-api.txt
+bash scripts/get_weights.sh                 # both camera pairs, 42 MB, needs the GitHub CLI
+.venv/bin/python -m pytest -q tests         # 150 tests
 (cd web && npm ci)
-bash scripts/start.sh          # API on :8000, dashboard on :5173
+bash scripts/start.sh                       # API on :8000, dashboard on :5173
 ```
 
+The dashboard's **Models** and **Benchmark** tabs now show the measured reports. Re-scoring the benchmark needs the recorded runs, which are rendered by Unity ([docs/training.md](docs/training.md#-scenario-benchmark)).
+
+### 3. Run a scene live in Unity
+
+Needs Unity **6000.6.4f1** (URP 17.6).
+
 1. In Unity Hub, add the `unity/` folder as a project, open `Assets/ProPass/Scenes/Checkout.unity`, and press **Play**.
-2. Open **http://127.0.0.1:5173** and pick a scenario on the title screen, such as **Identical products**. Unity switches to it.
+2. Open **http://127.0.0.1:5173** and pick a scenario on the title screen. Unity switches to it.
 3. Watch the **Live lane** tab, see why each item is (or isn't) in the cart on **Decisions**, then click **Review checkout** and **Confirm demo checkout**.
 
-The trained weights (`models/detector.pt`, `models/classifier.pt`) aren't in git. Copy them in, or retrain them with [docs/training.md](docs/training.md). Full setup and troubleshooting are in [docs/getting-started.md](docs/getting-started.md).
+The product photos and the animated characters are not in git (third-party images and a licensed asset pack), so a fresh clone renders boxes with placeholder art and capsule people. The recorded tour shows the full scene. Full setup and troubleshooting are in [docs/getting-started.md](docs/getting-started.md).
 
 ## 🎬 What it demonstrates
 

@@ -281,7 +281,7 @@ def create_app(database_url=None, vision_factory: Callable | None = None, camera
             return report and {"summary": report["summary"], "scenarios": report["scenarios"]}
         return {"manifest": load("manifest.json"), "static": load("evaluation-static-test.json"),
                 "live": load("evaluation-live-c.json") or load("evaluation-live.json"),
-                "benchmark": scenarios(load("benchmark-v2-test.json") or load("benchmark-c-final-test.json") or load("benchmark-final-test.json")),
+                "benchmark": scenarios(load("benchmark-v3-test.json") or load("benchmark-v2-test.json") or load("benchmark-c-final-test.json") or load("benchmark-final-test.json")),
                 "benchmark_reference": scenarios(load("benchmark-c-world-1cam-test.json") or load("benchmark-baseline-test.json")),
                 "config": json.loads((ROOT / "vision" / "config.json").read_text()),
                 "cameras": list(runtime.camera_ids), "geometry": runtime.geometry()}

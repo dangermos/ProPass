@@ -29,7 +29,7 @@ Owner: Danny (GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants
 
 1. **Carts dropped held-out to 60/85.** Stacked boxes 0 of 5, busy hands, next-lane shopper and hesitation 2 of 5, lumber 2 of 5. Two handed-off carts held a wrong line (*hands* seed 11, *lumber* seed 13). Start with `python -m training.inspect_run` on the matching development runs; `models/benchmark-v3-dev.json` lists the review reasons.
 1. **Barcode reads fell to 65% of charged items** because a box behind another on a cart hides its label. A second scan camera from the side, or labels on two faces, would help.
-1. **Not redone for carts:** dashboard screenshots (`docs/images/title-screen.jpg`, `dashboard.jpg`, `v2-*.jpg`), the live end-to-end check (`models/evaluation-live.json`). The cart weights are archived in `models/v7/`.
+1. **Not redone for carts:** dashboard screenshots (`docs/images/dashboard.jpg`, `v2-*.jpg`; the title screen and tour are current), the live end-to-end check (`models/evaluation-live.json`). The cart weights are archived in `models/v7/`.
 1. **Hats are switched off** (`ProPassCharacters.cs`). A straw hat above a carried box is read as a small yellow product. The flatbed's tan deck is also sometimes read as lumber when it waits off-lane.
 1. **Stacked identical boxes pass 60%.** Two copies pressed together look like one box from both cameras. Needs instance segmentation or a count-aware detector, or should stay a review case.
 2. **One edge-of-frame run fails**, and the two-camera run misses two items there that the lane camera alone gets. Worth tracing.
@@ -37,6 +37,9 @@ Owner: Danny (GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants
 4. `docs/training.md` still describes `training/replay.py`, which the benchmark recorder has replaced. Remove the script and that section together.
 
 ## Working notes
+
+- **The recorded tour** (`#/tour/<scenario>`, `web/src/Tour.tsx`) plays `web/public/tour/<scenario>.webm` and `.json`, built by `scripts/build_tour.py` from seed 2 of each development scenario with the current weights. Rebuild it after retraining or re-recording (about 5 minutes, light). `#/tour/mixed/10.3` opens paused at 10.3 s, which is how `docs/images/tour.jpg` was taken. Videos are small only when an `ffmpeg` is found; see the `Video` class.
+- **Weights are a release asset** (`weights-v7-carts`), installed by `scripts/get_weights.sh`. Publish a new release after retraining and change the default tag in the script.
 
 - **Run one heavy job at a time on Danny's machine.** On 2026-10-11 training both pairs while Unity recorded took the desktop down. Use `nice -n 10 ionice -c2 -n7`, log to `artifacts/logs/`, and check `free -h` and `nvidia-smi` first. Scoring is light (about 400 MB of GPU, 10 minutes per set). Headless recording of a few runs: see `scripts/record_missing.sh`.
 

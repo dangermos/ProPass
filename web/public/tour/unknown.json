@@ -1,0 +1,1 @@
+{"scenario":"unknown","seed":2,"description":"An unenrolled gray package","duration":18.0,"expected":[],"exact_cart":true,"review_required":true,"expected_review":true,"passed":true,"steps":[{"t":0.0,"lines":[]}],"notes":[{"t":6.62,"text":"Barcode read: not in the catalog"},{"t":6.62,"text":"Needs an associate: Barcode is not in the catalog"}]}
