@@ -14,6 +14,8 @@
 ![Barcodes](https://img.shields.io/badge/SKU-barcode%20scan%20%2B%20visual%20fallback-f96302)
 ![Cameras](https://img.shields.io/badge/cameras-lane%20%2B%20overhead-6aa8ff)
 
+![The project site: what it does, how it works, every camera angle, and the measured results](docs/images/site.jpg)
+
 ![ProPass title screen: every scenario card plays a recorded run, with its measured held-out pass rate](docs/images/title-screen.jpg)
 
 ![Live lane tab during the next-aisle scenario: the lane product is charged, the other shopper's product is tracked as outside the lane](docs/images/dashboard.jpg)
@@ -34,7 +36,7 @@ git clone https://github.com/dangermos/ProPass && cd ProPass/web
 npm ci && npm run dev          # then open http://127.0.0.1:5173
 ```
 
-Click **Watch the recorded tour**, or any scenario card. Each scene is seed 2 of that scenario from the development recordings, whether it passed or not, so some end in a hand-off to an associate. The videos are rebuilt from the recordings by [scripts/build_tour.py](scripts/build_tour.py).
+The front page is the **project site**: how it works, the same run from each camera in step, the measured results and the limits. Click **Watch the 17 scenes** for the tour, or **Open the lab** for the scenario picker. Each scene is seed 2 of that scenario from the development recordings, whether it passed or not, so some end in a hand-off to an associate. The videos are rebuilt from the recordings by [scripts/build_tour.py](scripts/build_tour.py).
 
 ![The recorded tour: three camera views with the system's boxes, the cart it built, and what it decided](docs/images/tour.jpg)
 

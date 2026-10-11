@@ -38,6 +38,7 @@ Owner: Danny (GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants
 
 ## Working notes
 
+- **The project site** is the dashboard's front page (`#/`, `web/src/Project.tsx`). Its numbers are copied by hand from the reports in `models/`; update them with every new benchmark. The scenario picker moved to `#/scenarios`. Per-camera videos in `web/public/angles/` come from the same build script (`ANGLES` list).
 - **The recorded tour** (`#/tour/<scenario>`, `web/src/Tour.tsx`) plays `web/public/tour/<scenario>.webm` and `.json`, built by `scripts/build_tour.py` from seed 2 of each development scenario with the current weights. Rebuild it after retraining or re-recording (about 5 minutes, light). `#/tour/mixed/10.3` opens paused at 10.3 s, which is how `docs/images/tour.jpg` was taken. Videos are small only when an `ffmpeg` is found; see the `Video` class.
 - **Weights are a release asset** (`weights-v7-carts`), installed by `scripts/get_weights.sh`. Publish a new release after retraining and change the default tag in the script.
 

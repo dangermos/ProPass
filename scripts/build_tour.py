@@ -22,6 +22,8 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 RECORDINGS, OUT, SEED = ROOT / "artifacts/benchmark", ROOT / "web/public/tour", 2
+# These scenes also get one full video per camera in web/public/angles, for the project page.
+ANGLES = ("mixed", "lumber", "parked", "locked")
 STATE_COLOR = {"ADDED": (94, 197, 34), "REVIEW": (2, 99, 249), "REMOVED": (140, 140, 140)}   # BGR
 FONT = cv2.FONT_HERSHEY_SIMPLEX
 
@@ -29,14 +31,14 @@ FONT = cv2.FONT_HERSHEY_SIMPLEX
 class Video:
     """VP8 WebM at a fixed bitrate through ffmpeg when one is found (about 0.8 MB a scene);
     otherwise OpenCV's own VP9 writer, which works everywhere but makes files 3-5x larger."""
-    def __init__(self, path, rate, size):
+    def __init__(self, path, rate, size, bitrate="350k"):
         bundled = glob.glob(os.path.expanduser("~/.cache/ms-playwright/ffmpeg-*/ffmpeg-linux"))
         ffmpeg, codec = (shutil.which("ffmpeg"), "libvpx") if shutil.which("ffmpeg") else (bundled[0], "vp8") if bundled else (None, None)
         self.process = self.writer = None
         if ffmpeg:
             self.process = subprocess.Popen(
                 [ffmpeg, "-y", "-loglevel", "error", "-f", "image2pipe", "-c:v", "mjpeg", "-framerate", str(rate), "-i", "/dev/stdin",
-                 "-c:v", codec, "-b:v", "350k", "-qmin", "4", "-qmax", "48", "-deadline", "good", "-cpu-used", "2", "-g", "80", str(path)],
+                 "-c:v", codec, "-b:v", bitrate, "-qmin", "4", "-qmax", "48", "-deadline", "good", "-cpu-used", "2", "-g", "80", str(path)],
                 stdin=subprocess.PIPE)
         else:
             self.writer = cv2.VideoWriter(str(path), cv2.VideoWriter_fourcc(*"VP90"), rate, size)
@@ -81,6 +83,11 @@ def build(engine, scenario, names):
     info = json.loads((run / "run.json").read_text())
     engine.reset(info["run_id"])
     writer = Video(OUT / f"{scenario}.webm", info["frame_rate"], (1280, 450))
+    angles = {}
+    if scenario in ANGLES:
+        (OUT.parent / "angles").mkdir(exist_ok=True)
+        angles = {c: Video(OUT.parent / "angles" / f"{scenario}-{c}.webm", info["frame_rate"], size, bitrate)
+                  for c, size, bitrate in (("lane", (960, 540), "450k"), ("overhead", (960, 540), "450k"), ("scan", (1920, 540), "700k"))}
     steps, notes, last, output = [], [], None, None
     for path in sorted(p for p in run.glob("*.jpg") if "." not in p.stem):
         record = json.loads(path.with_suffix(".json").read_text())
@@ -114,6 +121,10 @@ def build(engine, scenario, names):
             canvas[270:405, 800:] = cv2.resize(scan, (480, 135), interpolation=cv2.INTER_AREA)
             title(canvas[270:405, 800:], "Barcode camera" + (": label read" if output["barcodes"] else ""))
         writer.write(canvas)
+        for c, video in angles.items():
+            frame = scan if c == "scan" else views.get(c)
+            if frame is not None:
+                video.write(cv2.resize(frame, (1920, 540) if c == "scan" else (960, 540), interpolation=cv2.INTER_AREA))
         t = round(record["timestamp"], 2)
         for event in output["events"]:
             text = {"ITEM_ADDED": "Added to the cart", "ITEM_REMOVED": "Taken back out of the cart",
@@ -133,6 +144,8 @@ def build(engine, scenario, names):
             steps.append({"t": t, **state})
             last = state
     writer.release()
+    for video in angles.values():
+        video.release()
     expected = {l["sku"]: l["quantity"] for l in info.get("expected_cart", [])}
     final = {l["sku"]: l["quantity"] for l in (last or {"lines": []})["lines"]}
     exact = final == expected

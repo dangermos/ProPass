@@ -3,7 +3,7 @@ import { scenarios, scenarioName, type ScenarioInfo } from './scenarios';
 import { Icon, percent, rateColor } from './ui';
 
 type Props = {snapshot:Snapshot|null;connected:boolean;live:boolean;reports:Reports|null;busy:string|null;
-  onStart:(id:string)=>void;onWatch:(id:string)=>void;onResume:()=>void;onOpen:(tab:string)=>void};
+  onStart:(id:string)=>void;onWatch:(id:string)=>void;onResume:()=>void;onOpen:(tab:string)=>void;onHome:()=>void};
 
 function Card({s,index,score,active,disabled,live,onStart}:{s:ScenarioInfo;index:number;score?:number;active:boolean;disabled:boolean;live:boolean;onStart:()=>void}){
   return <button className={`title-card ${s.group} ${active?'active':''}`} disabled={disabled} onClick={onStart}>
@@ -20,7 +20,7 @@ function Card({s,index,score,active,disabled,live,onStart}:{s:ScenarioInfo;index
   </button>;
 }
 
-export default function TitleScreen({snapshot,connected,live,reports,busy,onStart,onWatch,onResume,onOpen}:Props){
+export default function TitleScreen({snapshot,connected,live,reports,busy,onStart,onWatch,onResume,onOpen,onHome}:Props){
   const score=(id:string)=>reports?.benchmark?.scenarios.find(r=>r.scenario===id)?.pass_rate;
   const bench=reports?.benchmark?.summary;
   const groups:[string,string,'classic'|'messy'][]=[
@@ -29,7 +29,7 @@ export default function TitleScreen({snapshot,connected,live,reports,busy,onStar
   return <div className="title-screen">
     <div className="title-backdrop" aria-hidden="true"><div className="title-lane"/></div>
     <header className="title-top">
-      <div className="wordmark">Pro<span>Pass</span><small>VISION CHECKOUT LAB</small></div>
+      <button className="wordmark wordmark-link" onClick={onHome} title="About the project">Pro<span>Pass</span><small>VISION CHECKOUT LAB</small></button>
       <div className="title-status">
         <span className={`status-chip ${connected?'ok':''}`}><span className="dot"/>{connected?'API connected':'API offline'}</span>
         <span className={`status-chip ${live?'ok':''}`}><span className="dot"/>{live?'Unity streaming':'Unity not streaming'}</span>
