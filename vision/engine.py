@@ -285,13 +285,22 @@ class VisionEngine:
         taken = {}
         for barcode in barcodes:
             best = None
+            camera = self.calibration.cameras.get(barcode.get("camera")) if self.calibration else None
+            # Lane direction from the label toward the scan camera: +1, -1, or 0 when unknown.
+            toward = 0 if camera is None else (1 if camera.position[2] >= barcode["world"][1] else -1)
             for index, obs in enumerate(observations):
                 x, z = geometry.from_map(obs.center[0]/geometry.MAP_SIZE, obs.center[1]/geometry.MAP_SIZE)
                 dx, dz = abs(x - barcode["world"][0]), abs(z - barcode["world"][1])
                 # The label is on the box's front face and below the calibration height, so it
                 # projects a little off the box center, mostly along the lane.
-                if dx <= self.fuse_radius and dz <= 2*self.fuse_radius and (best is None or dx + dz/2 < best[0]):
-                    best = (dx + dz/2, index)
+                if dx > self.fuse_radius or dz > 2*self.fuse_radius:
+                    continue
+                # A label on a cart sits below the calibration plane, so it projects toward the
+                # camera: its box is the first one behind it, not the neighbor it lands on.
+                behind = (barcode["world"][1] - z)*toward >= -0.05
+                score = (0 if behind else 1, dx + dz/2)
+                if best is None or score < best[0]:
+                    best = (score, index)
             if best is not None and best[1] not in taken:
                 taken[best[1]] = barcode
                 barcode["track_id"] = observations[best[1]].track_id

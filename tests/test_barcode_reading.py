@@ -10,6 +10,8 @@ from vision.ledger import Observation
 
 class FlatCamera:
     """A stand-in calibration: image pixels map straight to meters on the lane map."""
+    position = [0.0, 2.3, 1.9]
+
     def to_world(self, x, y, width, height):
         return x / width * 4 - 2, y / height * 4 - 2
 
@@ -58,6 +60,16 @@ def test_a_read_goes_to_the_nearest_tracked_box_only(engine):
     attached = engine._attach_barcodes([far, near], [read])
     assert [o.barcode for o in attached] == [None, "PEX-002"]
     assert read["track_id"] == 1
+
+
+def test_a_cart_label_goes_to_the_box_behind_it_not_the_neighbor_it_lands_on(engine):
+    # Measured on the flat cart: the back box's label projects 0.34 m toward the scan camera,
+    # 0.10 m from the middle box's center.
+    read = {"sku": "PEX-005", "camera": "scan", "world": (0.0, 0.43), "track_id": None}
+    middle, back = at(3, 0.0, 0.53), at(2, 0.0, 0.09)
+    attached = engine._attach_barcodes([middle, back], [read])
+    assert [o.barcode for o in attached] == [None, "PEX-005"]
+    assert read["track_id"] == 2
 
 
 def test_a_read_with_no_box_nearby_is_not_attached(engine):
