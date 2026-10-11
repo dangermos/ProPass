@@ -9,8 +9,8 @@
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/UI-React%20%2B%20Vite-61DAFB?logo=react&logoColor=black)
 ![Unity 6](https://img.shields.io/badge/Sim-Unity%206.6%20URP-000000?logo=unity&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-124%20passing-2EA043)
-![Benchmark](https://img.shields.io/badge/benchmark-78%2F85%20held--out-2EA043)
+![Tests](https://img.shields.io/badge/tests-150%20passing-2EA043)
+![Benchmark](https://img.shields.io/badge/held--out-60%E2%80%9378%20of%2085%20automatic%2C%200%20closed%20wrong-2EA043)
 ![Barcodes](https://img.shields.io/badge/SKU-barcode%20scan%20%2B%20visual%20fallback-f96302)
 ![Cameras](https://img.shields.io/badge/cameras-lane%20%2B%20overhead-6aa8ff)
 
@@ -51,7 +51,23 @@ The trained weights (`models/detector.pt`, `models/classifier.pt`) aren't in git
 | ↩️ **Change of mind** | Added on the forward crossing, removed on the observed reverse crossing | ✅ live |
 | ❓ **Unknown product** | Gray unenrolled package is tracked, and checkout is blocked for review | ✅ live |
 
-Eleven more **messy scenarios** stress it: busy hands, a crossing shopper, a lumber flatbed, a parked flatbed, partial views at the frame edge, stacked boxes, distractors, a shopper in the next aisle, hesitation, a locked-cage tool and bare lumber. Boxes carry **barcode labels** that a high-resolution scan camera reads. Items without one are recognized by look. On held-out seeds, **78 of 85** runs finish fully automatically with exactly the right cart and nothing wrongly charged ([benchmark](docs/benchmark.md), [how it works](docs/pro-express-v2.md)). Anything the system can't settle goes to an associate, and the scanned cart is kept.
+Eleven more **messy scenarios** stress it: busy hands, a crossing shopper, a lumber flatbed, a parked flatbed, partial views at the frame edge, stacked boxes, distractors, a shopper in the next aisle, hesitation, a locked-cage tool and bare lumber. Boxes carry **barcode labels** that a high-resolution scan camera reads. Items without one are recognized by look. Anything the system can't settle goes to an associate, and the scanned cart is kept.
+
+### 📈 Measured results
+
+Every round was scored on **held-out seeds the system was never tuned on**: 17 scenarios × 5 seeds = 85 recorded runs. Each round made the scene harder, and both camera model pairs were retrained for it.
+
+| Round | Scene | Fully automatic and exactly right | Carts closed with a wrong item |
+|---|---|:-:|:-:|
+| 🧍 Capsule people | hand-carried boxes | **78 of 85** | **0** |
+| 🚶 Animated characters | hand-carried boxes | **71 of 85** | **0** |
+| 🛒 Carts (current scene) | shopping, flat and lumber carts pushed by the customer | **60 of 85** | **0** |
+
+The number that matters most held in all three rounds: **no cart was ever closed automatically with a wrong item.** What drops as the scene gets more realistic is how often the system finishes on its own. Every other run goes to an associate with the scanned part of the cart kept. In the cart round two of those handed-off carts held one wrong line each (a second pair of gloves, a third board), which is why they were handed off. Details and per-scenario scores: [benchmark](docs/benchmark.md), [how it works](docs/pro-express-v2.md#carts-measured-2026-10-11).
+
+![Three cameras on a flat cart: the gate camera tracks, the overhead camera covers occlusions, the barcode camera reads the label](docs/images/cart-three-cameras.jpg)
+
+![Eight cart scenarios from the gate camera](docs/images/cart-scenarios.jpg)
 
 ![Two cameras: a flatbed hides the product from the lane camera while the coverage map keeps tracking it through the overhead camera](docs/images/two-camera-live.jpg)
 
