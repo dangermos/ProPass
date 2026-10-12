@@ -23,7 +23,7 @@
 ![Pipeline: Unity lane → FastAPI queue → detect and classify → physical ledger → cart and dashboard](docs/images/pipeline.svg)
 
 > [!NOTE]
-> This is an independent portfolio project inspired by contractor checkout. It is not connected to Home Depot. The products, prices and customers are fictional, and no payment is taken. All accuracy numbers below were measured on **synthetic Unity images**. Real-camera transfer has not been tested yet.
+> Built by **Danny Germosen** (SUNY Oswego). This is an independent student project inspired by contractor checkout. It is not connected to Home Depot. The products, prices and customers are fictional, and no payment is taken. All accuracy numbers below were measured on **synthetic Unity images**. Real-camera transfer has not been tested yet.
 
 ## ⚡ Quickstart
 
@@ -36,7 +36,7 @@ git clone https://github.com/dangermos/ProPass && cd ProPass/web
 npm ci && npm run dev          # then open http://127.0.0.1:5173
 ```
 
-The front page is the **project site**: how it works, the same run from each camera in step, the measured results and the limits. Click **Watch the 17 scenes** for the tour, or **Open the lab** for the scenario picker. Each scene is seed 2 of that scenario from the development recordings, whether it passed or not, so some end in a hand-off to an associate. The videos are rebuilt from the recordings by [scripts/build_tour.py](scripts/build_tour.py).
+The front page is the **project site**: how it works, the same run from each camera in step, the measured results and the limits. Click **Watch the 17 scenes** for the tour, or **Open the lab** for the scenario picker. Each scene is seed 2 of that scenario from the development recordings, whether it passed or not, so some end in a hand-off to an associate. The videos are 60 fps renders of those runs with the models' decisions drawn on, and the tour has a **Sound** button: lane ambience plus a cue for each barcode read, cart add and hand-off. They are rebuilt by [scripts/record_video.sh](scripts/record_video.sh) and [scripts/build_tour.py](scripts/build_tour.py).
 
 ![The recorded tour: three camera views with the system's boxes, the cart it built, and what it decided](docs/images/tour.jpg)
 

@@ -65,7 +65,7 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
       <video className="hero-video" src="/angles/mixed-lane.webm" autoPlay muted loop playsInline onClick={()=>onTour('mixed')} title="Open this scene in the tour" aria-label="A customer pushes a flat cart with three boxes down the lane; the system outlines and names each box and adds it to the cart" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')onTour('mixed');}}/>
     </header>
 
-    <p className="byline">Independent student project by <b>Danny</b> (<a href="https://github.com/dangermos">github.com/dangermos</a>). Not affiliated with or endorsed by The Home Depot. Everything shown is a simulation: fictional prices, no payment, no real store or camera.</p>
+    <p className="byline">Built by <b>Danny Germosen</b>, SUNY Oswego (<a href="https://github.com/dangermos">github.com/dangermos</a>), as an independent student project. Not affiliated with or endorsed by The Home Depot. Everything shown is a simulation: fictional prices, no payment, no real store or camera.</p>
 
     <section className="why">
       {[['The problem','A contractor with a loaded cart waits in line while every box is found, turned and scanned by hand.'],
@@ -155,6 +155,6 @@ bash scripts/start.sh           # API + dashboard: any scene runs live through t
         <button className="secondary-button" onClick={onScenarios}><Icon name="camera" size={16}/> Live lab</button>
         <button className="secondary-button" onClick={()=>onLab('benchmark')}><Icon name="chart" size={16}/> Full benchmark</button></div>
     </section>
-    <footer className="title-foot">Independent student project by Danny (github.com/dangermos), inspired by contractor checkout. Not affiliated with or endorsed by The Home Depot. Fictional prices, no payment, simulated data only.</footer>
+    <footer className="title-foot">Independent student project by Danny Germosen, SUNY Oswego (github.com/dangermos), inspired by contractor checkout. Not affiliated with or endorsed by The Home Depot. Fictional prices, no payment, simulated data only.</footer>
   </div>;
 }
