@@ -10,7 +10,7 @@
 ![React](https://img.shields.io/badge/UI-React%20%2B%20Vite-61DAFB?logo=react&logoColor=black)
 ![Unity 6](https://img.shields.io/badge/Sim-Unity%206.6%20URP-000000?logo=unity&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-153%20passing-2EA043)
-![Benchmark](https://img.shields.io/badge/held--out-60%E2%80%9378%20of%2085%20automatic%2C%200%20closed%20wrong-2EA043)
+![Benchmark](https://img.shields.io/badge/cart%20round-60%2F85%20pass%2C%2050%20fully%20automatic%2C%200%20closed%20wrong-2EA043)
 ![Barcodes](https://img.shields.io/badge/SKU-barcode%20scan%20%2B%20visual%20fallback-f96302)
 ![Cameras](https://img.shields.io/badge/cameras-lane%20%2B%20overhead-6aa8ff)
 
@@ -85,15 +85,20 @@ Eleven more **messy scenarios** stress it: busy hands, a crossing shopper, a lum
 
 ### 📈 Measured results
 
-Every round was scored on **held-out seeds the system was never tuned on**: 17 scenarios × 5 seeds = 85 recorded runs. Each round made the scene harder, and both camera model pairs were retrained for it.
+Every round was scored on **test seeds kept apart from tuning**: 17 scenarios × 5 seeds = 85 recorded runs. Each round made the scene harder, and both camera model pairs were retrained for it. A run **passes** when the cart is exactly right and an associate is called only when one should be.
 
-| Round | Scene | Fully automatic and exactly right | Carts closed with a wrong item |
-|---|---|:-:|:-:|
-| 🧍 Capsule people | hand-carried boxes | **78 of 85** | **0** |
-| 🚶 Animated characters | hand-carried boxes | **71 of 85** | **0** |
-| 🛒 Carts (current scene) | shopping, flat and lumber carts pushed by the customer | **60 of 85** | **0** |
+| Round | Scene | Passed | Closed automatically, exactly right | Correctly sent to an associate | Sent to an associate unnecessarily | Closed with a wrong or missing item |
+|---|---|:-:|:-:|:-:|:-:|:-:|
+| 1 · 🧍 Capsule people | hand-carried boxes | 78 | **68** | 10 | 6 | 1 (one board short) |
+| 2 · 🚶 Animated characters | hand-carried boxes | 71 | **61** | 10 | 14 | 0 |
+| 3 · 🛒 Carts (current scene) | shopping, flat and lumber carts | 60 | **50** | 10 | 25 | 0 |
 
-The number that matters most held in all three rounds: **no cart was ever closed automatically with a wrong item.** What drops as the scene gets more realistic is how often the system finishes on its own. Every other run goes to an associate with the scanned part of the cart kept. In the cart round two of those handed-off carts held one wrong line each (a second pair of gloves, a third board), which is why they were handed off. Details and per-scenario scores: [benchmark](docs/benchmark.md), [how it works](docs/pro-express-v2.md#carts-measured-2026-10-11).
+- **No cart in these rounds was charged for something the customer did not have.** One round 1 cart closed a lumber board short. An earlier five-product round, before barcodes were in, had one wrong charge.
+- **The 10 correct hand-offs are by design:** the unknown product and the locked-cage tool pass only when an associate is called.
+- **The open work is the unnecessary hand-offs.** In round 3, 15 of the 25 had an incomplete cart (16 items the cameras lost, most often an item that left view before the checkout line), and two held one wrong line (a second pair of gloves, a third board).
+- **Small samples.** With 85 runs, zero wrong closes still allows a true rate up to about 3.5%, and 5 runs per scenario are signals, not rates. Rounds 1 and 2 share test seeds 5–9, so only round 3 (seeds 10–14, scored once) is a clean first look.
+
+Details and per-scenario scores: [benchmark](docs/benchmark.md), [how it works](docs/pro-express-v2.md#carts-measured-2026-10-11).
 
 ![Three cameras on a flat cart: the gate camera tracks, the overhead camera covers occlusions, the barcode camera reads the label](docs/images/cart-three-cameras.jpg)
 
@@ -134,7 +139,7 @@ models/       Checkpoints (git-ignored), hash manifest, evaluation reports
 scripts/      start.sh launcher and the live end-to-end check
 tests/        Ledger, engine and checkout API tests
 docs/         Everything you are reading
-catalog.json  The five fictional products, prices and class indices
+catalog.json  The eight products, prices and class indices
 ```
 
 ## ✅ Checks

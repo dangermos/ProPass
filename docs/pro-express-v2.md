@@ -154,7 +154,7 @@ Eight products (six boxed with barcode labels, including one locked-cage tool, p
 
 | 85 runs each | Development seeds 0–4 | **Held-out seeds 5–9** |
 |---|:-:|:-:|
-| Runs fully automatic and exactly right | 78 | **78** |
+| Runs passed (cart exactly right, associate called only when needed; 10 of these are by-design hand-offs) | 78 | **78** |
 | Items wrongly charged | 0 | **0** |
 | Items missed | 0 | 1 |
 | Charged items identified by barcode | 96 of 114 | 96 of 114 |
@@ -173,7 +173,7 @@ The capsule people were replaced by animated characters, both camera model pairs
 
 | 85 runs each | Development seeds 0–4 | **Held-out seeds 5–9** | Held-out with capsule people |
 |---|:-:|:-:|:-:|
-| Runs fully automatic and exactly right | 77 | **71** | 78 |
+| Runs passed (cart exactly right, associate called only when needed; 10 of these are by-design hand-offs) | 77 | **71** | 78 |
 | Items wrongly charged | 0 | **0** | 0 |
 | Items missed | 2 | 2 | 1 |
 | Charged items identified by barcode | 94 of 112 | 93 of 113 | 96 of 114 |
@@ -213,7 +213,10 @@ Both camera model pairs were retrained on 2,640 scenes (1,728 earlier + 912 with
 
 | 85 runs each | Development seeds 0–4 | **Held-out seeds 10–14** | Characters, no carts (held-out 5–9) |
 |---|:-:|:-:|:-:|
-| Runs fully automatic and exactly right | 68 | **60** | 71 |
+| Runs passed (cart exactly right, associate called only when needed) | 68 | **60** | 71 |
+| of which closed automatically, no associate | 58 | **50** | 61 |
+| of which correctly sent to an associate (unknown product, locked tool) | 10 | 10 | 10 |
+| Runs sent to an associate unnecessarily | 17 | 25 | 14 |
 | Carts closed automatically with a wrong item | 0 | **0** | 0 |
 | Wrong lines inside carts handed to an associate | 0 | 2 | 0 |
 | Items missed | 9 | 16 | 2 |
@@ -224,11 +227,12 @@ Both camera model pairs were retrained on 2,640 scenes (1,728 earlier + 912 with
 | Lumber runs | 3 of 5 | 2 of 5 | 1 of 5 |
 | Stacked boxes | 1 of 5 | 0 of 5 | 4 of 5 |
 
-- **Carts cost 11 held-out runs, and no cart was closed with a wrong item.** The lost runs are handed to an associate. Two of those carts held one wrong line each: a second pair of gloves in *busy hands* seed 11, and a third board in *lumber* seed 13.
+- **Carts cost 11 held-out runs, and no cart was closed with a wrong item.** Only 50 carts closed with no associate; earlier wording on this page called all 60 passes "fully automatic", which was wrong. The lost runs are handed to an associate, and 15 of those 25 carts were incomplete. Two of those carts held one wrong line each: a second pair of gloves in *busy hands* seed 11, and a third board in *lumber* seed 13.
 - **One real bug was found and fixed on development seeds.** A label on a cart sits below the calibration plane, so it projects toward the barcode camera and lands on the neighboring box. Nine development runs were charged the wrong product (56 of 85). The label now goes to the first box behind it (`VisionEngine._attach_barcodes`, test in `tests/test_barcode_reading.py`): 68 of 85 and nothing wrongly charged. Held-out was scored once, after the fix.
 - **Weakest scenarios on held-out:** stacked boxes (0 of 5: two boxes pressed together on a cart read as one), busy hands, the next-lane shopper and hesitation (2 of 5 each), lumber (2 of 5). None of these has been tuned against.
 - **Barcodes are read less often than before** (65% of charged items, was 82%): on a cart, a box behind another box hides its label.
-- Median time per frame was 36 ms on development seeds. The held-out report says 67.5 ms because a game was running on the same GPU during scoring; do not quote that number.
+- **Earlier rounds, same split:** characters 61 automatic, 10 by design, 14 unnecessary; capsule people 68, 10, 6, and one lumber run (seed 7) that closed automatically one board short.
+- Median time per frame was 36 ms on development seeds (models only, recorded frames). The held-out report says 67.5 ms because a game was running on the same GPU during scoring; do not quote that number.
 - Reports: `models/benchmark-v3-dev.json`, `models/benchmark-v3-test.json`. The cart weights are archived in `models/v7/`. The pre-cart character weights are in `models/v6/`, their recordings in `artifacts/benchmark-nocart` and `artifacts/benchmark-test-nocart`.
 - **Not redone for carts:** the dashboard screenshots in this document and the README title screen are from before carts, and the live end-to-end check has not been repeated with the cart weights.
 

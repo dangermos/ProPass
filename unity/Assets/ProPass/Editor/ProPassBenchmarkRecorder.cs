@@ -36,6 +36,70 @@ namespace ProPass.Editor
             catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
         }
 
+        // Smooth footage for the site and tour: the same seeded runs, rendered at a display frame rate.
+        // Pictures only. The decisions drawn over them come from the 8 fps benchmark recording of the same seed.
+        //   Unity -batchmode -quit -projectPath unity -executeMethod ProPass.Editor.ProPassBenchmarkRecorder.RecordVideoFromCommandLine -videoOut <dir> [-videoFps 60] [-videoSeed 2] [-benchmarkScenarios a,b]
+        public static void RecordVideoFromCommandLine()
+        {
+            var args = Environment.GetCommandLineArgs();
+            string Arg(string name, string fallback)
+            {
+                int i = Array.IndexOf(args, name);
+                return i >= 0 && i + 1 < args.Length ? args[i + 1] : fallback;
+            }
+            try
+            {
+                RecordVideo(Arg("-videoOut", null) ?? throw new ArgumentException("-videoOut is required"),
+                    Arg("-benchmarkScenarios", null)?.Split(',') ?? ProPassScenarios.All.ToArray(),
+                    int.Parse(Arg("-videoSeed", "2"), CultureInfo.InvariantCulture), float.Parse(Arg("-videoFps", "60"), CultureInfo.InvariantCulture));
+                EditorApplication.Exit(0);
+            }
+            catch (Exception error) { Debug.LogException(error); EditorApplication.Exit(1); }
+        }
+
+        public static void RecordVideo(string output, IEnumerable<string> scenarios, int seed, float fps)
+        {
+            if (EditorApplication.isPlaying) throw new InvalidOperationException("Stop Play mode before recording.");
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().path != ScenePath) EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var simulation = UnityEngine.Object.FindFirstObjectByType<ProPassSimulation>() ?? throw new InvalidOperationException("Checkout scene has no ProPassSimulation");
+            var camera = simulation.checkoutCamera;
+            var cameras = ProPassCameras.Ensure(camera);
+            var light = UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None).FirstOrDefault(l => l.type == LightType.Directional);
+            if (simulation.occluder != null) simulation.occluder.gameObject.SetActive(false);
+            var customerStart = simulation.customer != null ? simulation.customer.position : Vector3.zero;
+            try
+            {
+                foreach (var scenario in scenarios)
+                {
+                    var plan = ProPassScenarios.Build(scenario, seed);
+                    string directory = Path.Combine(output, scenario, $"seed_{seed:D2}");
+                    if (Directory.Exists(directory)) Directory.Delete(directory, true);
+                    Directory.CreateDirectory(directory);
+                    var runner = new ProPassScenarioRunner(plan, simulation.productPrefabs, camera, light, simulation.customer, simulation.characters);
+                    try
+                    {
+                        int count = Mathf.FloorToInt(plan.duration * fps + 1e-3f) + 1;
+                        for (int n = 0; n < count; n++)
+                        {
+                            runner.Apply(n / fps);
+                            string stem = (n + 1).ToString("D6");
+                            File.WriteAllBytes(Path.Combine(directory, stem + ".jpg"), ProPassCameras.Render(camera, 0).EncodeToJPG(90));
+                            for (int c = 1; c < cameras.Length; c++)
+                                File.WriteAllBytes(Path.Combine(directory, stem + "." + ProPassCameras.Ids[c] + ".jpg"), ProPassCameras.Render(cameras[c], c).EncodeToJPG(88));
+                        }
+                        File.WriteAllText(Path.Combine(directory, "video.json"), "{\"scenario\":\"" + scenario + "\",\"seed\":" + seed + ",\"frame_rate\":" + fps.ToString(CultureInfo.InvariantCulture) + ",\"frames\":" + count + "}");
+                    }
+                    finally { runner.Dispose(); }
+                    Debug.Log($"ProPass video: recorded {scenario} seed {seed} at {fps} fps");
+                }
+            }
+            finally
+            {
+                if (simulation.customer != null) simulation.customer.position = customerStart;
+                ProPassCameras.Release(camera);
+            }
+        }
+
         [MenuItem("ProPass/Record benchmark suite")]
         public static void RecordFromMenu()
         {

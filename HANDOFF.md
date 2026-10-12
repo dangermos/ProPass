@@ -6,7 +6,7 @@ For the next person or AI picking this up. Read this first, then [docs/roadmap.m
 
 | Branch | State |
 |---|---|
-| `main` | **Everything.** Phases A–C, the dashboard, and Pro Express v2: barcode scanning, ratings, locked items, associate hand-off, customer phone view, eight products. Animated characters, a Training tab in the dashboard, and customers pushing shopping, flat and lumber carts. Held-out with carts (seeds 10–14): **60/85** fully automatic, no cart closed with a wrong item (characters without carts scored 71/85, weights in `models/v6/`; capsule people 78/85, weights in `models/v5/`). 153 tests pass. |
+| `main` | **Everything.** Phases A–C, the dashboard, and Pro Express v2: barcode scanning, ratings, locked items, associate hand-off, customer phone view, eight products. Animated characters, a Training tab in the dashboard, and customers pushing shopping, flat and lumber carts. Held-out with carts (seeds 10–14): **60/85** pass, of which 50 close with no associate and 10 are correct hand-offs; no cart closed with a wrong item (characters without carts scored 71/85, weights in `models/v6/`; capsule people 78/85, weights in `models/v5/`). 153 tests pass. |
 | `pro-express-v2` | Merged into `main` on 2026-10-06 (Danny's request). |
 
 Owner: Danny (GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants real trained models, colorful visual docs, no bloat, and to be asked before deleting or restructuring. Commit and push often. He likes short progress updates as work goes on.
