@@ -9,7 +9,7 @@
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/UI-React%20%2B%20Vite-61DAFB?logo=react&logoColor=black)
 ![Unity 6](https://img.shields.io/badge/Sim-Unity%206.6%20URP-000000?logo=unity&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-150%20passing-2EA043)
+![Tests](https://img.shields.io/badge/tests-153%20passing-2EA043)
 ![Benchmark](https://img.shields.io/badge/held--out-60%E2%80%9378%20of%2085%20automatic%2C%200%20closed%20wrong-2EA043)
 ![Barcodes](https://img.shields.io/badge/SKU-barcode%20scan%20%2B%20visual%20fallback-f96302)
 ![Cameras](https://img.shields.io/badge/cameras-lane%20%2B%20overhead-6aa8ff)
@@ -40,26 +40,25 @@ The front page is the **project site**: how it works, the same run from each cam
 
 ![The recorded tour: three camera views with the system's boxes, the cart it built, and what it decided](docs/images/tour.jpg)
 
-### 2. Run the models yourself
+### 2. Run the models yourself, live, with no Unity
 
-Needs Python 3.12 and ideally a CUDA GPU (CPU works, more slowly). The weights are not in git; they are a release asset.
+Needs Python 3.12 and ideally a CUDA GPU (CPU works, more slowly). The weights and the recorded runs are release assets, not in git.
 
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements-vision.txt -r requirements-api.txt
 bash scripts/get_weights.sh                 # both camera pairs, 42 MB, needs the GitHub CLI
-.venv/bin/python -m pytest -q tests         # 150 tests
+bash scripts/get_recordings.sh              # one recorded run per scenario, 500 MB
+.venv/bin/python -m pytest -q tests         # 153 tests
 (cd web && npm ci)
 bash scripts/start.sh                       # API on :8000, dashboard on :5173
 ```
 
-The dashboard's **Models** and **Benchmark** tabs now show the measured reports. Re-scoring the benchmark needs the recorded runs, which are rendered by Unity ([docs/training.md](docs/training.md#-scenario-benchmark)).
+Open the dashboard, click **Open the lab** and pick any scenario. The API plays the frames Unity **already rendered** through the trained models at the recorded 8 frames per second, so the **Live lane** tab shows the real thing: boxes, the cart building, ratings, the associate hand-off and checkout. Nothing is rendered again and no frame is dropped (`POST /api/replay`).
 
-### 3. Run a scene live in the browser (experimental)
+### 3. Render the scene in the browser (experimental)
 
-The checkout scene is also built for WebGL and committed in `web/public/unity`, so a live lane needs no Unity install. With the API running (step 2), open the dashboard, go to **Open the lab**, and press **Run the scene live in this browser**. A small window renders the scene and streams all three cameras to the local API; pick scenarios in the dashboard as usual and watch the **Live lane** tab.
-
-Capturing and encoding three cameras in a browser is slower than in the Editor, so the scene runs in **slow motion**: it slows itself until the models still get one frame per 1/8 s of scene time. Keep the scene window visible, because browsers pause hidden pages. Rebuild it with **ProPass → Build for the browser (WebGL)** in the Editor.
+The checkout scene is also built for WebGL and committed in `web/public/unity`. In the lab, **Render the scene in this browser** opens it in a small window and streams fresh frames to the API. Capturing three cameras in a browser is slow, so the scene runs in slow motion; replaying recorded frames (step 2) is the better way to watch. Rebuild it with **ProPass → Build for the browser (WebGL)**.
 
 ### 4. Run a scene live in Unity
 

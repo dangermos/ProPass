@@ -17,6 +17,9 @@ from .progress import progress
 from .store import CheckoutConflict, SCENARIOS, Store
 
 ROOT = Path(__file__).resolve().parents[1]
+# Recorded runs that /api/replay plays through the live pipeline: one seed of every scenario.
+RECORDINGS = Path(os.environ.get("PROPASS_RECORDINGS", ROOT / "artifacts" / "benchmark"))
+REPLAY_SEED = "seed_02"
 
 
 class ScenarioRequest(BaseModel):
@@ -65,6 +68,8 @@ class Runtime:
         self.lock = asyncio.Lock()
         self.queue = asyncio.Queue(maxsize=2)
         self.paused = False
+        self.replay_run = None      # run_id being fed from recorded frames instead of a live scene
+        self.replay_task = None
         self.loading = False
         self.error = None
         self.result = {}
@@ -106,6 +111,7 @@ class Runtime:
     def snapshot(self):
         state = self.store.snapshot()
         state["simulator"]["paused"] = self.paused
+        state["simulator"]["replay"] = self.replay_run is not None and self.replay_run == state["simulator"]["run_id"]
         state["vision"] = self.vision_status()
         state["cameras"] = list(self.camera_ids)
         state["geometry"] = self.geometry()
@@ -246,6 +252,8 @@ def create_app(database_url=None, vision_factory: Callable | None = None, camera
     async def lifespan(app):
         task = asyncio.create_task(runtime.worker())
         yield
+        if runtime.replay_task:
+            runtime.replay_task.cancel()
         task.cancel()
         try:
             await task
@@ -316,6 +324,8 @@ def create_app(database_url=None, vision_factory: Callable | None = None, camera
             current = runtime.store.snapshot()
             if current["session"]["run_id"] != run_id:
                 raise HTTPException(409, "Stale simulator run. Poll /api/simulator/control again.")
+            if runtime.replay_run == run_id:
+                raise HTTPException(409, "This run is being replayed from recorded frames")
             if runtime.paused or current["cart"]["status"] == "CONFIRMED":
                 raise HTTPException(409, "Capture is paused for checkout review")
             if frame_id < runtime.last_accepted_id or (frame_id == runtime.last_accepted_id and runtime.pending_group is None):
@@ -370,16 +380,68 @@ def create_app(database_url=None, vision_factory: Callable | None = None, camera
         await runtime.publish()
         return state
 
+    def stop_replay():
+        if runtime.replay_task and not runtime.replay_task.done():
+            runtime.replay_task.cancel()
+        runtime.replay_task, runtime.replay_run = None, None
+
     @app.post("/api/scenario")
     async def scenario(body: ScenarioRequest):
         if body.scenario not in SCENARIOS:
             raise HTTPException(422, "Unknown checkout scenario")
+        stop_replay()
         return await reset_run(body.scenario)
+
+    async def feed_recording(run_id, files):
+        """Send a recorded run through the same queue a live scene uses, at the pace it was recorded.
+
+        Unlike a live scene, a recording can wait: no frame group is dropped when inference is busy.
+        """
+        started, first = time.monotonic(), None
+        for frame_id, path in enumerate(files, start=1):
+            record = json.loads(path.with_suffix(".json").read_text())
+            payloads = {camera: (path if camera == "lane" else path.with_suffix(f".{camera}.jpg")).read_bytes()
+                        for camera in runtime.camera_ids}
+            first = record["timestamp"] if first is None else first
+            while True:
+                async with runtime.lock:
+                    current = runtime.store.snapshot()
+                    if current["session"]["run_id"] != run_id or runtime.replay_run != run_id or current["cart"]["status"] == "CONFIRMED":
+                        return
+                    due = time.monotonic() - started >= record["timestamp"] - first
+                    if due and not runtime.paused and not runtime.queue.full():
+                        runtime.last_accepted_id = frame_id
+                        runtime.pending_group = FrameGroup(frame_id, record["timestamp"], run_id, time.monotonic(), payloads)
+                        runtime.last_received_at = runtime.pending_group.received_at
+                        runtime.flush_pending()
+                        break
+                await asyncio.sleep(0.01)
+
+    async def start_replay(scenario_name):
+        directory = RECORDINGS / scenario_name / REPLAY_SEED
+        files = sorted(p for p in directory.glob("*.jpg") if "." not in p.stem) if directory.is_dir() else []
+        if not files:
+            raise HTTPException(404, "No recorded run for this scenario. Run scripts/get_recordings.sh, or record the benchmark in Unity.")
+        stop_replay()
+        state = await reset_run(scenario_name)
+        runtime.replay_run = state["session"]["run_id"]
+        runtime.replay_task = asyncio.create_task(feed_recording(runtime.replay_run, files))
+        state["simulator"]["replay"] = True
+        return state
+
+    @app.post("/api/replay")
+    async def replay(body: ScenarioRequest):
+        """Run a scenario from frames Unity already rendered: the full live pipeline, no scene needed."""
+        if body.scenario not in SCENARIOS:
+            raise HTTPException(422, "Unknown checkout scenario")
+        return await start_replay(body.scenario)
 
     @app.post("/api/cart/reset")
     async def reset():
         async with runtime.lock:
             scenario_name = runtime.store.snapshot()["simulator"]["scenario"]
+        if runtime.replay_run is not None:
+            return await start_replay(scenario_name)
         return await reset_run(scenario_name)
 
     @app.post("/api/session")

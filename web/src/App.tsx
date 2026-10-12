@@ -54,17 +54,23 @@ export default function App(){
     finally{setBusy(null);}
   }
   const start=(id:string)=>{void action('scenario',{scenario:id});go('lab','live');};
+  // No live scene: play the frames Unity already rendered through the real pipeline. Without the API or the recordings, show the recorded tour.
+  const replay=async(id:string)=>{
+    try{const response=await fetch('/api/replay',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({scenario:id})});
+      if(!response.ok)throw new Error();update(await response.json());go('lab','live');}
+    catch{go('tour',id);}
+  };
   const cart=snapshot?.cart;
   const age=(snapshot?.frame?.age_ms||0)+(now-lastUpdate.current);
   const live=!!snapshot?.frame&&age<4000&&!snapshot.simulator.paused;
   const reviewing=cart?.status==='REVIEWING',confirmed=cart?.status==='CONFIRMED';
-  const statusText=confirmed?'Confirmed':reviewing?'Ready to confirm':snapshot?.simulator.paused?'Capture paused':live?'Observing lane':'Awaiting camera';
+  const statusText=confirmed?'Confirmed':reviewing?'Ready to confirm':snapshot?.simulator.paused?'Capture paused':live?(snapshot?.simulator.replay?'Playing recorded frames':'Observing lane'):'Awaiting camera';
   function confirm(){if(!cart)return;if(!confirmationKey.current||confirmationKey.current.cart!==cart.id||confirmationKey.current.version!==cart.version)confirmationKey.current={cart:cart.id,version:cart.version,key:crypto.randomUUID()};void action('cart/confirm',{version:cart.version,idempotency_key:confirmationKey.current.key});}
 
   if(route.view==='project') return <Project onTour={id=>go('tour',id)} onScenarios={()=>go('title')} onLab={tab=>go('lab',tab)}/>;
   if(route.view==='tour') return <Tour id={route.tab} onPick={id=>go('tour',id)} onBack={()=>go('title')}/>;
   if(route.view==='title') return <TitleScreen snapshot={snapshot} connected={connected} live={live} reports={reports} busy={busy}
-    onStart={start} onWatch={id=>go('tour',id)} onResume={()=>go('lab','live')} onOpen={tab=>go('lab',tab)} onHome={()=>go('project')}/>;
+    onStart={start} onReplay={id=>void replay(id)} onWatch={id=>go('tour',id)} onResume={()=>go('lab','live')} onOpen={tab=>go('lab',tab)} onHome={()=>go('project')}/>;
 
   const tab=route.tab;
   return <div className="app-shell">

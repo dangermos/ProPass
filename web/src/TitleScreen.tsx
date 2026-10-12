@@ -3,7 +3,7 @@ import { scenarios, scenarioName, type ScenarioInfo } from './scenarios';
 import { Icon, percent, rateColor } from './ui';
 
 type Props = {snapshot:Snapshot|null;connected:boolean;live:boolean;reports:Reports|null;busy:string|null;
-  onStart:(id:string)=>void;onWatch:(id:string)=>void;onResume:()=>void;onOpen:(tab:string)=>void;onHome:()=>void};
+  onStart:(id:string)=>void;onReplay:(id:string)=>void;onWatch:(id:string)=>void;onResume:()=>void;onOpen:(tab:string)=>void;onHome:()=>void};
 
 function Card({s,index,score,active,disabled,live,onStart}:{s:ScenarioInfo;index:number;score?:number;active:boolean;disabled:boolean;live:boolean;onStart:()=>void}){
   return <button className={`title-card ${s.group} ${active?'active':''}`} disabled={disabled} onClick={onStart}>
@@ -15,16 +15,18 @@ function Card({s,index,score,active,disabled,live,onStart}:{s:ScenarioInfo;index
     <div className="title-card-body">
       <strong>{s.name}</strong>
       <small>{s.detail}</small>
-      <div className="title-card-foot"><span className="title-card-tag">{s.tests}</span><span className="title-card-go">{live?'Run live':'Watch'} <Icon name="play" size={12}/></span></div>
+      <div className="title-card-foot"><span className="title-card-tag">{s.tests}</span><span className="title-card-go">{live?'Run live':'Run'} <Icon name="play" size={12}/></span></div>
     </div>
   </button>;
 }
 
-export default function TitleScreen({snapshot,connected,live,reports,busy,onStart,onWatch,onResume,onOpen,onHome}:Props){
+export default function TitleScreen({snapshot,connected,live,reports,busy,onStart,onReplay,onWatch,onResume,onOpen,onHome}:Props){
+  // A live scene is Unity (Editor or browser build) streaming now. Recorded frames played by the API do not count.
+  const streaming=live&&!snapshot?.simulator.replay;
   const score=(id:string)=>reports?.benchmark?.scenarios.find(r=>r.scenario===id)?.pass_rate;
   const bench=reports?.benchmark?.summary;
   // The WebGL build of the scene (unity/ → web/public/unity). It streams frames to the local API like the Editor does.
-  const openScene=()=>{window.open('/unity/index.html','propass-scene','width=1000,height=660');};
+  const openScene=()=>{onStart(snapshot?.simulator.scenario??'single');window.open('/unity/index.html','propass-scene','width=1000,height=660');};  // onStart ends any replay so the scene's frames are accepted
   const groups:[string,string,'classic'|'messy'][]=[
     ['Classic demos','Clean runs that show each core idea on its own.','classic'],
     ['Messy lanes','Real-world clutter: occlusion, partial views, distractors, other shoppers.','messy']];
@@ -34,7 +36,7 @@ export default function TitleScreen({snapshot,connected,live,reports,busy,onStar
       <button className="wordmark wordmark-link" onClick={onHome} title="About the project">Pro<span>Pass</span><small>VISION CHECKOUT LAB</small></button>
       <div className="title-status">
         <span className={`status-chip ${connected?'ok':''}`}><span className="dot"/>{connected?'API connected':'API offline'}</span>
-        <span className={`status-chip ${live?'ok':''}`}><span className="dot"/>{live?'Scene streaming':'No scene streaming'}</span>
+        <span className={`status-chip ${live?'ok':''}`}><span className="dot"/>{streaming?'Scene streaming':live?'Playing recorded frames':'No scene streaming'}</span>
         <span className={`status-chip ${snapshot?.vision.ready?'ok':''}`}><span className="dot"/>{snapshot?.vision.ready?'Models ready':'Models load on first frame'}</span>
       </div>
     </header>
@@ -44,18 +46,18 @@ export default function TitleScreen({snapshot,connected,live,reports,busy,onStar
       <p>Unity renders the lane, a YOLO detector and an EfficientNet classifier read the pixels, and a physical-object ledger builds the cart. Every decision can be inspected.</p>
       <div className="title-actions">
         <button className="primary-button" onClick={()=>onWatch('single')}><Icon name="play" size={17}/> Watch the recorded tour <span className="muted">· 17 scenes, no setup</span></button>
-        {!live&&<button className="secondary-button" onClick={openScene} title="Opens the Unity scene in a small window. Keep it visible: browsers pause hidden pages."><Icon name="camera" size={16}/> Run the scene live in this browser</button>}
+        {!streaming&&<button className="secondary-button" onClick={openScene} title="Opens the Unity scene in a small window. Keep it visible: browsers pause hidden pages."><Icon name="camera" size={16}/> Render the scene in this browser (slow)</button>}
         {snapshot&&live&&<button className="secondary-button" onClick={onResume}><Icon name="camera" size={17}/> Resume live lane <span className="muted">· {scenarioName(snapshot.simulator.scenario)}</span></button>}
         <button className="secondary-button" onClick={()=>onOpen('benchmark')}><Icon name="chart" size={16}/> Benchmark{bench?` · ${bench.passed}/${bench.runs} runs pass`:''}</button>
         <button className="secondary-button" onClick={()=>onOpen('models')}><Icon name="chip" size={16}/> Models</button>
         <button className="secondary-button" onClick={()=>onOpen('training')}><Icon name="pulse" size={16}/> Training</button>
       </div>
-      {!live&&<p className="title-hint"><Icon name="alert" size={14}/> No scene is streaming, so each card plays a <b>recorded run</b> with the decisions the trained models made. For a live lane, press <b>Run the scene live in this browser</b> (needs the API and weights; the scene plays in slow motion so the models get every frame), or press <b>Play</b> on <code>Checkout.unity</code> in the Unity Editor.</p>}
+      {!streaming&&<p className="title-hint"><Icon name="alert" size={14}/> No scene is rendering right now, and none is needed: each card plays the frames Unity <b>already rendered</b> through the trained models at full speed, with the live cart, decisions and checkout. Without the API it plays the recorded tour instead. To render fresh frames, press <b>Play</b> on <code>Checkout.unity</code> in Unity, or use the slower in-browser scene.</p>}
     </section>
     {groups.map(([title,blurb,group])=><section className="title-group" key={group}>
       <div className="title-group-head"><h2>{title}</h2><p>{blurb}</p></div>
       <div className={`title-grid ${group}`}>{scenarios.filter(s=>s.group===group).map(s=><Card key={s.id} s={s} index={scenarios.indexOf(s)} score={score(s.id)}
-        active={live&&snapshot?.simulator.scenario===s.id} disabled={live&&!!busy} live={live} onStart={()=>live?onStart(s.id):onWatch(s.id)}/>)}</div>
+        active={live&&snapshot?.simulator.scenario===s.id} disabled={!!busy} live={streaming} onStart={()=>streaming?onStart(s.id):connected?onReplay(s.id):onWatch(s.id)}/>)}</div>
     </section>)}
     <footer className="title-foot">Independent portfolio project · fictional products and prices · no payment · synthetic data only</footer>
   </div>;

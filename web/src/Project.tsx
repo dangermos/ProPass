@@ -61,7 +61,7 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
 
     <section className="project-stats">
       {[['0','carts closed with a wrong item','held-out runs, all three rounds'],['60–78','of 85 held-out runs fully automatic','drops as the scene gets harder'],['3','cameras fused','gate, overhead, barcode'],
-        ['2,640','synthetic training scenes','rendered and labelled by Unity'],['36 ms','per frame, three cameras','RTX 4070 Super, development seeds'],['150','automated tests','ledger, API, barcodes, ratings']]
+        ['2,640','synthetic training scenes','rendered and labelled by Unity'],['36 ms','per frame, three cameras','RTX 4070 Super, development seeds'],['153','automated tests','ledger, API, barcodes, ratings']]
         .map(([value,label,note])=><div key={label}><strong>{value}</strong><span>{label}</span><small>{note}</small></div>)}
     </section>
 
@@ -126,8 +126,9 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
       <pre className="code">{`git clone https://github.com/dangermos/ProPass && cd ProPass/web
 npm ci && npm run dev        # this site and the recorded tour: no GPU, no Unity
 
-bash scripts/get_weights.sh  # trained weights, to run the models yourself
-bash scripts/start.sh        # API + dashboard; press Play in Unity for a live lane`}</pre>
+bash scripts/get_weights.sh     # trained weights
+bash scripts/get_recordings.sh  # frames Unity already rendered, one run per scene
+bash scripts/start.sh           # API + dashboard: any scene runs live through the models, no Unity`}</pre>
       <div className="title-actions"><button className="primary-button" onClick={()=>onTour('single')}><Icon name="play" size={17}/> Start the tour</button>
         <button className="secondary-button" onClick={onScenarios}><Icon name="camera" size={16}/> Live lab</button>
         <button className="secondary-button" onClick={()=>onLab('benchmark')}><Icon name="chart" size={16}/> Full benchmark</button></div>
