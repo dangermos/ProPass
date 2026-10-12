@@ -197,6 +197,20 @@ def markdown(summary, rows, chart_path, reference=None, reference_label=None):
     return "\n".join(lines)
 
 
+_worker_engine = None
+
+
+def _worker_start(models, config, cameras, image_mode):
+    """Each scoring process loads its own copy of the models once."""
+    global _worker_engine
+    from vision.engine import VisionEngine
+    _worker_engine = VisionEngine(ROOT / "catalog.json", models, config, cameras, world_mode=False if image_mode else None)
+
+
+def _worker_score(run_dir):
+    return score_run(_worker_engine, run_dir)
+
+
 def main():
     from vision.engine import VisionEngine
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
@@ -210,6 +224,9 @@ def main():
     parser.add_argument("--cameras", help="comma-separated camera ids (default: from the config)")
     parser.add_argument("--image-mode", action="store_true", help="ignore calibration: lane camera, image-space zones")
     parser.add_argument("--compare", type=Path, help="earlier benchmark JSON to show alongside (docs only)")
+    parser.add_argument("--workers", type=int, default=1,
+                        help="score this many runs at once, each in its own process (about 0.5 GB of GPU memory each); "
+                             "results are identical, but per-frame latency is only meaningful with 1")
     args = parser.parse_args()
     provenance = {"recording_root": str(args.root.resolve()),
                   "weights_sha256": {name: hashlib.sha256((ROOT / "models" / name).read_bytes()).hexdigest()
@@ -230,13 +247,20 @@ def main():
         run_dirs = [p for p in run_dirs if p.parent.name in args.scenario]
     if not run_dirs:
         raise SystemExit(f"No recorded runs under {args.root}. Record them in Unity first (docs/training.md).")
-    runs = []
-    for run_dir in run_dirs:
-        result = score_run(engine, run_dir)
-        runs.append(result)
+    def report(result):
         mark = "PASS" if result["passed"] else "FAIL"
         print(f"{mark}  {result['run_id']:<24} expected {result['expected_cart']}  got {result['predicted_cart']}  "
               f"review {result['review_required']}  switches {result['id_switches']}", flush=True)
+        return result
+
+    if args.workers > 1:
+        import multiprocessing
+        del engine
+        with multiprocessing.get_context("spawn").Pool(args.workers, _worker_start, (args.models, args.config, cameras, args.image_mode)) as pool:
+            runs = [report(r) for r in pool.imap(_worker_score, run_dirs)]
+        engine = VisionEngine(ROOT / "catalog.json", args.models, args.config, cameras, world_mode=False if args.image_mode else None)
+    else:
+        runs = [report(score_run(engine, run_dir)) for run_dir in run_dirs]
     rows = summarize(runs)
     latencies = [r["latency_ms_median"] for r in runs if r["latency_ms_median"] is not None]
     summary = {"label": args.label, "runs": len(runs), "passed": sum(r["passed"] for r in runs),

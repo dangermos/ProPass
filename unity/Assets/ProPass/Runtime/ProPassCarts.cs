@@ -11,9 +11,7 @@ namespace ProPass
     public static class ProPassCarts
     {
         // Package sizes by prefab index (width, height, depth). The scene builder builds the prefabs from these.
-        public static readonly Vector3[] ProductSizes = { new Vector3(.67f, .48f, .39f), new Vector3(.61f, .45f, .34f),
-            new Vector3(.36f, .34f, .18f), new Vector3(.45f, .36f, .29f), new Vector3(.45f, .4f, .2f), new Vector3(.52f, .4f, .3f),
-            new Vector3(.58f, .42f, .3f), new Vector3(.09f, .04f, 1.2f), new Vector3(.09f, .04f, 1.2f) };
+        public static readonly Vector3[] ProductSizes = ProPassCatalog.Sizes();
 
         static readonly Color Orange = new Color(1f, .4f, .1f), Steel = new Color(.55f, .57f, .6f), Dark = new Color(.13f, .14f, .16f);
 

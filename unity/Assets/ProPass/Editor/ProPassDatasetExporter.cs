@@ -17,7 +17,8 @@ namespace ProPass.Editor
     public static class ProPassDatasetExporter
     {
         public static readonly string[] ClassNames = { "merchandise", "person", "cart" };
-        static readonly int[] Enrolled = { 0, 1, 2, 3, 4, 6, 7, 8 };
+        // Every prefab except the unenrolled package.
+        static readonly int[] Enrolled = Enumerable.Range(0, ProPassCatalog.Items.Length).Where(i => i != ProPassCatalog.Unknown).ToArray();
         public static bool Running { get; private set; }
         public static int Completed { get; private set; }
         public static int Requested { get; private set; }
@@ -43,6 +44,36 @@ namespace ProPass.Editor
         static int trainingCount;
         static int validationCount;
         static int testingCount;
+
+        // Headless export, a slice at a time so one Unity process never holds the whole job in memory:
+        //   Unity -batchmode -quit -projectPath unity -executeMethod ProPass.Editor.ProPassDatasetExporter.ExportFromCommandLine
+        //         -exportOut <dir> -exportTrain 2000 -exportVal 320 -exportTest 320 [-exportStart 0] [-exportStop 600]
+        public static void ExportFromCommandLine()
+        {
+            var args=Environment.GetCommandLineArgs();
+            string Arg(string name,string fallback){int i=Array.IndexOf(args,name);return i>=0&&i+1<args.Length?args[i+1]:fallback;}
+            try
+            {
+                UnityEditor.SceneManagement.EditorSceneManager.OpenScene(ProPassBenchmarkRecorder.ScenePath,UnityEditor.SceneManagement.OpenSceneMode.Single);
+                int Number(string name,string fallback)=>int.Parse(Arg(name,fallback),CultureInfo.InvariantCulture);
+                Begin(Arg("-exportOut",null)??throw new ArgumentException("-exportOut is required"),Number("-exportTrain","2000"),Number("-exportVal","320"),Number("-exportTest","320"),Number("-exportStart","0"));
+                int stop=Mathf.Min(Requested,Number("-exportStop",Requested.ToString(CultureInfo.InvariantCulture)));
+                while(Running&&Completed<stop)
+                {
+                    ExportOne();Completed++;
+                    if(Completed%24==0)
+                    {
+                        File.WriteAllText(Path.Combine(OutputRoot,"export-progress.json"),JsonUtility.ToJson(new Progress{completed=Completed,total=Requested,running=true}));
+                        EditorUtility.UnloadUnusedAssetsImmediate();GC.Collect();
+                    }
+                }
+                bool done=Completed>=Requested;
+                Finish();
+                if(!done)File.WriteAllText(Path.Combine(OutputRoot,"export-progress.json"),JsonUtility.ToJson(new Progress{completed=stop,total=Requested,running=true}));
+                EditorApplication.Exit(LastError==null?0:1);
+            }
+            catch(Exception error){Debug.LogException(error);EditorApplication.Exit(1);}
+        }
 
         // startAt resumes an interrupted export: scenes are seeded by index, so earlier ones are kept as they are.
         public static void Begin(string directory,int train=450,int validation=90,int test=60,int startAt=0)
@@ -109,10 +140,10 @@ namespace ProPass.Editor
             var classes=new int[count];
             for(int i=0;i<count;i++)
             {
-                // Every enrolled product in turn; prefab 5 is the unenrolled package.
+                // Every enrolled product in turn.
                 classes[i]=Enrolled[(splitIndex+i)%Enrolled.Length];
                 // Unenrolled objects are still merchandise for generic localization.
-                if(splitIndex%17==0 && i==0)classes[i]=5;
+                if(splitIndex%17==0 && i==0)classes[i]=ProPassCatalog.Unknown;
             }
             // Most scenes have a cart with the first products on it, as in the lane.
             Transform cart=null;CartKind kind=CartKind.None;var loaded=new List<int>();

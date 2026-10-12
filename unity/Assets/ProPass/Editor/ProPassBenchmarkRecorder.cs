@@ -67,6 +67,12 @@ namespace ProPass.Editor
             var light = UnityEngine.Object.FindObjectsByType<Light>(FindObjectsSortMode.None).FirstOrDefault(l => l.type == LightType.Directional);
             if (simulation.occluder != null) simulation.occluder.gameObject.SetActive(false);
             var customerStart = simulation.customer != null ? simulation.customer.position : Vector3.zero;
+            // A close camera for the site videos only: it walks backwards ahead of the cart. The vision system never sees it.
+            var showObject = new GameObject("Showcase camera", typeof(Camera));
+            var show = showObject.GetComponent<Camera>();
+            show.CopyFrom(camera); show.fieldOfView = 42f; show.enabled = false;
+            var showTarget = new RenderTexture(1280, 720, 24, RenderTextureFormat.ARGB32) { antiAliasing = 4 };
+            var showPixels = new Texture2D(1280, 720, TextureFormat.RGB24, false);
             try
             {
                 foreach (var scenario in scenarios)
@@ -81,11 +87,25 @@ namespace ProPass.Editor
                         int count = Mathf.FloorToInt(plan.duration * fps + 1e-3f) + 1;
                         for (int n = 0; n < count; n++)
                         {
+                            if (n % 150 == 149) { EditorUtility.UnloadUnusedAssetsImmediate(); GC.Collect(); }
                             runner.Apply(n / fps);
                             string stem = (n + 1).ToString("D6");
                             File.WriteAllBytes(Path.Combine(directory, stem + ".jpg"), ProPassCameras.Render(camera, 0).EncodeToJPG(90));
                             for (int c = 1; c < cameras.Length; c++)
                                 File.WriteAllBytes(Path.Combine(directory, stem + "." + ProPassCameras.Ids[c] + ".jpg"), ProPassCameras.Render(cameras[c], c).EncodeToJPG(88));
+                            if (simulation.customer != null)
+                            {
+                                // Ahead of the customer and off to one side, at head height, looking at the cart.
+                                var who = simulation.customer.position;
+                                float z = Mathf.Clamp(who.z, -3.2f, 3.4f);
+                                show.transform.position = new Vector3(who.x + 2.1f, 1.75f, z + 3.6f);
+                                show.transform.LookAt(new Vector3(who.x, .85f, z + .9f));
+                                show.targetTexture = showTarget; show.Render();
+                                var active = RenderTexture.active; RenderTexture.active = showTarget;
+                                showPixels.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0); showPixels.Apply(false); RenderTexture.active = active;
+                                show.targetTexture = null;
+                                File.WriteAllBytes(Path.Combine(directory, stem + ".show.jpg"), showPixels.EncodeToJPG(90));
+                            }
                         }
                         File.WriteAllText(Path.Combine(directory, "video.json"), "{\"scenario\":\"" + scenario + "\",\"seed\":" + seed + ",\"frame_rate\":" + fps.ToString(CultureInfo.InvariantCulture) + ",\"frames\":" + count + "}");
                     }
@@ -97,6 +117,8 @@ namespace ProPass.Editor
             {
                 if (simulation.customer != null) simulation.customer.position = customerStart;
                 ProPassCameras.Release(camera);
+                UnityEngine.Object.DestroyImmediate(showObject); showTarget.Release();
+                UnityEngine.Object.DestroyImmediate(showTarget); UnityEngine.Object.DestroyImmediate(showPixels);
             }
         }
 
@@ -173,6 +195,8 @@ namespace ProPass.Editor
                             File.WriteAllText(Path.Combine(directory, stem + ".json"), JsonUtility.ToJson(new TruthFrame {
                                 frame_id = frameId, timestamp = (float)Math.Round(t, 4), run_id = runId, scenario = scenario, ground_truth = truth.ToArray() }));
                             frames++;
+                            // Rendered frames pile up in memory in batch mode unless they are released as we go.
+                            if (frames % 150 == 0) { EditorUtility.UnloadUnusedAssetsImmediate(); GC.Collect(); }
                         }
                         var expected = plan.ExpectedProductCounts(out bool review);
                         File.WriteAllText(Path.Combine(directory, "run.json"), JsonUtility.ToJson(new RunInfo {

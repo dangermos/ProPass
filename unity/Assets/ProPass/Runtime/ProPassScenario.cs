@@ -114,12 +114,14 @@ namespace ProPass
         // Messy scenarios randomize products, motion, occluders and rendering by seed.
         public static readonly string[] Messy = { "hands", "shopper", "flatbed", "edge", "stacked", "distractors", "bystander", "hesitate", "parked", "locked", "lumber" };
 
-        // Prefab indices (see ProPassSceneBuilder): 0-4 boxed products, then these.
-        public const int Unknown = 5, Locked = 6, Lumber = 7, TreatedLumber = 8;
+        // Prefab indices (see ProPassCatalog): the ordinary products first, then these.
+        public const int Unknown = ProPassCatalog.Unknown, Locked = ProPassCatalog.Locked, Lumber = ProPassCatalog.Lumber, TreatedLumber = ProPassCatalog.TreatedLumber;
 
         public static IEnumerable<string> All { get { foreach (var s in Classic) yield return s; foreach (var s in Messy) yield return s; } }
 
         const float CarryY = .9f, StartZ = -3.4f, EndZ = 3.8f;
+        // Seconds a flatbed takes to roll the 4.6 m between where it waits beside the lane and the lane: a walk.
+        const float RollTime = 4f;
         // Labels face the gate, where the barcode camera is.
         const float Forward = 180f;
 
@@ -141,7 +143,7 @@ namespace ProPass
                     sway = messy ? R(0f, .08f) : 0f, bob = messy ? R(0f, .03f) : 0f, phase = R(0f, 6.28f) };
                 return a.At(0, x, y, z0).At(t0, x, y, z0).At(t0 + walk, x, y, z1);
             }
-            int[] Distinct(int n) { var all = new List<int> { 0, 1, 2, 3, 4 }; var r = new int[n]; for (int i = 0; i < n; i++) { int k = Pick(all.Count); r[i] = all[k]; all.RemoveAt(k); } return r; }
+            int[] Distinct(int n) { var all = new List<int>(); for (int k0 = 0; k0 < ProPassCatalog.Ordinary; k0++) all.Add(k0); var r = new int[n]; for (int i = 0; i < n; i++) { int k = Pick(all.Count); r[i] = all[k]; all.RemoveAt(k); } return r; }
             ActorPlan Hand(int follow, float from, float to) => new ActorPlan { kind = ActorKind.Hand, follow = follow, visibleFrom = from, visibleTo = to, tint = new Color(.08f, .1f, .14f) }.At(0, 0, .15f, .25f);
             Color Shirt() => Color.HSVToRGB(R(0f, 1f), R(.3f, .8f), R(.35f, .85f));
 
@@ -171,7 +173,7 @@ namespace ProPass
                     break;
                 case "unknown":
                     plan.description = "An unenrolled gray package";
-                    plan.Add(Walk(5, 0f, 1.5f, 12f));
+                    plan.Add(Walk(Unknown, 0f, 1.5f, 12f));
                     break;
 
                 case "hands":
@@ -216,9 +218,14 @@ namespace ProPass
                         if (lead < 0) lead = p;
                     }
                     float from = start + walkTime * R(.25f, .5f), hold = R(1.5f, 3f), side = Pick(2) == 0 ? -1f : 1f;
+                    from = Mathf.Max(from, RollTime + .3f);
                     plan.Add(new ActorPlan { kind = ActorKind.Flatbed, follow = lead, tint = new Color(.82f, .68f, .46f) }
-                        .At(0, side * 6f, -CarryY, -1.3f).At(from - 1.5f, side * 6f, -CarryY, -1.3f)
-                        .At(from, 0f, -CarryY, -1.3f).At(from + hold, 0f, -CarryY, -1.3f).At(from + hold + 1.5f, -side * 6f, -CarryY, -1.3f));
+                        .At(0, side * 4.6f, -CarryY, -1.3f).At(from - RollTime, side * 4.6f, -CarryY, -1.3f)
+                        .At(from, 0f, -CarryY, -1.3f).At(from + hold, 0f, -CarryY, -1.3f).At(from + hold + RollTime, -side * 4.6f, -CarryY, -1.3f));
+                    // An associate walks it across from behind its handle; it does not move on its own.
+                    plan.Add(new ActorPlan { kind = ActorKind.Shopper, follow = lead, tint = new Color(.95f, .45f, .1f) }
+                        .At(0, side * 6.1f, -CarryY, -1.3f).At(from - RollTime, side * 6.1f, -CarryY, -1.3f)
+                        .At(from, side * 1.5f, -CarryY, -1.3f).At(from + hold, side * 1.5f, -CarryY, -1.3f).At(from + hold + RollTime, -side * 3.1f, -CarryY, -1.3f));
                     break;
                 }
                 case "parked":
@@ -233,9 +240,14 @@ namespace ProPass
                     }
                     // Hidden from the lane camera for longer than the single-camera occlusion window.
                     float from = start + walkTime * R(.15f, .3f), hold = R(7f, 9f), side = Pick(2) == 0 ? -1f : 1f;
+                    from = Mathf.Max(from, RollTime + .3f);
                     plan.Add(new ActorPlan { kind = ActorKind.Flatbed, follow = lead, tint = new Color(.82f, .68f, .46f) }
-                        .At(0, side * 6f, -CarryY, -1.3f).At(from - 1.5f, side * 6f, -CarryY, -1.3f)
-                        .At(from, 0f, -CarryY, -1.3f).At(from + hold, 0f, -CarryY, -1.3f).At(from + hold + 1.5f, -side * 6f, -CarryY, -1.3f));
+                        .At(0, side * 4.6f, -CarryY, -1.3f).At(from - RollTime, side * 4.6f, -CarryY, -1.3f)
+                        .At(from, 0f, -CarryY, -1.3f).At(from + hold, 0f, -CarryY, -1.3f).At(from + hold + RollTime, -side * 4.6f, -CarryY, -1.3f));
+                    // An associate walks it across from behind its handle; it does not move on its own.
+                    plan.Add(new ActorPlan { kind = ActorKind.Shopper, follow = lead, tint = new Color(.95f, .45f, .1f) }
+                        .At(0, side * 6.1f, -CarryY, -1.3f).At(from - RollTime, side * 6.1f, -CarryY, -1.3f)
+                        .At(from, side * 1.5f, -CarryY, -1.3f).At(from + hold, side * 1.5f, -CarryY, -1.3f).At(from + hold + RollTime, -side * 3.1f, -CarryY, -1.3f));
                     break;
                 }
                 case "locked":
@@ -266,7 +278,7 @@ namespace ProPass
                 case "stacked":
                 {
                     plan.description = "One package carried on top of another";
-                    int bottom = Pick(5), top = Pick(2) == 0 ? bottom : Pick(5);
+                    int bottom = Pick(ProPassCatalog.Ordinary), top = Pick(2) == 0 ? bottom : Pick(ProPassCatalog.Ordinary);
                     int b = plan.Add(Walk(bottom, R(-.4f, .4f), start, walkTime, StartZ, EndZ, .78f));
                     var stackedTop = new ActorPlan { kind = ActorKind.Product, productIndex = top, follow = b, yaw = Forward + R(-20f, 20f) };
                     plan.Add(stackedTop.At(0, R(-.06f, .06f), .46f, R(-.04f, .04f)));
@@ -307,7 +319,7 @@ namespace ProPass
                 case "hesitate":
                 {
                     plan.description = "The customer pauses mid-lane, steps back, then either finishes or turns around";
-                    int product = Pick(5);
+                    int product = Pick(ProPassCatalog.Ordinary);
                     bool completes = rng.NextDouble() < .6;
                     float x = R(-.4f, .4f), mid = R(-.8f, .6f), back = R(-2.9f, -2.5f), t = start;
                     var a = new ActorPlan { kind = ActorKind.Product, productIndex = product, yaw = Forward + R(-12f, 12f), sway = R(0f, .06f), phase = R(0f, 6.28f) };
@@ -372,7 +384,7 @@ namespace ProPass
                     for (int w = 0; w < other.path.Count; w++)
                     {
                         var p = other.path[w];
-                        if (other.kind == ActorKind.Flatbed)      // stays on the floor, and rolls across just ahead of the cart
+                        if (other.kind == ActorKind.Flatbed || other.kind == ActorKind.Shopper)      // stays on the floor, and rolls across just ahead of the cart
                             other.path[w] = new Waypoint(p.t, p.x, -newY, .2f - p.z);
                         else if (other.kind == ActorKind.Prop)    // carried by the person, so it keeps its height
                             other.path[w] = new Waypoint(p.t, p.x, p.y + oldY - newY, p.z - ProPassCarts.PushDistance(kind));
