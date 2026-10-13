@@ -39,7 +39,8 @@ Owner: Danny Germosen (SUNY Oswego, GitHub `dangermos`, private repo `dangermos/
 3. **A barcode that disagrees with how a package looks now always goes to an associate** (`PhysicalLedger._scan`). That removed the one wrong charge on development runs (a pail standing on a box took the box's label), at the cost of some automation when the classifier is the one that is wrong. A height-aware label assignment would be the better fix.
 4. **Nothing real has been tested.** The smallest useful experiment: one real camera, one real cart, printed copies of these labels.
 5. **Not redone for the new scene:** `docs/images/dashboard.jpg`, `v2-*.jpg`, `two-camera-live.jpg`, `messy-scenarios.jpg` and `models/evaluation-live.json` show the older scene; latency (36 ms per frame) was measured on the 8-product round.
-6. **From the outside reviews, still open:** a confusion-matrix or failure-frame figure on the site, an automation-versus-safety curve, tracking metrics, and a check of the invented brand names against trademarks.
+6. **The follow camera passes behind the gate post** near the end of each run (`RecordVideo` in `ProPassBenchmarkRecorder.cs`: clamp its z further back, then `scripts/round.sh tour`). The flatbed scenes' thumbnails are also blocked by the flatbed.
+7. **From the outside reviews, still open:** a confusion-matrix or failure-frame figure on the site, an automation-versus-safety curve, tracking metrics, and a check of the invented brand names against trademarks.
 
 ## Working notes
 
