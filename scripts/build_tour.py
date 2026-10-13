@@ -59,13 +59,13 @@ class Video:
 
 
 def label(image, text, x, y, color):
-    (w, h), _ = cv2.getTextSize(text, FONT, 0.5, 1)
-    cv2.rectangle(image, (x, y - h - 8), (x + w + 8, y), color, -1)
-    cv2.putText(image, text, (x + 4, y - 5), FONT, 0.5, (255, 255, 255), 1, cv2.LINE_AA)
+    (w, h), _ = cv2.getTextSize(text, FONT, 0.62, 2)
+    cv2.rectangle(image, (x, y - h - 10), (x + w + 10, y), color, -1)
+    cv2.putText(image, text, (x + 5, y - 6), FONT, 0.62, (255, 255, 255), 2, cv2.LINE_AA)
 
 
 def title(image, text):
-    label(image, text, 6, 26, (40, 34, 30))
+    label(image, text, 6, 32, (40, 34, 30))
 
 
 def cart_lines(objects, names):
@@ -133,17 +133,17 @@ def build(engine, scenario, names):
     else:
         rate, files = info["frame_rate"], tick_files
     fast = rate > 30
-    writer = Video(OUT / f"{scenario}.webm", rate, (1280, 450), "800k" if fast else "350k")
+    writer = Video(OUT / f"{scenario}.webm", rate, (1280, 720), "1100k" if fast else "450k")
     angles = {}
     if scenario in ANGLES:
         (OUT.parent / "angles").mkdir(exist_ok=True)
         angles = {c: Video(OUT.parent / "angles" / f"{scenario}-{c}.webm", rate, (960, 540), "700k" if fast else "450k")
-                  for c in ("lane", "overhead", "scan")}
+                  for c in ("show", "lane", "overhead", "scan")}
     for n, path in enumerate(files):
         position = n / rate * info["frame_rate"]
         k = min(int(position), len(ticks) - 1)
         now, after, f = ticks[k], ticks[min(k + 1, len(ticks) - 1)], position - int(position)
-        views = {c: cv2.imread(str(path if c == "lane" else path.with_suffix(f".{c}.jpg"))) for c in ("lane", "overhead", "scan")}
+        views = {c: cv2.imread(str(path if c == "lane" else path.with_suffix(f".{c}.jpg"))) for c in ("lane", "overhead", "scan", "show")}
         for (camera, object_id), (bbox, color, text) in now["boxes"].items():
             view = views.get(camera)
             if view is None:
@@ -159,20 +159,21 @@ def build(engine, scenario, names):
             for text, corners in now["barcodes"].items():
                 corners = lerp(corners, after["barcodes"][text], f) if text in after["barcodes"] else corners
                 cv2.polylines(scan, [np.array(corners, np.int32).reshape(-1, 2)], True, (94, 197, 34), 12)
-        canvas = np.full((450, 1280, 3), (32, 26, 24), np.uint8)
-        canvas[:, :800] = cv2.resize(views["lane"], (800, 450), interpolation=cv2.INTER_AREA)
-        title(canvas[:, :800], "Gate camera: detect, track, identify")
-        if views.get("overhead") is not None:
-            canvas[:270, 800:] = cv2.resize(views["overhead"], (480, 270), interpolation=cv2.INTER_AREA)
-            title(canvas[:270, 800:], "Overhead camera")
-        if scan is not None:
-            # The middle of the wide barcode view, where the cart and its labels pass.
-            close = scan[:, scan.shape[1]//4: scan.shape[1]*3//4]
-            canvas[270:, 800:] = cv2.resize(close, (480, 270), interpolation=cv2.INTER_AREA)[45:225]
-            title(canvas[270:, 800:], "Barcode camera" + (": label read" if now["barcodes"] else ""))
+        # Four equal panes: the close video camera (when recorded), then the three cameras the system uses.
+        close = scan[:, scan.shape[1]//4: scan.shape[1]*3//4] if scan is not None else None
+        panes = [(views.get("show"), "Follow camera (for viewers only)"), (views["lane"], "Gate camera: detect, track, identify"),
+                 (views.get("overhead"), "Overhead camera"), (close, "Barcode camera" + (": label read" if now["barcodes"] else ""))]
+        canvas = np.full((720, 1280, 3), (32, 26, 24), np.uint8)
+        for index, (picture, name) in enumerate(panes):
+            if picture is None:
+                picture = views["lane"]
+            pane = canvas[(index // 2) * 360:(index // 2) * 360 + 360, (index % 2) * 640:(index % 2) * 640 + 640]
+            pane[:] = cv2.resize(picture, (640, 360), interpolation=cv2.INTER_AREA)
+            title(pane, name)
+        views["scan"] = close
         writer.write(canvas)
         for c, video in angles.items():
-            frame = close if c == "scan" else views.get(c)
+            frame = views.get(c)
             if frame is not None:
                 video.write(cv2.resize(frame, (960, 540), interpolation=cv2.INTER_AREA))
     writer.release()

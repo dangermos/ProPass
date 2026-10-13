@@ -17,7 +17,7 @@ ROOT="$PWD"; PY=.venv/bin/python; LOG=artifacts/logs/round.log; mkdir -p artifac
 TRAIN=3400; VAL=500; TEST=500; SLICE=800          # training scenes, and how many one Unity launch exports
 DEV_SEEDS=5; TEST_SEED_START=15                   # development seeds 0-4; held-out seeds 15-19
 WORKERS=4                                         # scoring processes
-GROUPS=("single,duplicate,mixed,occlusion,remove,unknown" "hands,shopper,flatbed,edge,stacked,distractors" "bystander,hesitate,parked,locked,lumber")
+SCENE_GROUPS=("single,duplicate,mixed,occlusion,remove,unknown" "hands,shopper,flatbed,edge,stacked,distractors" "bystander,hesitate,parked,locked,lumber")
 FROM="${1:-art}"; STARTED=0
 say() { echo "[$(date +%T)] $*" | tee -a "$LOG"; }
 stage() { [ "$STARTED" = 1 ] || [ "$1" = "$FROM" ] && STARTED=1; [ "$STARTED" = 1 ]; }
@@ -29,7 +29,7 @@ headroom() {   # stop early rather than push a loaded machine over
 }
 unity() { scripts/unity_run.sh "$@" >> "$LOG" 2>&1; }
 record() {   # record <folder> <first seed>
-  for group in "${GROUPS[@]}"; do
+  for group in "${SCENE_GROUPS[@]}"; do
     headroom record
     unity "record-$(basename "$1")" ProPass.Editor.ProPassBenchmarkRecorder.RunFromCommandLine -benchmarkOut "$ROOT/$1" \
       -benchmarkSeeds "$DEV_SEEDS" -benchmarkSeedStart "$2" -benchmarkScenarios "$group" || { say "FAILED recording $group"; exit 1; }

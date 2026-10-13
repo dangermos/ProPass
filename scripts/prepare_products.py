@@ -138,26 +138,28 @@ def panel(product, width_m, height_m, top=False):
     base, accent = rgb(product["color"]), rgb(product["accent"])
     dark = sum(product["color"]) < 1.4
     ink = (250, 250, 248) if dark else (16, 18, 22)
+    if top:
+        # The top is one plain, lighter panel with a thin border: from above, a package must read as a single
+        # object. A top that repeats the front's brand bar made one box look like two to the detector.
+        tone = rgb([c + (1 - c) * .28 for c in product["color"]]) if not dark else rgb([c + .16 for c in product["color"]])
+        image = Image.new("RGB", (w, h), tone)
+        draw = ImageDraw.Draw(image)
+        edge = max(4, min(w, h) // 28)
+        draw.rectangle((0, 0, w - 1, h - 1), outline=base, width=edge)
+        name = fit(draw, product["label"], w * .8, int(h * .2))
+        draw.text((w * .5, h * .46), product["label"], font=name, fill=ink, anchor="mm")
+        small = fit(draw, product["brand"], w * .5, int(h * .1))
+        draw.text((w * .5, h * .72), product["brand"], font=small, fill=ink, anchor="mm")
+        return image
     image = Image.new("RGB", (w, h), base)
     draw = ImageDraw.Draw(image)
-    pattern(draw, product["pattern"], (0, int(h * (.0 if top else .5)), w, h), rgb(product["color"], 1.25 if dark else .82))
+    pattern(draw, product["pattern"], (0, int(h * .5), w, h), rgb(product["color"], 1.25 if dark else .82))
     # Brand bar across the top edge.
-    bar = int(h * (.24 if top else .2))
+    bar = int(h * .2)
     draw.rectangle((0, 0, w, bar), fill=accent)
     bar_ink = (16, 18, 22) if sum(product["accent"]) > 1.6 else (250, 250, 248)
     brand = fit(draw, product["brand"], w * .86, int(bar * .62))
     draw.text((w * .06, bar * .5), product["brand"], font=brand, fill=bar_ink, anchor="lm")
-    if top:
-        name = fit(draw, product["label"], w * .9, int(h * .26))
-        draw.text((w * .5, bar + (h - bar) * .5), product["label"], font=name, fill=ink, anchor="mm", stroke_width=max(2, h // 90), stroke_fill=base)
-        return image
-    if w < 560:
-        # A narrow face (a pail, a tall box): name on top, emblem underneath.
-        name = fit(draw, product["label"], w * .88, int(h * .1))
-        draw.text((w * .5, bar + (h - bar) * .16), product["label"], font=name, fill=ink, anchor="mm")
-        icon(draw, product["icon"], w * .5, bar + (h - bar) * .58, min(w * .3, (h - bar) * .26), accent if accent != base else ink, base)
-        draw.rectangle((0, h - max(6, h // 40), w, h), fill=accent)
-        return image
     radius = min(w * .2, h * .22)
     icon(draw, product["icon"], w * .76, bar + (h - bar) * .36, radius, accent if accent != base else ink, base)
     name = fit(draw, product["label"], w * .56, int(h * .13))

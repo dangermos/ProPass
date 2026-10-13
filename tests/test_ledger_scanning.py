@@ -52,13 +52,21 @@ def test_visual_recognition_is_rated_high_or_medium_by_confidence():
     assert medium["metrics"]["cart_units"] == 1
 
 
-def test_barcode_outranks_a_visual_guess_made_before_the_item_is_in_the_cart():
+def test_barcode_that_contradicts_how_the_package_looks_goes_to_an_associate():
+    # A label can belong to a touching package (a pail standing on a box), so a clash is never settled by guessing.
     engine = ledger()
     for frame in range(4):      # recognized by look as PEX-001 while still approaching
         engine.update([obs(1, 800, sku=0)], frame, frame * 0.1, RUN, (1000, 1000))
     result = engine.update([obs(1, 800, sku=0, barcode="PEX-004")], 4, 0.4, RUN, (1000, 1000))
+    assert item(result)["sku"] == "PEX-001"
+    assert result["assist"][0]["reason"] == "Barcode disagrees with how the product looks"
+
+
+def test_barcode_names_a_package_the_classifier_has_not_settled():
+    engine = ledger()
+    result = engine.update([obs(1, 800, barcode="PEX-004")], 0, 0.0, RUN, (1000, 1000))
     assert item(result)["sku"] == "PEX-004" and item(result)["rating"] == "high"    # one read so far
-    again = engine.update([obs(1, 800, sku=0, barcode="PEX-004")], 5, 0.5, RUN, (1000, 1000))
+    again = engine.update([obs(1, 800, barcode="PEX-004")], 1, 0.1, RUN, (1000, 1000))
     assert item(again)["rating"] == "verified" and not again["assist"]
 
 

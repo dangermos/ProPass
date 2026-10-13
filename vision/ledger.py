@@ -245,11 +245,15 @@ class PhysicalLedger:
         obj.barcode_reads += 1
         if obj.sku == obs.barcode:
             obj.sku_source = "barcode"
-        elif obj.sku is None or (obj.sku_source == "visual" and not obj.membership):
+        elif obj.sku is None:
             obj.sku, obj.sku_source, obj.accepted_confidence = obs.barcode, "barcode", 1.0
             if not obj.ambiguous_identity:
                 obj.review_reason = None
             self._emit(obj, "SKU_RESOLVED", timestamp)
+        elif obj.sku_source == "visual" and not obj.membership:
+            # The label says one product and the package looks like another. A label can belong to a
+            # touching package (a pail standing on a box), so neither is trusted: an associate decides.
+            self._review(obj, timestamp, "Barcode disagrees with how the product looks")
         else:
             # Never silently rewrite a cart member or an earlier barcode read.
             self._review(obj, timestamp, "Barcode disagrees with the product already recorded")

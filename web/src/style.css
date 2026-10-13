@@ -427,3 +427,8 @@ html{scroll-behavior:smooth}
 .angle.scan{grid-column:auto}
 .angle.scan video{aspect-ratio:16/9;max-height:none}
 @media(max-width:1000px){.angle-grid{grid-template-columns:1fr}}
+
+/* ---------- Four-pane videos ---------- */
+.tour-stage video{aspect-ratio:16/9}
+.angle-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:800px){.angle-grid{grid-template-columns:1fr}}

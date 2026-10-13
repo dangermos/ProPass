@@ -19,6 +19,7 @@ const angleScenes=[
   {id:'locked',name:'Locked-cage tool',note:'A restricted item is identified, then held for an associate by design.'},
 ];
 const cameras=[
+  {id:'show',name:'Follow camera',role:'For viewers only: a close look at the cart and the customer. The system never sees this view.'},
   {id:'lane',name:'Gate camera',role:'Detects, tracks and identifies every box as the cart rolls toward it.'},
   {id:'overhead',name:'Overhead camera',role:'A second angle that keeps an item alive when something blocks the gate view.'},
   {id:'scan',name:'Barcode camera',role:'High resolution, facing the oncoming cart, to read the label on each box. Shown here: the middle of its view.'},
@@ -39,7 +40,7 @@ function Angles(){
       <span className="angle-spacer"/><button className="angle-play" onClick={toggle}><Icon name={playing?'pause':'play'} size={14}/> {playing?'Pause':'Play all three'}</button>
       <button onClick={restart}><Icon name="reset" size={14}/> Restart</button></div>
     <div className="angle-grid">{cameras.map(c=><figure key={c.id+scene.id} className={`angle ${c.id}`}>
-      <video ref={el=>{videos.current[c.id]=el;}} src={`/angles/${scene.id}-${c.id}.webm`} muted playsInline loop preload="metadata" poster={c.id==='lane'?`/scenarios/${scene.id}.jpg`:undefined}
+      <video ref={el=>{videos.current[c.id]=el;}} src={`/angles/${scene.id}-${c.id}.webm`} muted playsInline loop preload="metadata" 
         onTimeUpdate={c.id==='lane'?sync:undefined} onClick={toggle} aria-label={`${c.name}: ${c.role}`}/>
       <figcaption><b>{c.name}</b>{c.role}</figcaption></figure>)}</div>
     <p className="angle-note">{scene.note} The boxes and outlines are drawn by the system from pixels alone.</p>
@@ -62,7 +63,7 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
         <p>A contractor pushes a cart down the lane. Three cameras watch. Trained models find every box, read its barcode or recognize it by look, and build the cart with a reason for every line. When the system is not sure, it hands the cart to an associate instead of guessing.</p>
         <div className="title-actions"><button className="primary-button" onClick={()=>onTour('single')}><Icon name="play" size={17}/> Watch the 17 scenes</button>
           <a className="secondary-button" href="#results"><Icon name="chart" size={16}/> See the measured results</a></div></div>
-      <video className="hero-video" src="/angles/mixed-lane.webm" autoPlay muted loop playsInline onClick={()=>onTour('mixed')} title="Open this scene in the tour" aria-label="A customer pushes a flat cart with three boxes down the lane; the system outlines and names each box and adds it to the cart" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')onTour('mixed');}}/>
+      <video className="hero-video" src="/angles/mixed-show.webm" autoPlay muted loop playsInline onClick={()=>onTour('mixed')} title="Open this scene in the tour" aria-label="A customer pushes a flat cart with three boxes down a store checkout lane" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')onTour('mixed');}}/>
     </header>
 
     <p className="byline">Built by <b>Danny Germosen</b>, SUNY Oswego (<a href="https://github.com/dangermos">github.com/dangermos</a>), as an independent student project. Not affiliated with or endorsed by The Home Depot. Everything shown is a simulation: fictional prices, no payment, no real store or camera.</p>
@@ -119,8 +120,8 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
     </section>
 
     <section id="cameras" className="project-section">
-      <div className="section-head"><div className="eyebrow">ONE MOMENT, THREE ANGLES</div><h2>What each camera sees</h2>
-        <p>The same run from every camera, played in step. Pick a scene and press play.</p></div>
+      <div className="section-head"><div className="eyebrow">ONE MOMENT, EVERY ANGLE</div><h2>What each camera sees</h2>
+        <p>The same run from every camera, played in step. Pick a scene and press play. Three cameras feed the system; the fourth is only for you.</p></div>
       <Angles/>
     </section>
 
