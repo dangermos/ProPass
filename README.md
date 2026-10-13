@@ -1,6 +1,6 @@
 # ProPass
 
-**A cashierless checkout lane you can run on one machine.** Unity renders the store, trained vision models read the camera pixels, every physical product gets its own identity, and a React dashboard shows the cart building itself, along with the reason for every line.
+**A checkout lane that rings up the cart as it rolls through, and calls an associate when it is not sure.** A simulated store lane, three cameras, trained vision models, and a ledger that gives every physical item one identity. Built by **Danny Germosen** (SUNY Oswego).
 
 ![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-CUDA-EE4C2C?logo=pytorch&logoColor=white)
@@ -9,147 +9,141 @@
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/UI-React%20%2B%20Vite-61DAFB?logo=react&logoColor=black)
 ![Unity 6](https://img.shields.io/badge/Sim-Unity%206.6%20URP-000000?logo=unity&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-153%20passing-2EA043)
-![Benchmark](https://img.shields.io/badge/cart%20round-60%2F85%20pass%2C%2050%20fully%20automatic%2C%200%20closed%20wrong-2EA043)
-![Barcodes](https://img.shields.io/badge/SKU-barcode%20scan%20%2B%20visual%20fallback-f96302)
-![Cameras](https://img.shields.io/badge/cameras-lane%20%2B%20overhead-6aa8ff)
+![Tests](https://img.shields.io/badge/tests-156%20passing-2EA043)
 
-![The project site: what it does, how it works, every camera angle, and the measured results](docs/images/site.jpg)
-
-![ProPass title screen: every scenario card plays a recorded run, with its measured held-out pass rate](docs/images/title-screen.jpg)
-
-![Live lane tab during the next-aisle scenario: the lane product is charged, the other shopper's product is tracked as outside the lane](docs/images/dashboard.jpg)
-
-![Pipeline: Unity lane → FastAPI queue → detect and classify → physical ledger → cart and dashboard](docs/images/pipeline.svg)
+![The project site](docs/images/site.jpg)
 
 > [!NOTE]
-> Built by **Danny Germosen** (SUNY Oswego). This is an independent student project inspired by contractor checkout. It is not connected to Home Depot. The products, prices and customers are fictional, and no payment is taken. All accuracy numbers below were measured on **synthetic Unity images**. Real-camera transfer has not been tested yet.
+> An independent student project inspired by contractor checkout. It is **not affiliated with or endorsed by The Home Depot**. Every brand, product, price and customer in it is invented, and no payment is taken. Every number below was measured on **simulated images rendered by Unity**. Nothing has been tested on a real camera.
 
-## ⚡ Quickstart
+## What it does
 
-### 1. Watch it: two minutes, no GPU, no Unity
+1. **See.** A small object detector finds every package, person and cart in two camera views, and a tracker follows each package.
+2. **Identify.** A third camera reads the barcode on each package. Where no label is visible, an image classifier recognizes which of the 15 catalog products it is, or says it does not know.
+3. **Fuse.** Camera calibration puts both views on one floor plan, so a package seen twice is one object and a hidden package is not lost.
+4. **Decide.** Each physical item gets one identity. It is added when it crosses the checkout line, removed if it comes back, and rated for how sure the system is.
+5. **Hand off.** Unknown products, restricted tools and anything unsettled go to an associate. The scanned part of the cart is kept.
 
-Only Node.js is needed. Every one of the 17 scenes plays in the browser from all three cameras, with the cart and the decisions the trained models made beside it.
+Unity never tells the vision system what is in the cart. Each camera sends a plain image with a timestamp, and everything else is worked out from pixels.
+
+![Four views of one moment: the follow camera, and the three cameras the system uses](docs/images/tour.jpg)
+
+## Measured results
+
+The current scene has 15 invented products (boxes, pails, a locked tool, bare lumber), customers pushing shopping, flat and lumber carts, and a stocked store. It was scored on **85 held-out runs** (17 scenarios × seeds 15–19) that were recorded after tuning was finished and scored once.
+
+| 85 runs each | Development (seeds 0–4) | **Held-out (seeds 15–19)** |
+|---|:-:|:-:|
+| Passed: cart exactly right, associate called only when needed | 67 | **68** |
+| Closed automatically, exactly right | 57 | **58** |
+| Correctly sent to an associate (unknown product, locked tool) | 10 | **10** |
+| Sent to an associate unnecessarily | 18 | **17** |
+| Closed with a wrong or missing item | 0 | **0** |
+| Items the cameras lost (all in carts sent to an associate) | 13 | 13 |
+| Wrong lines inside carts sent to an associate | 0 | 1 |
+| Charged items settled by barcode | 62 of 101 | 60 of 103 |
+
+- **58 of 85 held-out carts closed with nobody stepping in, and all 10 carts that needed a person were sent to one.**
+- **No cart closed with a wrong or missing item** on the held-out runs.
+- **The open problem is the 17 unnecessary hand-offs.** 9 of them had an incomplete or wrong cart (13 items the cameras lost, 1 wrong line), which is why they were not closed. Most common reasons: entered merchandise disappeared before an observed checkout or reverse removal (12); product first observed beyond checkout boundary (6); conflicting sku evidence on the same physical object (3).
+
+Models (test split of the training data): gate camera detector mAP50-95 0.818, classifier 95.5%; overhead detector mAP50-95 0.867, classifier 94.6%. Per-scenario scores are in [docs/benchmark.md](docs/benchmark.md). Earlier rounds with 8 products are in [docs/pro-express-v2.md](docs/pro-express-v2.md).
+
+**Read these numbers with care.** 85 runs can find failures but cannot promise a rate: zero wrong closes in 85 runs still allows a true rate of up to about 3.5%. Five runs per scenario are signals, not percentages.
+
+## Quickstart
+
+### 1. Watch it: two minutes, Node.js only
 
 ```bash
 git clone https://github.com/dangermos/ProPass && cd ProPass/web
-npm ci && npm run dev          # then open http://127.0.0.1:5173
+npm ci && npm run dev          # open http://127.0.0.1:5173
 ```
 
-The front page is the **project site**: how it works, the same run from each camera in step, the measured results and the limits. Click **Watch the 17 scenes** for the tour, or **Open the lab** for the scenario picker. Each scene is seed 2 of that scenario from the development recordings, whether it passed or not, so some end in a hand-off to an associate. The videos are 60 fps renders of those runs with the models' decisions drawn on, and the tour has a **Sound** button: lane ambience plus a cue for each barcode read, cart add and hand-off. They are rebuilt by [scripts/record_video.sh](scripts/record_video.sh) and [scripts/build_tour.py](scripts/build_tour.py).
+The front page explains the project. **Watch the 17 scenes** opens the recorded tour: every scenario from four camera angles at 60 fps, with the cart the system built and what it decided beside the video, and a **Sound** button. No GPU, Unity or model weights are needed, because the videos are in the repository. Each tour scene is development seed 2 of its scenario, pass or not.
 
-![The recorded tour: three camera views with the system's boxes, the cart it built, and what it decided](docs/images/tour.jpg)
+### 2. Run the models live, without Unity
 
-### 2. Run the models yourself, live, with no Unity
-
-Needs Python 3.12 and ideally a CUDA GPU (CPU works, more slowly). The weights and the recorded runs are release assets, not in git.
+Needs Python 3.12 and ideally a CUDA GPU. The weights and one recorded run per scenario are release assets (they need the [GitHub CLI](https://cli.github.com/) signed in).
 
 ```bash
 python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements-vision.txt -r requirements-api.txt
-bash scripts/get_weights.sh                 # both camera pairs, 42 MB, needs the GitHub CLI
-bash scripts/get_recordings.sh              # one recorded run per scenario, 500 MB
-.venv/bin/python -m pytest -q tests         # 153 tests
+bash scripts/get_weights.sh          # both camera model pairs, 42 MB
+bash scripts/get_recordings.sh       # frames Unity already rendered, about 500 MB
+.venv/bin/python -m pytest -q tests  # 156 tests
 (cd web && npm ci)
-bash scripts/start.sh                       # API on :8000, dashboard on :5173
+bash scripts/start.sh                # API on :8000, dashboard on :5173
 ```
 
-Open the dashboard, click **Open the lab** and pick any scenario. The API plays the frames Unity **already rendered** through the trained models at the recorded 8 frames per second, so the **Live lane** tab shows the real thing: boxes, the cart building, ratings, the associate hand-off and checkout. Nothing is rendered again and no frame is dropped (`POST /api/replay`).
+Open the dashboard, click **Open the lab** and pick any scenario. The API plays the recorded frames through the trained models at the recorded pace, so the **Live lane** tab shows the real pipeline: boxes, the cart building, ratings, the associate hand-off and checkout.
 
-### 3. Render the scene in the browser (experimental)
+### 3. Render a scene yourself
 
-The checkout scene is also built for WebGL and committed in `web/public/unity`. In the lab, **Render the scene in this browser** opens it in a small window and streams fresh frames to the API. Capturing three cameras in a browser is slow, so the scene runs in slow motion; replaying recorded frames (step 2) is the better way to watch. Rebuild it with **ProPass → Build for the browser (WebGL)**.
+Needs Unity **6000.6.4f1** (URP 17.6). Open `unity/` in Unity Hub, load `Assets/ProPass/Scenes/Checkout.unity` and press **Play** with the API running. The dashboard follows the live scene. The animated characters come from a free Asset Store pack that is not in this repository; without it the scene uses capsule people.
 
-### 4. Run a scene live in Unity
+### 4. Rebuild everything from scratch
 
-Needs Unity **6000.6.4f1** (URP 17.6).
+One command exports the training data, trains both camera model pairs, records the development runs and scores them. It runs unattended, throttles itself, and picks up where it stopped.
 
-1. In Unity Hub, add the `unity/` folder as a project, open `Assets/ProPass/Scenes/Checkout.unity`, and press **Play**.
-2. Open **http://127.0.0.1:5173** and pick a scenario on the title screen. Unity switches to it.
-3. Watch the **Live lane** tab, see why each item is (or isn't) in the cart on **Decisions**, then click **Review checkout** and **Confirm demo checkout**.
+```bash
+scripts/round.sh            # about 40 minutes on an RTX 4070 Super
+scripts/round.sh test       # record and score fresh held-out runs, once
+scripts/round.sh tour       # render the 60 fps tour videos
+tail -f artifacts/logs/round.log
+```
 
-The product photos and the animated characters are not in git (third-party images and a licensed asset pack), so a fresh clone renders boxes with placeholder art and capsule people. The recorded tour shows the full scene. Full setup and troubleshooting are in [docs/getting-started.md](docs/getting-started.md).
+## The 17 scenarios
 
-## 🎬 What it demonstrates
+| Group | Scenarios |
+|---|---|
+| Clean | single item · identical products · mixed cart · temporary occlusion · change of mind · unknown product |
+| Messy | busy hands · crossing shopper · crossing flatbed · edge of frame · stacked packages · distractors · next-aisle shopper · hesitation · parked flatbed · locked-cage tool · lumber |
 
-| Scenario | What happens | Measured |
-|---|---|:---:|
-| 🟥 **Single item** | One drill kit, counted once despite hundreds of observations | ✅ live + replay |
-| 🟥🟥 **Identical products** | Two physical drill kits → same SKU, quantity 2 | ✅ live |
-| 🟥🟨🟩 **Mixed cart** | Drill kit, measuring tape, work gloves | ✅ live |
-| 🫥 **Temporary occlusion** | Box disappears briefly and is re-attached to the same identity | ✅ live |
-| ↩️ **Change of mind** | Added on the forward crossing, removed on the observed reverse crossing | ✅ live |
-| ❓ **Unknown product** | Gray unenrolled package is tracked, and checkout is blocked for review | ✅ live |
+## Known limits
 
-Eleven more **messy scenarios** stress it: busy hands, a crossing shopper, a lumber flatbed, a parked flatbed, partial views at the frame edge, stacked boxes, distractors, a shopper in the next aisle, hesitation, a locked-cage tool and bare lumber. Boxes carry **barcode labels** that a high-resolution scan camera reads. Items without one are recognized by look. Anything the system can't settle goes to an associate, and the scanned cart is kept.
+- **Simulated only.** No real camera, lighting, motion blur or lens has been tested.
+- **Too many hand-offs.** 17 of 85 held-out carts were sent to an associate without needing it. That rate would not work in a store, and cutting it is the main open problem.
+- **Small test.** 15 products and 85 runs.
+- **Hidden labels.** A package behind another package on a cart is not scanned and falls back to recognition by look.
 
-### 📈 Measured results
-
-Every round was scored on **test seeds kept apart from tuning**: 17 scenarios × 5 seeds = 85 recorded runs. Each round made the scene harder, and both camera model pairs were retrained for it. A run **passes** when the cart is exactly right and an associate is called only when one should be.
-
-| Round | Scene | Passed | Closed automatically, exactly right | Correctly sent to an associate | Sent to an associate unnecessarily | Closed with a wrong or missing item |
-|---|---|:-:|:-:|:-:|:-:|:-:|
-| 1 · 🧍 Capsule people | hand-carried boxes | 78 | **68** | 10 | 6 | 1 (one board short) |
-| 2 · 🚶 Animated characters | hand-carried boxes | 71 | **61** | 10 | 14 | 0 |
-| 3 · 🛒 Carts (current scene) | shopping, flat and lumber carts | 60 | **50** | 10 | 25 | 0 |
-
-- **No cart in these rounds was charged for something the customer did not have.** One round 1 cart closed a lumber board short. An earlier five-product round, before barcodes were in, had one wrong charge.
-- **The 10 correct hand-offs are by design:** the unknown product and the locked-cage tool pass only when an associate is called.
-- **The open work is the unnecessary hand-offs.** In round 3, 15 of the 25 had an incomplete cart (16 items the cameras lost, most often an item that left view before the checkout line), and two held one wrong line (a second pair of gloves, a third board).
-- **Small samples.** With 85 runs, zero wrong closes still allows a true rate up to about 3.5%, and 5 runs per scenario are signals, not rates. Rounds 1 and 2 share test seeds 5–9, so only round 3 (seeds 10–14, scored once) is a clean first look.
-
-Details and per-scenario scores: [benchmark](docs/benchmark.md), [how it works](docs/pro-express-v2.md#carts-measured-2026-10-11).
-
-![Three cameras on a flat cart: the gate camera tracks, the overhead camera covers occlusions, the barcode camera reads the label](docs/images/cart-three-cameras.jpg)
-
-![Eight cart scenarios from the gate camera](docs/images/cart-scenarios.jpg)
-
-![Two cameras: a flatbed hides the product from the lane camera while the coverage map keeps tracking it through the overhead camera](docs/images/two-camera-live.jpg)
-
-![Eight messy benchmark scenarios rendered by Unity](docs/images/messy-scenarios.jpg)
-
-## 🧭 Documentation map
+## Documentation
 
 | Doc | Read it to… |
 |---|---|
-| 🚀 [Getting started](docs/getting-started.md) | Install, run the demo, and fix common problems |
-| 🖥️ [Dashboard tour](docs/getting-started.md#️-dashboard-tour) | Use the title screen and the Live lane, Decisions, Models and Benchmark tabs |
-| 📷 [Camera evidence and coverage](docs/dashboard.md) | Switch views and read the calibrated map |
-| 🔬 [Phase C results](docs/roadmap.md#-phase-c-results) | One camera vs two, on development and held-out seeds |
-| 🔁 [Unity → web pipeline](docs/pipeline.md) | Follow a frame from Unity's camera to the cart on screen |
-| 🏗️ [Architecture](docs/architecture.md) | Understand the components, the checkout state machine and the design decisions |
-| 👁️ [Vision and tracking](docs/vision.md) | See how detection, classification, tracking and zone events work, and tune them |
-| 🧪 [Training and results](docs/training.md) | Export data from Unity, retrain both models, and read the measured results |
-| 📊 [Benchmark](docs/benchmark.md) | See current per-scenario exact-cart and review scores |
-| 🔌 [API reference](docs/api.md) | Look up endpoints, payloads and the snapshot shape |
-| 🧩 [Extending ProPass](docs/extending.md) | Add a product, scenario, camera or model |
-| 🗺️ [Roadmap](docs/roadmap.md) | See what's next: messy lanes, learned re-ID, multi-camera coverage |
-| 🧰 [Pro Express v2 plan](docs/pro-express-v2.md) | Read what's planned next: real product looks, barcode scanning, ratings, associate handoff, a customer phone view |
-| 📚 [Research](docs/research/README.md) | Read the original technical report and research notes |
+| [Getting started](docs/getting-started.md) | Install, run, and fix common problems |
+| [Architecture](docs/architecture.md) | Components, the checkout state machine, design decisions |
+| [Unity → web pipeline](docs/pipeline.md) | Follow one frame from a camera to the cart on screen |
+| [Vision and tracking](docs/vision.md) | Detection, classification, tracking, fusion and the ledger |
+| [Training](docs/training.md) | Export data, train, record and score |
+| [Benchmark](docs/benchmark.md) | Per-scenario held-out scores (generated) |
+| [API reference](docs/api.md) | Endpoints, payloads and the snapshot shape |
+| [Extending](docs/extending.md) | Add a product, scenario, camera or model |
+| [Project log](docs/pro-express-v2.md) | Earlier rounds, what changed and why |
+| [HANDOFF.md](HANDOFF.md) | Working notes for whoever picks this up next |
 
-## 🗂️ Project layout
+## Project layout
 
 ```text
-api/          FastAPI app: frame ingress, cart/session persistence, confirmation
-vision/       Learned RGB inference, SKU evidence, physical-object ledger, config.json
-web/          React + TypeScript dashboard: title screen + Live/Decisions/Models/Benchmark tabs
-unity/        The Unity 6.6 project; our code and scene live in unity/Assets/ProPass
-training/     Dataset prep, model training, static and replay evaluation
-models/       Checkpoints (git-ignored), hash manifest, evaluation reports
-scripts/      start.sh launcher and the live end-to-end check
-tests/        Ledger, engine and checkout API tests
-docs/         Everything you are reading
-catalog.json  The eight products, prices and class indices
+api/          FastAPI app: frame ingress, replay, cart and session persistence, checkout
+vision/       Inference engine, camera calibration, barcode reading, the physical-object ledger
+web/          React + TypeScript dashboard: project site, recorded tour, live lab
+unity/        The Unity 6.6 project; code, scene and generated label art in unity/Assets/ProPass
+training/     Model training and the benchmark scorer
+models/       Hash manifests and benchmark reports (weights are release assets)
+scripts/      round.sh (the whole pipeline), start.sh, weight and recording downloads, tour builder
+tests/        156 tests: ledger, fusion, calibration, barcodes, API, catalog consistency
+docs/         Documentation
+catalog.json  The 15 invented products: prices, barcodes, label art recipe
 ```
 
-## ✅ Checks
+## Checks
 
 ```bash
-.venv/bin/python -m pytest tests -q        # ledger, fusion, calibration, checkout races, rejection
+.venv/bin/python -m pytest tests -q        # ledger, fusion, calibration, barcodes, API, catalog
 (cd web && npm run build)                  # type-check and bundle the dashboard
-.venv/bin/python scripts/verify_live.py    # needs Unity in Play mode + the API
 ```
 
-## 📜 Licensing notes
+## Licensing notes
 
-Ultralytics (the YOLO detector) is AGPL-3.0 or commercially licensed, and nothing in this repo grants a license to its code or weights. Torchvision's pretrained EfficientNet weights keep their upstream attribution. Review both before you distribute any weights.
+Ultralytics (the YOLO detector) is AGPL-3.0 or commercially licensed, and nothing in this repository grants a license to its code or weights. Torchvision's pretrained EfficientNet weights carry their own terms. The character models in the videos come from the "Creative Characters FREE" pack by ithappy on the Unity Asset Store and are not redistributed here. All product names, brands and package art were invented for this project and generated by `scripts/prepare_products.py`; the names have not been checked against registered trademarks.

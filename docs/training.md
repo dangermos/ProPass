@@ -1,5 +1,12 @@
 # 🧪 Training and results
 
+> [!TIP]
+> **The short way: `scripts/round.sh`.** One command exports the training data, trains both camera model pairs, records the 85 development runs and scores them, unattended and throttled, and it resumes where it stopped. `scripts/round.sh test` records and scores fresh held-out runs once; `scripts/round.sh tour` renders the 60 fps tour videos; `.venv/bin/python scripts/publish_results.py` then writes the numbers into the README and the site. Watch it with `tail -f artifacts/logs/round.log`. The sections below explain each stage and how to run it by hand.
+
+> [!NOTE]
+> **Current results live in the [README](../README.md#measured-results) and [benchmark.md](benchmark.md).** Tables on this page that mention 5 or 8 products, or held-out seeds 5–9, are from earlier rounds and are kept as history.
+
+
 Both models are trained only on **procedural Unity data** from the lane and overhead views. There's no human footage and no scraped imagery. Unity's labels are used offline and never at runtime. The two-view training set has **2,100 scenes**. The scenario benchmark uses separate recordings and seeds.
 
 ```mermaid

@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 614" font-family="Segoe UI, Helvetica, Arial, sans-serif">
 <rect width="760" height="614" rx="16" fill="#0d1420"/>
-<text x="24" y="36" fill="#ffffff" font-size="18" font-weight="700">Benchmark · Pro Express v2 · carts · held-out seeds 10–14</text>
+<text x="24" y="36" fill="#ffffff" font-size="18" font-weight="700">Benchmark · held-out seeds 15-19</text>
 <text x="24" y="54" fill="#8fa3bf" font-size="12">Share of runs with the exact cart and the correct review decision</text>
 <circle cx="30" cy="76" r="4" fill="#ffbb71"/>
 <text x="42" y="80" fill="#c9d4e3" font-size="13">single</text>
 <rect x="150" y="67" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="67" width="416" height="18" rx="5" fill="#2ea043"/>
-<text x="682" y="80" fill="#ffffff" font-size="13" font-weight="600">80%</text>
+<rect x="150" y="67" width="520" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="80" fill="#ffffff" font-size="13" font-weight="600">100%</text>
 <circle cx="30" cy="106" r="4" fill="#ffbb71"/>
 <text x="42" y="110" fill="#c9d4e3" font-size="13">duplicate</text>
 <rect x="150" y="97" width="520" height="18" rx="5" fill="#1b2638"/>
@@ -35,33 +35,33 @@
 <circle cx="30" cy="256" r="4" fill="#bd9aff"/>
 <text x="42" y="260" fill="#c9d4e3" font-size="13">hands</text>
 <rect x="150" y="247" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="247" width="208" height="18" rx="5" fill="#f85149"/>
-<text x="682" y="260" fill="#ffffff" font-size="13" font-weight="600">40%</text>
+<rect x="150" y="247" width="312" height="18" rx="5" fill="#d29922"/>
+<text x="682" y="260" fill="#ffffff" font-size="13" font-weight="600">60%</text>
 <circle cx="30" cy="286" r="4" fill="#bd9aff"/>
 <text x="42" y="290" fill="#c9d4e3" font-size="13">shopper</text>
 <rect x="150" y="277" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="277" width="208" height="18" rx="5" fill="#f85149"/>
-<text x="682" y="290" fill="#ffffff" font-size="13" font-weight="600">40%</text>
+<rect x="150" y="277" width="416" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="290" fill="#ffffff" font-size="13" font-weight="600">80%</text>
 <circle cx="30" cy="316" r="4" fill="#bd9aff"/>
 <text x="42" y="320" fill="#c9d4e3" font-size="13">flatbed</text>
 <rect x="150" y="307" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="307" width="312" height="18" rx="5" fill="#d29922"/>
-<text x="682" y="320" fill="#ffffff" font-size="13" font-weight="600">60%</text>
+<rect x="150" y="307" width="416" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="320" fill="#ffffff" font-size="13" font-weight="600">80%</text>
 <circle cx="30" cy="346" r="4" fill="#bd9aff"/>
 <text x="42" y="350" fill="#c9d4e3" font-size="13">edge</text>
 <rect x="150" y="337" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="337" width="416" height="18" rx="5" fill="#2ea043"/>
-<text x="682" y="350" fill="#ffffff" font-size="13" font-weight="600">80%</text>
+<rect x="150" y="337" width="312" height="18" rx="5" fill="#d29922"/>
+<text x="682" y="350" fill="#ffffff" font-size="13" font-weight="600">60%</text>
 <circle cx="30" cy="376" r="4" fill="#bd9aff"/>
 <text x="42" y="380" fill="#c9d4e3" font-size="13">stacked</text>
 <rect x="150" y="367" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="367" width="2" height="18" rx="5" fill="#f85149"/>
-<text x="682" y="380" fill="#ffffff" font-size="13" font-weight="600">0%</text>
+<rect x="150" y="367" width="208" height="18" rx="5" fill="#f85149"/>
+<text x="682" y="380" fill="#ffffff" font-size="13" font-weight="600">40%</text>
 <circle cx="30" cy="406" r="4" fill="#bd9aff"/>
 <text x="42" y="410" fill="#c9d4e3" font-size="13">distractors</text>
 <rect x="150" y="397" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="397" width="312" height="18" rx="5" fill="#d29922"/>
-<text x="682" y="410" fill="#ffffff" font-size="13" font-weight="600">60%</text>
+<rect x="150" y="397" width="416" height="18" rx="5" fill="#2ea043"/>
+<text x="682" y="410" fill="#ffffff" font-size="13" font-weight="600">80%</text>
 <circle cx="30" cy="436" r="4" fill="#bd9aff"/>
 <text x="42" y="440" fill="#c9d4e3" font-size="13">bystander</text>
 <rect x="150" y="427" width="520" height="18" rx="5" fill="#1b2638"/>
@@ -70,8 +70,8 @@
 <circle cx="30" cy="466" r="4" fill="#bd9aff"/>
 <text x="42" y="470" fill="#c9d4e3" font-size="13">hesitate</text>
 <rect x="150" y="457" width="520" height="18" rx="5" fill="#1b2638"/>
-<rect x="150" y="457" width="208" height="18" rx="5" fill="#f85149"/>
-<text x="682" y="470" fill="#ffffff" font-size="13" font-weight="600">40%</text>
+<rect x="150" y="457" width="312" height="18" rx="5" fill="#d29922"/>
+<text x="682" y="470" fill="#ffffff" font-size="13" font-weight="600">60%</text>
 <circle cx="30" cy="496" r="4" fill="#bd9aff"/>
 <text x="42" y="500" fill="#c9d4e3" font-size="13">parked</text>
 <rect x="150" y="487" width="520" height="18" rx="5" fill="#1b2638"/>

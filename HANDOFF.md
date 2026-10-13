@@ -1,17 +1,24 @@
-# Handoff notes (2026-10-11)
+# Handoff notes (2026-10-12)
 
 For the next person or AI picking this up. Read this first, then [docs/roadmap.md](docs/roadmap.md).
 
 ## Where things stand
 
-| Branch | State |
-|---|---|
-| `main` | **Everything.** Phases A–C, the dashboard, and Pro Express v2: barcode scanning, ratings, locked items, associate hand-off, customer phone view, eight products. Animated characters, a Training tab in the dashboard, and customers pushing shopping, flat and lumber carts. Held-out with carts (seeds 10–14): **60/85** pass, of which 50 close with no associate and 10 are correct hand-offs; no cart closed with a wrong item (characters without carts scored 71/85, weights in `models/v6/`; capsule people 78/85, weights in `models/v5/`). 153 tests pass. |
-| `pro-express-v2` | Merged into `main` on 2026-10-06 (Danny's request). |
+**Everything is on `main`.** The current scene has 15 invented products (boxes, pails, a locked tool, bare lumber) from six invented brands, customers pushing three kinds of cart, and a stocked store. Both camera model pairs were retrained on 4,400 scenes of it on 2026-10-12.
 
-Owner: Danny (GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants real trained models, colorful visual docs, no bloat, and to be asked before deleting or restructuring. Commit and push often. He likes short progress updates as work goes on.
+| | Development seeds 0–4 | Held-out seeds 15–19 (scored once) |
+|---|:-:|:-:|
+| Passed | 67 | **68** |
+| Closed automatically, exactly right | 57 | **58** |
+| Correctly sent to an associate | 10 | 10 |
+| Sent to an associate unnecessarily | 18 | 17 |
+| Closed with a wrong or missing item | 0 | 0 |
 
-**The plan, progress checklist and results for the current work are in [docs/pro-express-v2.md](docs/pro-express-v2.md). Start there.**
+The README, the project site (`web/public/results.json`) and `docs/benchmark.md` are generated from the reports: run `.venv/bin/python scripts/publish_results.py` after any new score instead of typing numbers. 156 tests pass.
+
+Owner: Danny Germosen (SUNY Oswego, GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants real trained models, colorful visual docs, no bloat, and to be asked before deleting or restructuring. Commit and push often. He wants a reply at each milestone, not only status edits. **Run one heavy job at a time on his desktop**; `scripts/round.sh` and `scripts/unity_run.sh` already do that and throttle themselves.
+
+**Held-out seeds 15–19 are now spent.** Record seeds 20–24 for the next reported number (`TEST_SEED_START` in `scripts/round.sh`).
 
 ## Things that are easy to get wrong
 
@@ -27,14 +34,12 @@ Owner: Danny (GitHub `dangermos`, private repo `dangermos/ProPass`). Danny wants
 
 ## Open problems, in rough priority
 
-1. **Carts dropped held-out to 60/85.** Stacked boxes 0 of 5, busy hands, next-lane shopper and hesitation 2 of 5, lumber 2 of 5. Two handed-off carts held a wrong line (*hands* seed 11, *lumber* seed 13). Start with `python -m training.inspect_run` on the matching development runs; `models/benchmark-v3-dev.json` lists the review reasons.
-1. **Barcode reads fell to 65% of charged items** because a box behind another on a cart hides its label. A second scan camera from the side, or labels on two faces, would help.
-1. **Not redone for carts:** dashboard screenshots (`docs/images/dashboard.jpg`, `v2-*.jpg`; the title screen and tour are current), the live end-to-end check (`models/evaluation-live.json`). The cart weights are archived in `models/v7/`.
-1. **Hats are switched off** (`ProPassCharacters.cs`). A straw hat above a carried box is read as a small yellow product. The flatbed's tan deck is also sometimes read as lumber when it waits off-lane.
-1. **Stacked identical boxes pass 60%.** Two copies pressed together look like one box from both cameras. Needs instance segmentation or a count-aware detector, or should stay a review case.
-2. **One edge-of-frame run fails**, and the two-camera run misses two items there that the lane camera alone gets. Worth tracing.
-3. **Roadmap leftovers:** thumbnail crops per event in the Decisions tab, a 60–90 s demo video, and real-camera data (nothing has been tested outside Unity).
-4. `docs/training.md` still describes `training/replay.py`, which the benchmark recorder has replaced. Remove the script and that section together.
+1. **17 of 85 held-out carts go to an associate without needing it.** The top reason is "entered merchandise disappeared before an observed checkout": an item is lost from view before the line (stacked packages 2 of 5, lumber 2 of 5, hesitation 3 of 5). Start from `models/benchmark-dev.json` review reasons and `python -m training.inspect_run` on development runs.
+2. **Barcodes settle only 60 of 103 charged items.** A package behind another on a cart hides its label. A side scan camera or labels on two faces would help.
+3. **A barcode that disagrees with how a package looks now always goes to an associate** (`PhysicalLedger._scan`). That removed the one wrong charge on development runs (a pail standing on a box took the box's label), at the cost of some automation when the classifier is the one that is wrong. A height-aware label assignment would be the better fix.
+4. **Nothing real has been tested.** The smallest useful experiment: one real camera, one real cart, printed copies of these labels.
+5. **Not redone for the new scene:** `docs/images/dashboard.jpg`, `v2-*.jpg`, `two-camera-live.jpg`, `messy-scenarios.jpg` and `models/evaluation-live.json` show the older scene; latency (36 ms per frame) was measured on the 8-product round.
+6. **From the outside reviews, still open:** a confusion-matrix or failure-frame figure on the site, an automation-versus-safety curve, tracking metrics, and a check of the invented brand names against trademarks.
 
 ## Working notes
 

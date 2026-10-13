@@ -73,6 +73,8 @@ namespace ProPass.Editor
             show.CopyFrom(camera); show.fieldOfView = 42f; show.enabled = false;
             var showTarget = new RenderTexture(1280, 720, 24, RenderTextureFormat.ARGB32) { antiAliasing = 4 };
             var showPixels = new Texture2D(1280, 720, TextureFormat.RGB24, false);
+            // Kept alive across the periodic unload of unused assets.
+            showTarget.hideFlags = HideFlags.HideAndDontSave; showPixels.hideFlags = HideFlags.HideAndDontSave; show.targetTexture = showTarget;
             try
             {
                 foreach (var scenario in scenarios)
@@ -100,10 +102,9 @@ namespace ProPass.Editor
                                 float z = Mathf.Clamp(who.z, -3.2f, 3.4f);
                                 show.transform.position = new Vector3(who.x + 2.1f, 1.75f, z + 3.6f);
                                 show.transform.LookAt(new Vector3(who.x, .85f, z + .9f));
-                                show.targetTexture = showTarget; show.Render();
+                                show.Render();
                                 var active = RenderTexture.active; RenderTexture.active = showTarget;
                                 showPixels.ReadPixels(new Rect(0, 0, 1280, 720), 0, 0); showPixels.Apply(false); RenderTexture.active = active;
-                                show.targetTexture = null;
                                 File.WriteAllBytes(Path.Combine(directory, stem + ".show.jpg"), showPixels.EncodeToJPG(90));
                             }
                         }
@@ -117,7 +118,7 @@ namespace ProPass.Editor
             {
                 if (simulation.customer != null) simulation.customer.position = customerStart;
                 ProPassCameras.Release(camera);
-                UnityEngine.Object.DestroyImmediate(showObject); showTarget.Release();
+                show.targetTexture = null; UnityEngine.Object.DestroyImmediate(showObject); showTarget.Release();
                 UnityEngine.Object.DestroyImmediate(showTarget); UnityEngine.Object.DestroyImmediate(showPixels);
             }
         }

@@ -1,6 +1,10 @@
 # 🗺️ Roadmap: tracking that holds up in messy lanes
 
 > [!NOTE]
+> **Current results live in the [README](../README.md#measured-results) and [benchmark.md](benchmark.md).** Tables on this page that mention 5 or 8 products, or held-out seeds 5–9, are from earlier rounds and are kept as history.
+
+
+> [!NOTE]
 > **Status:** Phases A and B are ✅ done ([A results](#-phase-a-results), [B results](#-phase-b-results)). Phase C (second camera) is ✅ done ([C results](#-phase-c-results)), and so is most of Phase D. Each phase lists what changes, which *real models* are involved, and how success gets measured.
 
 Today's lane is clean: boxes slide in a straight line, the only occluder is a slab that appears for 0.6 s, and nothing else ever enters the frame. Real checkout lanes are messy. The goal is a tracker that keeps an exact cart through **occlusion, partial views, distractors and multiple cameras**, and can prove it with numbers.

@@ -1,5 +1,9 @@
 # 👁️ Vision and tracking
 
+> [!NOTE]
+> **Current results live in the [README](../README.md#measured-results) and [benchmark.md](benchmark.md).** Tables on this page that mention 5 or 8 products, or held-out seeds 5–9, are from earlier rounds and are kept as history.
+
+
 The vision package turns synchronized **lane and overhead RGB images** into camera observations, projects them onto a shared carry-height plane, and fuses views of the same merchandise. The **physical ledger** then turns those observations into **physical objects and cart events**. Camera-local tracker IDs, shared physical identity and SKU are separate concepts. Everything here lives in [vision/](../vision).
 
 ![Detector predictions on held-out synthetic scenes](images/detector-predictions.jpg)

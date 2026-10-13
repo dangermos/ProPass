@@ -1,6 +1,10 @@
 # 🧰 Pro Express v2: plan
 
 > [!NOTE]
+> **This is the project log.** It records each round as it was built and measured, including numbers that were later corrected. The current scene (15 invented products, stocked store, fresh held-out seeds 15–19) and its results are in the [README](../README.md#measured-results).
+
+
+> [!NOTE]
 > **Status: in progress on the `pro-express-v2` branch.** Written on 2026-10-06 from Danny's brief, before any code, so the work can be picked up by anyone. Progress is tracked in the checklist at the bottom.
 
 ## 🎯 The brief, in Danny's words (condensed)
@@ -235,6 +239,19 @@ Both camera model pairs were retrained on 2,640 scenes (1,728 earlier + 912 with
 - Median time per frame was 36 ms on development seeds (models only, recorded frames). The held-out report says 67.5 ms because a game was running on the same GPU during scoring; do not quote that number.
 - Reports: `models/benchmark-v3-dev.json`, `models/benchmark-v3-test.json`. The cart weights are archived in `models/v7/`. The pre-cart character weights are in `models/v6/`, their recordings in `artifacts/benchmark-nocart` and `artifacts/benchmark-test-nocart`.
 - **Not redone for carts:** the dashboard screenshots in this document and the README title screen are from before carts, and the live end-to-end check has not been repeated with the cart weights.
+
+### Fictional catalog and a stocked store (measured, 2026-10-12)
+
+Danny asked for everything to be fictional and far more varied, better-looking videos, and a faster pipeline.
+
+![The new store, products and follow camera](images/new-store-preview.jpg)
+
+- **Catalog:** 15 invented products from six invented brands, up from 8 (one of which carried a real brand and photo, now removed). Boxes of many proportions and two pails. Every printed front, top and barcode is drawn by `scripts/prepare_products.py`.
+- **Store:** stocked pallet racking, walls, signage, an associate station. The crossing flatbed now rolls at walking pace with an associate pushing it.
+- **Pipeline:** `scripts/round.sh` runs export, training, recording and scoring unattended in about 40 minutes; scoring uses four processes.
+- **First pass, 58 of 85 on development runs, one wrong close.** Two causes, both fixed on development runs: package tops that repeated the front's dark brand bar made one box look like two to the detector (redrawn as plain panels: 67 of 85), and a pail standing on a box took the box's barcode (a barcode that disagrees with how a package looks now goes to an associate).
+- **Held-out seeds 15–19, scored once: 68 of 85 pass.** 58 close automatically, 10 are correct hand-offs, 17 are unnecessary hand-offs, none closed wrong. The same table for the previous 8-product cart round was 60, 50, 10, 25, 0.
+- Weights: `models/v8/` and release `weights-v8-fictional`. Reports: `models/benchmark-dev.json`, `models/benchmark-test.json`.
 
 ### Earlier rounds
 

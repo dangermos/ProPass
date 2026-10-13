@@ -1,0 +1,126 @@
+{
+ "dev": {
+  "runs": 85,
+  "seeds": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "passed": 67,
+  "auto": 57,
+  "held": 10,
+  "extra": 18,
+  "extra_incomplete": 10,
+  "wrong": 0,
+  "missed": 13,
+  "false_adds": 0,
+  "barcode": 62,
+  "charged": 101,
+  "scenes": {
+   "bystander": 4,
+   "distractors": 5,
+   "duplicate": 5,
+   "edge": 4,
+   "flatbed": 3,
+   "hands": 4,
+   "hesitate": 4,
+   "locked": 5,
+   "lumber": 3,
+   "mixed": 3,
+   "occlusion": 4,
+   "parked": 3,
+   "remove": 5,
+   "shopper": 4,
+   "single": 4,
+   "stacked": 2,
+   "unknown": 5
+  },
+  "top_reasons": [
+   [
+    "Entered merchandise disappeared before an observed checkout or reverse removal",
+    8
+   ],
+   [
+    "Product first observed beyond checkout boundary",
+    7
+   ],
+   [
+    "Conflicting SKU evidence on the same physical object",
+    2
+   ]
+  ]
+ },
+ "test": {
+  "runs": 85,
+  "seeds": [
+   15,
+   16,
+   17,
+   18,
+   19
+  ],
+  "passed": 68,
+  "auto": 58,
+  "held": 10,
+  "extra": 17,
+  "extra_incomplete": 9,
+  "wrong": 0,
+  "missed": 13,
+  "false_adds": 1,
+  "barcode": 60,
+  "charged": 103,
+  "scenes": {
+   "bystander": 5,
+   "distractors": 4,
+   "duplicate": 5,
+   "edge": 3,
+   "flatbed": 4,
+   "hands": 3,
+   "hesitate": 3,
+   "locked": 5,
+   "lumber": 2,
+   "mixed": 5,
+   "occlusion": 5,
+   "parked": 3,
+   "remove": 5,
+   "shopper": 4,
+   "single": 5,
+   "stacked": 2,
+   "unknown": 5
+  },
+  "top_reasons": [
+   [
+    "Entered merchandise disappeared before an observed checkout or reverse removal",
+    12
+   ],
+   [
+    "Product first observed beyond checkout boundary",
+    6
+   ],
+   [
+    "Conflicting SKU evidence on the same physical object",
+    3
+   ]
+  ]
+ },
+ "models": {
+  "lane": {
+   "map50": 0.972,
+   "map50_95": 0.818,
+   "accuracy": 0.955,
+   "crops": 576,
+   "train_scenes": 3400
+  },
+  "overhead": {
+   "map50": 0.974,
+   "map50_95": 0.867,
+   "accuracy": 0.946,
+   "crops": 672,
+   "train_scenes": 3400
+  }
+ },
+ "tests": 156,
+ "products": 15
+}

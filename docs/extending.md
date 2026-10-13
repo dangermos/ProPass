@@ -1,5 +1,9 @@
 # 🧩 Extending ProPass
 
+> [!NOTE]
+> **Current results live in the [README](../README.md#measured-results) and [benchmark.md](benchmark.md).** Tables on this page that mention 5 or 8 products, or held-out seeds 5–9, are from earlier rounds and are kept as history.
+
+
 These are recipes for the most common changes. Each one lists every file you'll touch, so nothing gets missed.
 
 ```mermaid
@@ -28,14 +32,12 @@ mindmap
 
 ## 🏷️ Add a product
 
-1. **Catalog:** add an entry to [catalog.json](../catalog.json) with the next `class_index`:
-   ```json
-   {"sku":"PEX-006","name":"Cordless Impact Driver","price":159.00,"class_index":5,"color":[0.95,0.55,0.10]}
-   ```
-2. **Unity:** in [ProPassSceneBuilder.cs](../unity/Assets/ProPass/Editor/ProPassSceneBuilder.cs), extend `Colors`, `Names` and `Sizes`. Keep the gray *unenrolled* package **last**, then update the `"PEX-00"+(i+1)` and `i<5` logic and known-product bounds. In [ProPassDatasetExporter.cs](../unity/Assets/ProPass/Editor/ProPassDatasetExporter.cs), update crop folders, known-product sampling/modulo bounds, crop eligibility and the gray-prefab index. Run **ProPass → Build checkout scene**.
-3. **Scenario indices:** move the `unknown` scenario's gray-prefab index in [ProPassScenario.cs](../unity/Assets/ProPass/Runtime/ProPassScenario.cs) after the new known products; otherwise the unknown demo would show the newly enrolled SKU.
-4. **Data and models:** export both camera perspectives, extract unknown crops, retrain **the classifiers** for both cameras (see [training.md](training.md)). The classifier's SKU order and output size come from the catalog. Evaluate whether the merchandise detector needs retraining for the new package's appearance or geometry.
-5. **Check:** the engine refuses to load a classifier whose SKU order doesn't match the catalog, so a stale checkpoint fails loudly instead of mislabeling. Re-run static evaluation and the temporal benchmark, including two identical units of the new SKU.
+The catalog is written in two places that must agree, and a test (`tests/test_catalog_consistency.py`) fails if they do not.
+
+1. **`catalog.json`:** add the product with the next free `class_index`, a made-up 10-digit `barcode` starting with `99`, a `size` in meters, a `shape` (`box`, `drum` or `board`), a `color`, an `accent`, and the label art recipe (`brand`, `label`, `pattern`, `icon`).
+2. **Unity:** add the matching row to [ProPassCatalog.cs](../unity/Assets/ProPass/Runtime/ProPassCatalog.cs). Ordinary products go before the `UNKNOWN` row; raise `Ordinary`, `Unknown`, `Locked`, `Lumber` and `TreatedLumber` by one each.
+3. **Rebuild everything:** `scripts/round.sh art` draws the label art, rebuilds the scene, exports new training data, retrains both camera model pairs, and records and scores the development runs. Any change to how a product looks needs this, because the models learn from rendered images.
+4. **Check:** `.venv/bin/python -m pytest -q tests`, then read `artifacts/logs/round.log` for the development score. The engine refuses to load a classifier whose SKU order does not match the catalog, so a stale checkpoint fails loudly.
 
 ## 🎬 Add a scenario
 

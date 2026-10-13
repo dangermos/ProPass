@@ -1,5 +1,9 @@
 # 🔁 Unity → web pipeline
 
+> [!NOTE]
+> **Current results live in the [README](../README.md#measured-results) and [benchmark.md](benchmark.md).** Tables on this page that mention 5 or 8 products, or held-out seeds 5–9, are from earlier rounds and are kept as history.
+
+
 This page follows one **synchronized capture group** from Unity's lane and overhead cameras to the dashboard cart, then follows the control loop back to Unity. Both images share a frame number, timestamp and run ID; the backend performs one ledger update for the group.
 
 ![Pipeline overview](images/pipeline.svg)

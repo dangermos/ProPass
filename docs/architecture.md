@@ -1,5 +1,9 @@
 # 🏗️ Architecture
 
+> [!NOTE]
+> **Current results live in the [README](../README.md#measured-results) and [benchmark.md](benchmark.md).** Tables on this page that mention 5 or 8 products, or held-out seeds 5–9, are from earlier rounds and are kept as history.
+
+
 ProPass is four small parts with one strict boundary between them: **Unity owns the physical world, and everything after the cameras has to infer it from pixels.** Synchronized lane and overhead views feed one physical ledger and one cart. Fixed camera calibration supplies geometry; live product transforms and labels never enter inference.
 
 ```mermaid

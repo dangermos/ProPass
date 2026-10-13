@@ -3,7 +3,7 @@
 # into models/. Needs the GitHub CLI signed in to an account that can read the repository.
 set -euo pipefail
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.."
-TAG="${1:-weights-v7-carts}"
+TAG="${1:-weights-v8-fictional}"
 TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
 gh release download "$TAG" --repo dangermos/ProPass --dir "$TMP"
 mkdir -p models/overhead

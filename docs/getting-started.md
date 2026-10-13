@@ -42,15 +42,22 @@ models/overhead/detector.pt   ← overhead camera pair
 models/overhead/classifier.pt
 ```
 
-Either copy them from a machine that already has them (check SHA-256 against [models/manifest.json](../models/manifest.json)), or reproduce them with [training.md](training.md). Without weights, the API still starts. Models initialize on the first accepted capture group; missing checkpoints then appear in `/api/health`. Predictions are never simulated.
+Download them with one command (needs the [GitHub CLI](https://cli.github.com/), signed in to an account that can read the repository), or rebuild them with `scripts/round.sh` ([training.md](training.md)):
 
-### Product labels and photos
+```bash
+bash scripts/get_weights.sh       # both camera pairs, 42 MB; prints their SHA-256, which should match models/manifest.json
+bash scripts/get_recordings.sh    # one recorded run per scenario (about 500 MB), so scenes run without Unity
+```
+
+Without weights, the API still starts and the dashboard says the models are missing.
+
+### Product label art
 
 ```bash
 .venv/bin/python scripts/prepare_products.py
 ```
 
-This builds each product's barcode label, and its photo when you have put one in `Barcodes/` (two files per product, named by the 10-digit SKU: `1015765383.png` for the photo, `1015765383.gif` for the barcode). The folder and the generated textures stay out of git. Afterwards, rebuild the scene in Unity with **ProPass → Build checkout scene**.
+This draws every product's printed front, top and barcode label from `catalog.json`. All 15 products and their brands are invented, so the art is generated and already in the repository; rerun the script only after changing the catalog, then rebuild the scene (**ProPass → Build checkout scene**).
 
 ## 3️⃣ Open the Unity project
 

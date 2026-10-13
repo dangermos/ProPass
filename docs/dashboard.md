@@ -1,5 +1,9 @@
 # 🖥️ Inspecting the checkout lane
 
+> [!NOTE]
+> **Current results live in the [README](../README.md#measured-results) and [benchmark.md](benchmark.md).** Tables on this page that mention 5 or 8 products, or held-out seeds 5–9, are from earlier rounds and are kept as history.
+
+
 The dashboard has four tabs and a scenario title screen. **Live lane** shows the rendered camera evidence, physical objects, events and cart. **Decisions** explains ledger membership and review blocks. **Models** and **Benchmark** load measured results from the local reports.
 
 ## 📷 Camera evidence
