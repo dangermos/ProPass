@@ -13,18 +13,23 @@ function VideoCanvas({snapshot,config,camera,showTracks,worldMode}:{snapshot:Sna
   const ref=useRef<HTMLCanvasElement>(null);
   const [displayedFrame,setDisplayedFrame]=useState<string|null>(null);
   const [failedFrame,setFailedFrame]=useState<string|null>(null);
+  // Once a frame is on screen it stays there until the next one is fully decoded and drawn over it.
+  // Swapping the canvas for a placeholder between frames made the view flash several times a second.
+  const shownRun=useRef<string|null>(null);
   const frame=frameForCamera(snapshot,camera);
   const frameKey=frame?`${camera}:${frame.run_id}:${frame.frame_id}:${showTracks}`:null;
   useEffect(()=>{
     if(!frame)return;
     const image=new Image();
     let cancelled=false;
-    image.onload=()=>{
+    const draw=()=>{
       if(cancelled||!ref.current)return;
       const canvas=ref.current,ctx=canvas.getContext('2d');if(!ctx)return;
-      canvas.width=frame.width;canvas.height=frame.height;
+      // Resizing a canvas clears it, so only do it when the size really changes.
+      if(canvas.width!==frame.width||canvas.height!==frame.height){canvas.width=frame.width;canvas.height=frame.height;}
+      shownRun.current=`${camera}:${frame.run_id}`;
       ctx.drawImage(image,0,0);
-      if(!showTracks){setDisplayedFrame(frameKey);return;}
+      if(!showTracks){setDisplayedFrame(frameKey);setFailedFrame(null);return;}
       const ledger=config?.ledger||{},W=frame.width,H=frame.height;
       const lane:number[][]|undefined=ledger.lane_polygon;
       if(lane&&!worldMode){ctx.save();ctx.beginPath();lane.forEach(([x,y],i)=>i?ctx.lineTo(x*W,y*H):ctx.moveTo(x*W,y*H));ctx.closePath();ctx.fillStyle='rgba(56,214,191,0.07)';ctx.fill();ctx.setLineDash([4,6]);ctx.lineWidth=1.5;ctx.strokeStyle='rgba(220,235,255,0.45)';ctx.stroke();ctx.restore();ctx.font='bold 12px monospace';ctx.fillStyle='rgba(220,235,255,0.7)';ctx.fillText('LANE',lane[3][0]*W+8,24);}
@@ -42,13 +47,17 @@ function VideoCanvas({snapshot,config,camera,showTracks,worldMode}:{snapshot:Sna
       });
       // Decoded barcodes, outlined where the scan camera read them.
       (snapshot?.barcodes??[]).filter(b=>b.camera===camera).forEach(b=>{ctx.strokeStyle='#7ee2b8';ctx.lineWidth=5;ctx.beginPath();b.corners.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));ctx.closePath();ctx.stroke();const label=`${b.text}${b.sku.startsWith('unlisted')?' · NOT IN CATALOG':''}`;ctx.font='bold 30px monospace';const w=ctx.measureText(label).width+24;const x=b.corners[0][0],y=Math.max(40,b.corners[0][1]-12);ctx.fillStyle=b.sku.startsWith('unlisted')?'#ff8293':'#7ee2b8';ctx.fillRect(x,y-36,w,40);ctx.fillStyle='#07121a';ctx.fillText(label,x+12,y-6);});
-      setDisplayedFrame(frameKey);
+      setDisplayedFrame(frameKey);setFailedFrame(null);
     };
+    // A frame that has moved on (evicted) is skipped quietly: the last good frame stays up.
     image.onerror=()=>{if(!cancelled)setFailedFrame(frameKey);};
     image.src=frame.url;
-    return()=>{cancelled=true;image.onload=null;image.onerror=null;};
+    // Decode off-screen first, then draw in one step.
+    image.decode().then(draw,()=>{if(!cancelled&&image.complete&&image.naturalWidth)draw();else if(!cancelled)setFailedFrame(frameKey);});
+    return()=>{cancelled=true;image.onerror=null;};
   },[frame?.url,frameKey,snapshot?.detections,snapshot?.barcodes,config,camera,showTracks,worldMode]); // image and boxes come from the same processed group
-  const hasImage=!!frameKey&&displayedFrame===frameKey&&failedFrame!==frameKey;
+  // Keep showing whatever was drawn last for this camera and run; the placeholder is only for "nothing yet".
+  const hasImage=!!displayedFrame&&!!frame&&shownRun.current===`${camera}:${frame.run_id}`;
   return <div className="camera-stage"><canvas ref={ref} className={hasImage?'':'hidden'}/>{!hasImage&&<div className="empty-camera"><div className="camera-grid"/><div className="camera-orbit"><Icon name="camera" size={36}/></div><h3>{frame?failedFrame===frameKey?'Frame no longer available':'Loading camera frame':snapshot?.frame?`${cameraName(camera)} is missing from this frame`:'Waiting for the checkout camera'}</h3><p>{frame?'The displayed image and boxes use the same frame ID.':snapshot?.frame?'The cart continues with the available view. No older image is reused.':'Start the Unity simulation to stream rendered RGB frames.'}</p><span className="connection-code">UNITY → VISION → CHECKOUT</span></div>}<div className="feed-corner top-left"><span className="dot"/> {camera.toUpperCase()} <span className="muted">/ CHECKOUT VIEW</span></div><div className="feed-corner bottom-left">{frame?`FRAME ${frame.frame_id.toString().padStart(5,'0')} · ${frame.width} × ${frame.height}`:'NO MATCHING CAMERA FRAME'}</div><div className="feed-corner bottom-right">RGB INPUT ONLY</div></div>;
 }
 
