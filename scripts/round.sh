@@ -15,7 +15,7 @@ set -uo pipefail
 cd "$(dirname "$0")/.."
 ROOT="$PWD"; PY=.venv/bin/python; LOG=artifacts/logs/round.log; mkdir -p artifacts/logs
 TRAIN=3400; VAL=500; TEST=500; SLICE=800          # training scenes, and how many one Unity launch exports
-DEV_SEEDS=5; TEST_SEED_START=15                   # development seeds 0-4; held-out seeds 15-19
+DEV_SEEDS=5; TEST_SEED_START=20                   # development seeds 0-4; held-out seeds 20-24
 WORKERS=4                                         # scoring processes
 SCENE_GROUPS=("single,duplicate,mixed,occlusion,remove,unknown" "hands,shopper,flatbed,edge,stacked,distractors" "bystander,hesitate,parked,locked,lumber")
 FROM="${1:-art}"; STARTED=0

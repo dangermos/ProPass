@@ -36,9 +36,9 @@ namespace ProPass
         public readonly GameObject Root;
         readonly ProPassCharacterSet set;
         readonly float phase;
-        PlayableGraph graph;
-        AnimationClipPlayable walk, idle;
-        AnimationMixerPlayable mixer;
+        readonly GameObject rig;        // the object carrying the Animator, which the clips are sampled onto
+        readonly Transform hips;
+        readonly Vector3 restHips;      // where the hips sit relative to the character's root when standing
         float facing;
 
         // Slots every character wears, and slots that only some do (with how often, out of 8).
@@ -59,6 +59,9 @@ namespace ProPass
             foreach (var renderer in Root.GetComponentsInChildren<SkinnedMeshRenderer>(true))
             {
                 renderer.updateWhenOffscreen = true;    // never culled out of a label or scan render
+                // Offline recording renders many frames without the player loop running in between, and the
+                // skinned mesh would keep the shape of the first pose. Re-skin on every render instead.
+                renderer.forceMatrixRecalculationPerRender = true;
                 string slot = renderer.name;
                 int roll = random.Next(8), pick = random.Next(1 << 16);
                 int sometimes = Array.IndexOf(Sometimes, slot);
@@ -85,14 +88,10 @@ namespace ProPass
             animator.runtimeAnimatorController = null;  // the plan drives motion, not a controller
             animator.applyRootMotion = false;
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
-            graph = PlayableGraph.Create("ProPass character");
-            graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
-            walk = AnimationClipPlayable.Create(graph, set.walk);
-            idle = AnimationClipPlayable.Create(graph, set.idle);
-            mixer = AnimationMixerPlayable.Create(graph, 2);
-            graph.Connect(walk, 0, mixer, 0);
-            graph.Connect(idle, 0, mixer, 1);
-            AnimationPlayableOutput.Create(graph, "pose", animator).SetSourcePlayable(mixer);
+            rig = animator.gameObject;
+            hips = animator.isHuman ? animator.GetBoneTransform(HumanBodyBones.Hips) : null;
+            set.idle.SampleAnimation(rig, 0f);
+            restHips = hips != null ? Root.transform.InverseTransformPoint(hips.position) : Vector3.zero;
         }
 
         public void Face(float yawDegrees) => facing = yawDegrees;
@@ -105,17 +104,23 @@ namespace ProPass
             bool moving = speed > .08f;
             if (moving && !keepFacing) facing = Mathf.Atan2(velocity.x, velocity.z) * Mathf.Rad2Deg;
             Root.transform.SetPositionAndRotation(new Vector3(position.x, 0f, position.z), Quaternion.Euler(0f, facing, 0f));
-            mixer.SetInputWeight(0, moving ? 1f : 0f);
-            mixer.SetInputWeight(1, moving ? 0f : 1f);
+            // The pose is sampled straight from the clip for time t, so it is the same in Play mode,
+            // in offline recording and in the exporter, and a frame never depends on the frame before.
+            // (A manually evaluated PlayableGraph left the characters in their bind pose when rendering offline.)
             // Stride rate follows walking speed, so feet roughly keep up with the ground.
-            walk.SetTime(Mathf.Repeat((t + phase) * Mathf.Clamp(speed / 1.2f, .35f, 1.4f), set.walk.length));
-            idle.SetTime(Mathf.Repeat(t + phase, set.idle.length));
-            graph.Evaluate(0f);
+            if (moving) set.walk.SampleAnimation(rig, Mathf.Repeat((t + phase) * Mathf.Clamp(speed / 1.2f, .35f, 1.4f), set.walk.length));
+            else set.idle.SampleAnimation(rig, Mathf.Repeat(t + phase, set.idle.length));
+            // The walk clip carries its own forward travel. The plan already moves the root, so walk on the
+            // spot: keep the hips over the root and keep only their up-and-down bob.
+            if (hips != null)
+            {
+                var local = Root.transform.InverseTransformPoint(hips.position);
+                hips.position = Root.transform.TransformPoint(new Vector3(restHips.x, local.y, restHips.z));
+            }
         }
 
         public void Dispose()
         {
-            if (graph.IsValid()) graph.Destroy();
             ProPassScenarioRunner.Destroy(Root);
         }
     }
