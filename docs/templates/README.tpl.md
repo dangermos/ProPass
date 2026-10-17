@@ -47,7 +47,7 @@ The current scene has 15 invented products (boxes, pails, a locked tool, bare lu
 | Passed: cart exactly right, associate called only when needed | @DEV_PASS@ | **@TEST_PASS@** |
 | Closed automatically, exactly right | @DEV_AUTO@ | **@TEST_AUTO@** |
 | Correctly sent to an associate (unknown product, locked tool) | @DEV_HELD@ | **@TEST_HELD@** |
-| Sent to an associate as a precaution | @DEV_EXTRA@ | **@TEST_EXTRA@** |
+| Sent to an associate as a precaution (scene could have closed on its own) | @DEV_EXTRA@ | **@TEST_EXTRA@** |
 | Closed with a wrong or missing item | @DEV_WRONG@ | **@TEST_WRONG@** |
 | Items the cameras lost (all in carts sent to an associate) | @DEV_MISSED@ | @TEST_MISSED@ |
 | Wrong lines inside carts sent to an associate | @DEV_FALSE@ | @TEST_FALSE@ |
@@ -113,7 +113,7 @@ tail -f artifacts/logs/round.log
 ## Known limits
 
 - **Simulated only.** No real camera, lighting, motion blur or lens has been tested.
-- **Cautious hand-offs.** @TEST_EXTRA@ of 85 held-out carts went to an associate as a precaution. A store would want fewer, and cutting that number without risking wrong charges is the main open problem.
+- **Cautious hand-offs.** @TEST_EXTRA@ of 85 held-out carts went to an associate as a precaution, in scenes the lane could have closed on its own. A store would want fewer, and cutting that number without risking wrong charges is the main open problem.
 - **Small test.** 15 products and 85 runs.
 - **Hidden labels.** A package behind another package on a cart is not scanned and falls back to recognition by look.
 

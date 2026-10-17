@@ -25,7 +25,7 @@ The project page and a recorded tour of all 17 scenes, in the browser. Nothing t
 ## Known weak spots and next steps
 
 - **Weakest scenes:** **lumber** and **stacked** pass 2 of 5 held-out runs each. The reasons per scene are in [docs/benchmark.md](docs/benchmark.md#-why-runs-fail).
-- **Cautious hand-offs:** when the lane isn't sure, it sends the cart to an associate rather than risk a wrong charge. 17 of 85 held-out carts went to one as a precaution, and 8 of those were already right.
+- **Cautious hand-offs:** when the lane isn't sure, it sends the cart to an associate rather than risk a wrong charge. 17 of 85 held-out carts, all in scenes it could have closed, went to one as a precaution. 8 of those 17 were already right. Of the other 9, 8 were missing items (13 in all), so closing them would have undercharged; 1 had one item too many, so closing it would have overcharged. Because they went to a person, none of them closed with a wrong charge.
 - **Wrong charges:** None of the held-out carts closed with a wrong or missing item, but 85 runs cannot rule out a small rate. Earlier rounds did close wrong carts: one held-out lumber cart one board short, and development runs before two bug fixes ([project log](docs/pro-express-v2.md)).
 - **Next steps:** fewer precautionary hand-offs, then stacked and hidden packages; see [docs/roadmap.md](docs/roadmap.md).
 
@@ -50,7 +50,7 @@ The current scene has 15 invented products (boxes, pails, a locked tool, bare lu
 | Passed: cart exactly right, associate called only when needed | 67 | **68** |
 | Closed automatically, exactly right | 57 | **58** |
 | Correctly sent to an associate (unknown product, locked tool) | 10 | **10** |
-| Sent to an associate as a precaution | 18 | **17** |
+| Sent to an associate as a precaution (scene could have closed on its own) | 18 | **17** |
 | Closed with a wrong or missing item | 0 | **0** |
 | Items the cameras lost (all in carts sent to an associate) | 13 | 13 |
 | Wrong lines inside carts sent to an associate | 0 | 1 |
@@ -58,7 +58,7 @@ The current scene has 15 invented products (boxes, pails, a locked tool, bare lu
 
 - **58 of 85 held-out carts closed with nobody stepping in, and all 10 carts that needed a person were sent to one.**
 - **No cart closed with a wrong or missing item** on the held-out runs.
-- **17 carts went to an associate as a precaution.** When the lane isn't sure, it hands the cart to a person rather than risk a wrong charge. 8 of them were already right. The other 9 were incomplete or wrong (13 items the cameras lost, 1 wrong line), so closing them would have charged the wrong amount. Most common reasons: entered merchandise disappeared before an observed checkout or reverse removal (12); product first observed beyond checkout boundary (6); conflicting sku evidence on the same physical object (3).
+- **The 10 carts built to need a person all went to one. In the other 75, the lane closed 58 on its own and sent 17 to an associate rather than guess.** 8 of those 17 were already right. Of the other 9, 8 were missing items (13 in all), so closing them would have undercharged; 1 had one item too many, so closing it would have overcharged. Because they went to a person, none of them closed with a wrong charge. Most common reasons: entered merchandise disappeared before an observed checkout or reverse removal (12); product first observed beyond checkout boundary (6); conflicting sku evidence on the same physical object (3).
 
 Models (test split of the training data): gate camera detector mAP50-95 0.818, classifier 95.5%; overhead detector mAP50-95 0.867, classifier 94.6%. Per-scenario scores are in [docs/benchmark.md](docs/benchmark.md). Earlier rounds with 8 products are in [docs/pro-express-v2.md](docs/pro-express-v2.md).
 
@@ -118,7 +118,7 @@ tail -f artifacts/logs/round.log
 ## Known limits
 
 - **Simulated only.** No real camera, lighting, motion blur or lens has been tested.
-- **Cautious hand-offs.** 17 of 85 held-out carts went to an associate as a precaution. A store would want fewer, and cutting that number without risking wrong charges is the main open problem.
+- **Cautious hand-offs.** 17 of 85 held-out carts went to an associate as a precaution, in scenes the lane could have closed on its own. A store would want fewer, and cutting that number without risking wrong charges is the main open problem.
 - **Small test.** 15 products and 85 runs.
 - **Hidden labels.** A package behind another package on a cart is not scanned and falls back to recognition by look.
 
