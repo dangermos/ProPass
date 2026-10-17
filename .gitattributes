@@ -177,3 +177,4 @@ docs/images/*.jpg -filter -diff -merge -text
 docs/images/*.jpeg -filter -diff -merge -text
 docs/images/*.webp -filter -diff -merge -text
 web/public/** -filter -diff -merge
+docs/media/** -filter -diff -merge -text
