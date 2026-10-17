@@ -1,6 +1,6 @@
 # Handoff notes (2026-10-12)
 
-For the next person or AI picking this up. Read this first, then [docs/roadmap.md](docs/roadmap.md).
+For the next person or AI picking this up. Read this first, then [docs/roadmap.md](../roadmap.md).
 
 ## Where things stand
 

@@ -120,7 +120,7 @@ tail -f artifacts/logs/round.log
 | [API reference](docs/api.md) | Endpoints, payloads and the snapshot shape |
 | [Extending](docs/extending.md) | Add a product, scenario, camera or model |
 | [Project log](docs/pro-express-v2.md) | Earlier rounds, what changed and why |
-| [HANDOFF.md](HANDOFF.md) | Working notes for whoever picks this up next |
+| [Engineering logs](docs/engineering-logs/HANDOFF.md) | Working notes for whoever picks this up next |
 
 ## Project layout
 
