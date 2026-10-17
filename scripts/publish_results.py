@@ -54,10 +54,11 @@ def weak_spots(test):
              else f"{test['wrong']} held-out cart(s) closed with a wrong or missing item")
     return [f"- **Weakest scenes:** {' and '.join(names) if len(names) < 3 else ', '.join(names)} pass {low} of {per_scene} held-out runs"
             f"{' each' if len(names) > 1 else ''}. The reasons per scene are in [docs/benchmark.md](docs/benchmark.md#-why-runs-fail).",
-            f"- **Unnecessary hand-offs:** {test['extra']} of {test['runs']} held-out carts went to an associate without needing one.",
+            f"- **Cautious hand-offs:** when the lane isn't sure, it sends the cart to an associate rather than risk a wrong charge. "
+            f"{test['extra']} of {test['runs']} held-out carts went to one as a precaution, and {test['extra'] - test['extra_incomplete']} of those were already right.",
             f"- **Wrong charges:** {wrong}, but {test['runs']} runs cannot rule out a small rate. Earlier rounds did close wrong carts: "
             "one held-out lumber cart one board short, and development runs before two bug fixes ([project log](docs/pro-express-v2.md)).",
-            "- **Next steps:** fewer unnecessary hand-offs, then stacked and hidden packages; see [docs/roadmap.md](docs/roadmap.md)."]
+            "- **Next steps:** fewer precautionary hand-offs, then stacked and hidden packages; see [docs/roadmap.md](docs/roadmap.md)."]
 
 
 def main():
@@ -71,8 +72,9 @@ def main():
     notes = [f"- **{test['auto']} of 85 held-out carts closed with nobody stepping in, and all {test['held']} carts that needed a person were sent to one.**"]
     notes.append(f"- **{'No cart' if not test['wrong'] else str(test['wrong']) + ' cart(s)'} closed with a wrong or missing item**"
                  + (" on the held-out runs." if not test["wrong"] else " on the held-out runs: that is the worst kind of error and it is listed in docs/benchmark.md."))
-    notes.append(f"- **The open problem is the {test['extra']} unnecessary hand-offs.** {test['extra_incomplete']} of them had an incomplete or wrong cart "
-                 f"({test['missed']} items the cameras lost, {test["false_adds"]} wrong line{"" if test["false_adds"] == 1 else "s"}), which is why they were not closed. "
+    notes.append(f"- **{test['extra']} carts went to an associate as a precaution.** When the lane isn't sure, it hands the cart to a person rather than risk a wrong charge. "
+                 f"{test['extra'] - test['extra_incomplete']} of them were already right. The other {test['extra_incomplete']} were incomplete or wrong "
+                 f"({test['missed']} items the cameras lost, {test["false_adds"]} wrong line{"" if test["false_adds"] == 1 else "s"}), so closing them would have charged the wrong amount. "
                  "Most common reasons: " + "; ".join(f"{reason.lower()} ({count})" for reason, count in test["top_reasons"]) + ".")
     fill = {"TESTS": results["tests"], "RESULT_NOTES": "\n".join(notes), "WEAK_SPOTS": "\n".join(weak_spots(test)),
             "LANE_MAP": nets["lane"]["map50_95"], "LANE_ACC": f"{nets['lane']['accuracy']:.1%}",

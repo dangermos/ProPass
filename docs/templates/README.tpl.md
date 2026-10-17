@@ -1,6 +1,12 @@
 # ProPass
 
-**A checkout lane that rings up the cart as it rolls through, and calls an associate when it is not sure.** A simulated store lane, three cameras, trained vision models, and a ledger that gives every physical item one identity. Built by **Danny Germosen** (SUNY Oswego).
+### [Live demo: dangermos.github.io/ProPass](https://dangermos.github.io/ProPass/)
+
+The project page and a recorded tour of all 17 scenes, in the browser. Nothing to install.
+
+[![15 seconds of the locked-tool scene: four camera views, the boxes the system draws, and its decisions, including the associate hand-off. Click to open the live demo.](docs/media/demo.gif)](https://dangermos.github.io/ProPass/)
+
+**A checkout lane that rings up the cart as it rolls through, and calls an associate when it isn't sure.** I built it as a student project: a simulated store lane in Unity, three cameras, vision models I trained, and a ledger that gives every physical item one identity. By **Danny Germosen** (SUNY Oswego).
 
 [![CI](https://github.com/dangermos/ProPass/actions/workflows/ci.yml/badge.svg)](https://github.com/dangermos/ProPass/actions/workflows/ci.yml)
 ![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue)
@@ -12,8 +18,6 @@
 ![React](https://img.shields.io/badge/UI-React%20%2B%20Vite-61DAFB?logo=react&logoColor=black)
 ![Unity 6](https://img.shields.io/badge/Sim-Unity%206.6%20URP-000000?logo=unity&logoColor=white)
 ![Tests](https://img.shields.io/badge/tests-@TESTS@%20passing-2EA043)
-
-![15 seconds of the locked-tool scene: four camera views, the boxes the system draws, and its decisions, including the associate hand-off](docs/media/demo.gif)
 
 > [!NOTE]
 > An independent student project inspired by contractor checkout. It is **not affiliated with or endorsed by The Home Depot**. Every brand, product, price and customer in it is invented, and no payment is taken. Every number below was measured on **simulated images rendered by Unity**. Nothing has been tested on a real camera.
@@ -43,7 +47,7 @@ The current scene has 15 invented products (boxes, pails, a locked tool, bare lu
 | Passed: cart exactly right, associate called only when needed | @DEV_PASS@ | **@TEST_PASS@** |
 | Closed automatically, exactly right | @DEV_AUTO@ | **@TEST_AUTO@** |
 | Correctly sent to an associate (unknown product, locked tool) | @DEV_HELD@ | **@TEST_HELD@** |
-| Sent to an associate unnecessarily | @DEV_EXTRA@ | **@TEST_EXTRA@** |
+| Sent to an associate as a precaution | @DEV_EXTRA@ | **@TEST_EXTRA@** |
 | Closed with a wrong or missing item | @DEV_WRONG@ | **@TEST_WRONG@** |
 | Items the cameras lost (all in carts sent to an associate) | @DEV_MISSED@ | @TEST_MISSED@ |
 | Wrong lines inside carts sent to an associate | @DEV_FALSE@ | @TEST_FALSE@ |
@@ -109,7 +113,7 @@ tail -f artifacts/logs/round.log
 ## Known limits
 
 - **Simulated only.** No real camera, lighting, motion blur or lens has been tested.
-- **Too many hand-offs.** @TEST_EXTRA@ of 85 held-out carts were sent to an associate without needing it. That rate would not work in a store, and cutting it is the main open problem.
+- **Cautious hand-offs.** @TEST_EXTRA@ of 85 held-out carts went to an associate as a precaution. A store would want fewer, and cutting that number without risking wrong charges is the main open problem.
 - **Small test.** 15 products and 85 runs.
 - **Hidden labels.** A package behind another package on a cart is not scanned and falls back to recognition by look.
 
