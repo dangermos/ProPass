@@ -24,6 +24,8 @@ export default function CoverageMap({geometry,snapshot,camera,onCamera}:{geometr
       const ids=new Set(snapshot.objects.map(keyFor));
       return {run:snapshot.session.run_id,trails:[...trails].filter(([key])=>ids.has(key)).map(([key,points])=>({id:key,points}))};
     });
+  // Keyed to the processed frame on purpose: trails grow once per frame, not on every snapshot.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[snapshot?.session.run_id,snapshot?.frame?.frame_id,snapshot?.objects]);
 
   if(!geometry)return <article className="panel coverage-panel"><div className="panel-heading"><div><Icon name="lane" size={17}/><h2>Lane coverage</h2><span className="subtle-tag">IMAGE MODE</span></div></div><div className="coverage-empty"><strong>Single-view tracking</strong><p>No calibrated lane map is available. The camera overlay shows the image-space checkout zones.</p></div></article>;

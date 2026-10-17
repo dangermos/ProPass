@@ -11,6 +11,9 @@ import TrainingTab from './TrainingTab';
 import Tour from './Tour';
 import Project from './Project';
 
+// The GitHub Pages build (npm run build:static) has no API: only the project page and the recorded tour work there.
+const STATIC=import.meta.env.VITE_STATIC==='1';
+
 const tabs=[
   {id:'live',name:'Live lane',icon:'camera',hint:'Camera, overlays, cart and checkout'},
   {id:'decisions',name:'Decisions',icon:'list',hint:'Why each object is (or isn’t) in the cart'},
@@ -39,8 +42,9 @@ export default function App(){
   const update=(s:Snapshot)=>{setSnapshot(s);lastUpdate.current=Date.now();};
   const go=(view:string,tab='live')=>{location.hash=view==='lab'?`/lab/${tab}`:view==='tour'?`/tour/${tab}`:view==='title'?'/scenarios':'/';window.scrollTo(0,0);};
   useEffect(()=>{const onHash=()=>setRoute(readRoute());window.addEventListener('hashchange',onHash);return()=>window.removeEventListener('hashchange',onHash);},[]);
-  useEffect(()=>{fetch('/api/reports').then(r=>r.ok?r.json():Promise.reject()).then(setReports).catch(()=>{});},[connected]);
+  useEffect(()=>{if(STATIC)return;fetch('/api/reports').then(r=>r.ok?r.json():Promise.reject()).then(setReports).catch(()=>{});},[connected]);
   useEffect(()=>{
+    if(STATIC)return;
     let disposed=false,socket:WebSocket|undefined,retry:ReturnType<typeof setTimeout>|undefined;
     const connect=()=>{if(disposed)return;socket=new WebSocket(`${location.protocol==='https:'?'wss:':'ws:'}//${location.host}/api/ws`);socket.onopen=()=>setConnected(true);socket.onmessage=e=>{try{update(JSON.parse(e.data));}catch{/* bad snapshots stay out of rendered state */}};socket.onclose=()=>{setConnected(false);if(!disposed)retry=setTimeout(connect,1500);};socket.onerror=()=>socket?.close();};
     connect();

@@ -1,13 +1,14 @@
 import type { Reports, Snapshot } from './types';
 import { scenarios, scenarioName, type ScenarioInfo } from './scenarios';
 import { Icon, percent, rateColor } from './ui';
+import { asset } from './assets';
 
 type Props = {snapshot:Snapshot|null;connected:boolean;live:boolean;reports:Reports|null;busy:string|null;
   onStart:(id:string)=>void;onReplay:(id:string)=>void;onWatch:(id:string)=>void;onResume:()=>void;onOpen:(tab:string)=>void;onHome:()=>void};
 
 function Card({s,index,score,active,disabled,live,onStart}:{s:ScenarioInfo;index:number;score?:number;active:boolean;disabled:boolean;live:boolean;onStart:()=>void}){
   return <button className={`title-card ${s.group} ${active?'active':''}`} disabled={disabled} onClick={onStart}>
-    <div className="title-card-image" style={{backgroundImage:`url(/scenarios/${s.id}.jpg)`}}>
+    <div className="title-card-image" style={{backgroundImage:`url(${asset(`scenarios/${s.id}.jpg`)})`}}>
       <span className="title-card-number">{String(index+1).padStart(2,'0')}</span>
       {score!=null&&<span className="title-card-score" style={{borderColor:rateColor(score),color:rateColor(score)}} title="Share of held-out benchmark runs passed">{percent(score)}</span>}
       {active&&<span className="title-card-live"><span className="dot"/>CURRENT</span>}
@@ -26,7 +27,7 @@ export default function TitleScreen({snapshot,connected,live,reports,busy,onStar
   const score=(id:string)=>reports?.benchmark?.scenarios.find(r=>r.scenario===id)?.pass_rate;
   const bench=reports?.benchmark?.summary;
   // The WebGL build of the scene (unity/ → web/public/unity). It streams frames to the local API like the Editor does.
-  const openScene=()=>{onStart(snapshot?.simulator.scenario??'single');window.open('/unity/index.html','propass-scene','width=1000,height=660');};  // onStart ends any replay so the scene's frames are accepted
+  const openScene=()=>{onStart(snapshot?.simulator.scenario??'single');window.open(asset('unity/index.html'),'propass-scene','width=1000,height=660');};  // onStart ends any replay so the scene's frames are accepted
   const groups:[string,string,'classic'|'messy'][]=[
     ['Classic demos','Clean runs that show each core idea on its own.','classic'],
     ['Messy lanes','Real-world clutter: occlusion, partial views, distractors, other shoppers.','messy']];

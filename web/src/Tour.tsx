@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { scenarios } from './scenarios';
 import { Icon } from './ui';
-import { cue, moving, soundOff, soundOn, type Cue } from './sound';
+import { cue, moving, soundOff, soundOn } from './sound';
+import { cartAt, outcomeOf, type Run } from './tourRun';
+import { asset } from './assets';
 
 // A recorded run and what the trained models decided, built by scripts/build_tour.py.
 // Plays from static files in /tour: no API, GPU or Unity needed. #/tour/<scenario>/<seconds> opens paused at that moment.
-type Line={sku:string;name:string;quantity:number;rating?:string|null;source?:string|null};
-type Run={scenario:string;seed:number;description:string;duration:number;expected:Line[];exact_cart:boolean;
-  review_required:boolean;expected_review:boolean;passed:boolean;steps:{t:number;lines:Line[]}[];notes:{t:number;text:string;kind?:Cue}[]};
 
 const ratingText:Record<string,string>={verified:'Verified by barcode',high:'High: one barcode read',medium:'Recognized by look',low:'Low confidence',needs_associate:'Held for an associate'};
 
@@ -33,14 +32,10 @@ export default function Tour({id,onPick,onBack}:{id:string;onPick:(id:string)=>v
   const toast=run?.notes.filter(n=>n.kind&&n.kind!=='identify'&&n.t<=time&&time-n.t<1.8).pop();
   const index=Math.max(0,scenarios.findIndex(s=>s.id===id)),info=scenarios[index];
   useEffect(()=>{setRun(null);setMissing(false);setTime(0);setEnded(false);
-    fetch(`/tour/${info.id}.json`).then(r=>r.ok?r.json():Promise.reject()).then(setRun).catch(()=>setMissing(true));},[info.id]);
-  const step=run?.steps.filter(s=>s.t<=time).pop();
+    fetch(asset(`tour/${info.id}.json`)).then(r=>r.ok?r.json():Promise.reject()).then(setRun).catch(()=>setMissing(true));},[info.id]);
   const notes=run?.notes.filter(n=>ended||n.t<=time)??[];
-  const lines=ended&&run?run.steps[run.steps.length-1]?.lines??[]:step?.lines??[];
-  const outcome=!run?null:run.passed?{tone:'pass',title:run.expected_review?'Correctly held for an associate':'Closed automatically, exactly right',
-      text:run.expected_review?'This scene is meant to need a person, and the system asked for one.':'Every item was counted once and identified. No one had to step in.'}
-    :run.review_required?{tone:'assist',title:'Handed to an associate',text:run.exact_cart?'The cart was right, but the system was not sure enough to close it on its own.':'The system could not settle every item, so it kept what it had and asked for help instead of guessing.'}
-    :{tone:'fail',title:'Closed with a wrong cart',text:'This run is a miss: the cart was closed without the right items.'};
+  const lines=cartAt(run,time,ended);
+  const outcome=outcomeOf(run);
   const move=(by:number)=>onPick(scenarios[(index+by+scenarios.length)%scenarios.length].id);
   return <div className="tour">
     <header className="tour-top">
@@ -52,7 +47,7 @@ export default function Tour({id,onPick,onBack}:{id:string;onPick:(id:string)=>v
       <section className="tour-stage">
         <p className="tour-watch"><b>Watch for:</b> {info.detail.toLowerCase()}. This scene tests {info.tests.toLowerCase()}.</p>
         {missing?<div className="tab-empty">This scene has not been built yet. Run <code>.venv/bin/python scripts/build_tour.py</code>.</div>
-          :<video ref={video} key={info.id} src={`/tour/${info.id}.webm`} controls autoPlay muted playsInline
+          :<video ref={video} key={info.id} src={asset(`tour/${info.id}.webm`)} controls autoPlay muted playsInline
               onLoadedMetadata={e=>{const at=Number(location.hash.split('/')[3]);if(at>0){e.currentTarget.pause();e.currentTarget.currentTime=at;}}}
               onPlay={()=>{setEnded(false);if(sound){soundOn();moving(true);}}} onPause={()=>moving(false)}
               onEnded={()=>{setEnded(true);moving(false);if(run)cue(run.passed&&!run.review_required?'pass':'handoff');}}/>}
@@ -74,6 +69,6 @@ export default function Tour({id,onPick,onBack}:{id:string;onPick:(id:string)=>v
               </aside>
     </div>
     <div className="tour-strip">{scenarios.map(s=><button key={s.id} className={s.id===info.id?'on':''} onClick={()=>onPick(s.id)} title={s.detail}
-      style={{backgroundImage:`linear-gradient(180deg,transparent 30%,#0b1320ee),url(/scenarios/${s.id}.jpg)`}}>{s.name}</button>)}</div>
+      style={{backgroundImage:`linear-gradient(180deg,transparent 30%,#0b1320ee),url(${asset(`scenarios/${s.id}.jpg`)})`}}>{s.name}</button>)}</div>
   </div>;
 }
