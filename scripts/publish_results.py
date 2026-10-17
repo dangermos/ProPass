@@ -45,6 +45,21 @@ def models():
     return out
 
 
+def weak_spots(test):
+    """The README's short list of what still fails, from the held-out report."""
+    low = min(test["scenes"].values())
+    names = [f"**{scene}**" for scene, passed in test["scenes"].items() if passed == low]
+    per_scene = len(test["seeds"])
+    wrong = ("None of the held-out carts closed with a wrong or missing item" if not test["wrong"]
+             else f"{test['wrong']} held-out cart(s) closed with a wrong or missing item")
+    return [f"- **Weakest scenes:** {' and '.join(names) if len(names) < 3 else ', '.join(names)} pass {low} of {per_scene} held-out runs"
+            f"{' each' if len(names) > 1 else ''}. The reasons per scene are in [docs/benchmark.md](docs/benchmark.md#-why-runs-fail).",
+            f"- **Unnecessary hand-offs:** {test['extra']} of {test['runs']} held-out carts went to an associate without needing one.",
+            f"- **Wrong charges:** {wrong}, but {test['runs']} runs cannot rule out a small rate. Earlier rounds did close wrong carts: "
+            "one held-out lumber cart one board short, and development runs before two bug fixes ([project log](docs/pro-express-v2.md)).",
+            "- **Next steps:** fewer unnecessary hand-offs, then stacked and hidden packages; see [docs/roadmap.md](docs/roadmap.md)."]
+
+
 def main():
     dev, test, nets = split(ROOT / "models/benchmark-dev.json"), split(ROOT / "models/benchmark-test.json"), models()
     tests = re.search(r"(\d+) passed", subprocess.run([str(ROOT / ".venv/bin/python"), "-m", "pytest", "-q", "tests"], cwd=ROOT,
@@ -59,7 +74,7 @@ def main():
     notes.append(f"- **The open problem is the {test['extra']} unnecessary hand-offs.** {test['extra_incomplete']} of them had an incomplete or wrong cart "
                  f"({test['missed']} items the cameras lost, {test["false_adds"]} wrong line{"" if test["false_adds"] == 1 else "s"}), which is why they were not closed. "
                  "Most common reasons: " + "; ".join(f"{reason.lower()} ({count})" for reason, count in test["top_reasons"]) + ".")
-    fill = {"TESTS": results["tests"], "RESULT_NOTES": "\n".join(notes),
+    fill = {"TESTS": results["tests"], "RESULT_NOTES": "\n".join(notes), "WEAK_SPOTS": "\n".join(weak_spots(test)),
             "LANE_MAP": nets["lane"]["map50_95"], "LANE_ACC": f"{nets['lane']['accuracy']:.1%}",
             "OVER_MAP": nets["overhead"]["map50_95"], "OVER_ACC": f"{nets['overhead']['accuracy']:.1%}"}
     for name, s in (("DEV", dev), ("TEST", test)):
