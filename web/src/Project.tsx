@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { scenarios } from './scenarios';
 import { Icon } from './ui';
+import { asset } from './assets';
+import { endingOf } from './tourRun';
 
 // The project's front page. Measured numbers come from /results.json, which scripts/publish_results.py writes
 // from the reports in models/, so the page cannot drift from the data. The earlier rounds below are history.
@@ -42,7 +44,7 @@ function Angles(){
       <span className="angle-spacer"/><button className="angle-play" onClick={toggle}><Icon name={playing?'pause':'play'} size={14}/> {playing?'Pause':'Play all four'}</button>
       <button onClick={restart}><Icon name="reset" size={14}/> Restart</button></div>
     <div className="angle-grid">{cameras.map(c=><figure key={c.id+scene.id} className={`angle ${c.id}`}>
-      <video ref={el=>{videos.current[c.id]=el;}} src={`/angles/${scene.id}-${c.id}.webm`} muted playsInline loop preload="metadata" 
+      <video ref={el=>{videos.current[c.id]=el;}} src={asset(`angles/${scene.id}-${c.id}.webm`)} muted playsInline loop preload="metadata" 
         onTimeUpdate={c.id==='lane'?sync:undefined} onClick={toggle} aria-label={`${c.name}: ${c.role}`}/>
       <figcaption><b>{c.name}</b>{c.role}</figcaption></figure>)}</div>
     <p className="angle-note">{scene.note} The boxes and outlines are drawn by the system from pixels alone.</p>
@@ -52,10 +54,10 @@ function Angles(){
 export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>void;onScenarios:()=>void;onLab:(tab:string)=>void}){
   // How each recorded tour run ended, shown on its card so the result is visible before pressing play.
   const [res,setRes]=useState<Results|null>(null);
-  useEffect(()=>{fetch('/results.json').then(r=>r.ok?r.json():Promise.reject()).then(setRes).catch(()=>{});},[]);
+  useEffect(()=>{fetch(asset('results.json')).then(r=>r.ok?r.json():Promise.reject()).then(setRes).catch(()=>{});},[]);
   const t=res?.test,d=res?.dev;
   const [ends,setEnds]=useState<Record<string,string>>({});
-  useEffect(()=>{scenarios.forEach(s=>{fetch(`/tour/${s.id}.json`).then(r=>r.ok?r.json():Promise.reject()).then(run=>setEnds(e=>({...e,[s.id]:run.passed?(run.expected_review?'held':'pass'):run.review_required?'assist':'fail'}))).catch(()=>{});});},[]);
+  useEffect(()=>{scenarios.forEach(s=>{fetch(asset(`tour/${s.id}.json`)).then(r=>r.ok?r.json():Promise.reject()).then(run=>setEnds(e=>({...e,[s.id]:endingOf(run)}))).catch(()=>{});});},[]);
   const endText:Record<string,string>={pass:'Closed correctly',held:'Correctly held',assist:'Sent to associate',fail:'Wrong cart'};
   return <div className="project">
     <nav className="project-nav"><div className="wordmark">Pro<span>Pass</span><small>VISION CHECKOUT LAB</small></div>
@@ -68,7 +70,7 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
         <p>A contractor pushes a cart down the lane. Three cameras watch. Trained models find every box, read its barcode or recognize it by look, and build the cart with a reason for every line. When the system is not sure, it hands the cart to an associate instead of guessing.</p>
         <div className="title-actions"><button className="primary-button" onClick={()=>onTour('single')}><Icon name="play" size={17}/> Watch the 17 scenes</button>
           <a className="secondary-button" href="#results"><Icon name="chart" size={16}/> See the measured results</a></div></div>
-      <video className="hero-video" src="/angles/mixed-show.webm" autoPlay muted loop playsInline onClick={()=>onTour('mixed')} title="Open this scene in the tour" aria-label="A customer pushes a flat cart with three boxes down a store checkout lane" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')onTour('mixed');}}/>
+      <video className="hero-video" src={asset('angles/mixed-show.webm')} autoPlay muted loop playsInline onClick={()=>onTour('mixed')} title="Open this scene in the tour" aria-label="A customer pushes a flat cart with three boxes down a store checkout lane" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')onTour('mixed');}}/>
     </header>
 
     <p className="byline">Built by <b>Danny Germosen</b>, SUNY Oswego (<a href="https://github.com/dangermos">github.com/dangermos</a>), as an independent student project. Not affiliated with or endorsed by The Home Depot. Everything shown is a simulation: fictional prices, no payment, no real store or camera.</p>
@@ -134,7 +136,7 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
     <section id="scenes" className="project-section">
       <div className="section-head"><div className="eyebrow">17 SCENES</div><h2>Watch any run, with the decisions beside it</h2>
         <p>Each card plays a recorded run from all three cameras: the boxes the system drew, the cart it built, and what it did at each second. They are development seed 2 of every scenario, pass or not, so they are examples and not the test runs scored above.</p></div>
-      <div className="scene-grid">{scenarios.map((s,i)=><button key={s.id} className="scene" onClick={()=>onTour(s.id)} style={{backgroundImage:`linear-gradient(180deg,transparent 25%,#0b1320f2 78%),url(/scenarios/${s.id}.jpg)`}}>
+      <div className="scene-grid">{scenarios.map((s,i)=><button key={s.id} className="scene" onClick={()=>onTour(s.id)} style={{backgroundImage:`linear-gradient(180deg,transparent 25%,#0b1320f2 78%),url(${asset(`scenarios/${s.id}.jpg`)})`}}>
         <span className="title-card-number">{String(i+1).padStart(2,'0')}</span>{ends[s.id]&&<span className={`end-chip ${ends[s.id]}`}>{endText[ends[s.id]]}</span>}<strong>{s.name}</strong><small>{s.detail}</small></button>)}</div>
     </section>
 

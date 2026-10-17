@@ -1,0 +1,27 @@
+# Tooling only. Dependencies stay in requirements-api.txt (the light API server and its tests)
+# and requirements-vision.txt (PyTorch, Ultralytics, OpenCV: inference and training).
+
+[tool.ruff]
+target-version = "py312"
+# The code base favors dense, one-line expressions; 200 columns keeps that readable without wrapping churn.
+line-length = 200
+extend-exclude = ["unity", "web", "artifacts", ".venv"]
+
+[tool.ruff.lint]
+# pycodestyle, pyflakes, warnings, import order, bugbear, pyupgrade.
+select = ["E", "W", "F", "I", "B", "UP"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["api", "vision", "training", "scripts", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.mypy]
+python_version = "3.12"
+files = ["api"]
+# Vision and training import heavy optional packages lazily; they are not type-checked yet.
+follow_imports = "silent"
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true

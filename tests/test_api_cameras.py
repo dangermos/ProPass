@@ -4,9 +4,9 @@ import io
 import threading
 import time
 
+import pytest
 from fastapi.testclient import TestClient
 from PIL import Image
-import pytest
 
 from api.app import create_app
 

@@ -1,10 +1,12 @@
 """Single-writer local checkout state with durable, idempotent membership changes."""
 import json
 import uuid
-from datetime import timezone
+from datetime import UTC
 from pathlib import Path
+
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import sessionmaker
+
 from .models import Base, Cart, CheckoutEvent, CheckoutSession, PhysicalItem, Receipt
 
 # Must match ProPassScenarios.Classic + Messy in unity/Assets/ProPass/Runtime/ProPassScenario.cs.
@@ -153,7 +155,9 @@ class Store:
                 kind, oid, sku = event.get("type", ""), event.get("object_id"), event.get("sku")
                 if sku is not None and sku not in self.products:
                     raise ValueError("Vision emitted a SKU outside the demo catalog")
-                db.add(CheckoutEvent(session_id=self.session_id, run_id=session.run_id, event_id=event_id, event_type=kind, object_id=str(oid) if oid is not None else None, sku=sku, timestamp=float(event.get("timestamp", result.get("timestamp", 0))), detail=event))
+                db.add(CheckoutEvent(session_id=self.session_id, run_id=session.run_id, event_id=event_id, event_type=kind,
+                                     object_id=str(oid) if oid is not None else None, sku=sku,
+                                     timestamp=float(event.get("timestamp", result.get("timestamp", 0))), detail=event))
                 if kind == "REVIEW_REQUIRED" and cart.status == "REVIEWING":
                     self._invalidate(cart, session)
                     cart.version += 1
@@ -192,8 +196,9 @@ class Store:
     def _receipt(receipt):
         created = receipt.created_at
         if created.tzinfo is None:
-            created = created.replace(tzinfo=timezone.utc)
-        return dict(id=receipt.id, cart_id=receipt.cart_id, customer_name=receipt.customer_name, version=receipt.confirmed_version, items=receipt.lines, total=receipt.total, created_at=created.isoformat(), simulated=True)
+            created = created.replace(tzinfo=UTC)
+        return dict(id=receipt.id, cart_id=receipt.cart_id, customer_name=receipt.customer_name, version=receipt.confirmed_version,
+                    items=receipt.lines, total=receipt.total, created_at=created.isoformat(), simulated=True)
 
     def confirm(self, version, idempotency_key, current_run_id, review_required=False):
         with self.db.begin() as db:
@@ -204,12 +209,14 @@ class Store:
                 if existing.idempotency_key != idempotency_key or existing.confirmed_version != version:
                     raise CheckoutConflict("This cart was confirmed by a different request")
                 return self._receipt(existing)
-            if cart.status != "REVIEWING" or cart.version != version or cart.prepared_version != version or cart.prepared_run_id != current_run_id or session.run_id != current_run_id or review_required:
+            if (cart.status != "REVIEWING" or cart.version != version or cart.prepared_version != version or cart.prepared_run_id != current_run_id
+                    or session.run_id != current_run_id or review_required):
                 raise CheckoutConflict("Cart evidence changed. Prepare the current cart again.")
             lines = self._lines(db)
             if not lines:
                 raise CheckoutConflict("There are no recognized products to confirm")
-            receipt = Receipt(id=new_id(), cart_id=cart.id, idempotency_key=idempotency_key, confirmed_version=version, customer_name=session.customer_name, lines=lines, total=round(sum(i["line_total"] for i in lines), 2))
+            receipt = Receipt(id=new_id(), cart_id=cart.id, idempotency_key=idempotency_key, confirmed_version=version,
+                              customer_name=session.customer_name, lines=lines, total=round(sum(i["line_total"] for i in lines), 2))
             db.add(receipt)
             db.flush()
             cart.status = session.status = "CONFIRMED"
@@ -221,4 +228,8 @@ class Store:
             lines = self._lines(db)
             receipt = db.scalar(select(Receipt).where(Receipt.cart_id == cart.id))
             events = db.scalars(select(CheckoutEvent).where(CheckoutEvent.session_id == self.session_id).order_by(CheckoutEvent.id.desc()).limit(60)).all()
-            return dict(session=dict(id=session.id, customer_name=session.customer_name, status=session.status, run_id=session.run_id), cart=dict(id=cart.id, version=cart.version, status=cart.status, prepared_version=cart.prepared_version, prepared_frame_id=cart.prepared_frame_id, items=lines, total=round(sum(i["line_total"] for i in lines), 2), currency=self.currency), simulator=dict(scenario=session.scenario, run_id=session.run_id), events=[dict(**e.detail, sequence=e.id) for e in events], receipt=self._receipt(receipt) if receipt else None)
+            return dict(session=dict(id=session.id, customer_name=session.customer_name, status=session.status, run_id=session.run_id),
+                        cart=dict(id=cart.id, version=cart.version, status=cart.status, prepared_version=cart.prepared_version, prepared_frame_id=cart.prepared_frame_id,
+                                  items=lines, total=round(sum(i["line_total"] for i in lines), 2), currency=self.currency),
+                        simulator=dict(scenario=session.scenario, run_id=session.run_id),
+                        events=[dict(**e.detail, sequence=e.id) for e in events], receipt=self._receipt(receipt) if receipt else None)

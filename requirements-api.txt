@@ -1,3 +1,8 @@
+# The API server: no GPU, no model weights. The tests also need requirements-vision.txt
+# (CPU wheels are enough; see .github/workflows/ci.yml).
+# requirements-vision.txt pins the tested versions of these same packages for the full
+# vision environment; every pin there must stay inside the ranges here. Install both for
+# live inference: pip install -r requirements-vision.txt -r requirements-api.txt
 fastapi>=0.115,<1
 uvicorn>=0.30,<1
 websockets>=14,<18

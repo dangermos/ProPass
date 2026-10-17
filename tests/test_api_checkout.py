@@ -1,13 +1,13 @@
 """Backend correctness tests use deterministic vision events, not claimed CV accuracy."""
 import concurrent.futures
 import io
-from pathlib import Path
 import threading
 import time
+from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 from PIL import Image
-import pytest
 from sqlalchemy import func, select
 
 from api.app import create_app
@@ -126,7 +126,8 @@ class FakeVision:
         self.entered.set()
         if self.blocked:
             assert self.release.wait(4), "Test frame barrier was not released"
-        return dict(run_id=run_id, frame_id=frame_id, timestamp=timestamp, detections=[], objects=[], events=[event("crossing", sku="PEX-001")] if not self.unknown else [], review_required=self.unknown, metrics={})
+        return dict(run_id=run_id, frame_id=frame_id, timestamp=timestamp, detections=[], objects=[],
+                    events=[event("crossing", sku="PEX-001")] if not self.unknown else [], review_required=self.unknown, metrics={})
 
 
 def wait_frame(client, frame_id):

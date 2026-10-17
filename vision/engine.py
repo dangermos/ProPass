@@ -9,13 +9,13 @@ cameras see at the same spot are fused into one observation, and the ledger's
 zones are physical lines. Without it, the single lane camera's image is used.
 """
 from __future__ import annotations
-from dataclasses import dataclass, fields
-from collections import deque
-from math import hypot
-from pathlib import Path
+
 import json
 import os
 import time
+from dataclasses import dataclass, fields
+from math import hypot
+from pathlib import Path
 
 from . import geometry
 from .ledger import LedgerConfig, Observation, PhysicalLedger
@@ -118,6 +118,7 @@ class VisionEngine:
 
     def _load_classifier(self, path):
         from types import SimpleNamespace
+
         from torch import nn
         from torchvision.models import efficientnet_b0
         torch = self.torch
@@ -129,7 +130,8 @@ class VisionEngine:
         network.classifier[1] = nn.Linear(network.classifier[1].in_features, len(class_labels))
         network.load_state_dict(checkpoint["state_dict"])
         network.to(self.device).eval()
-        on_device = lambda t: t.to(self.device) if t is not None else None
+        def on_device(t):
+            return t.to(self.device) if t is not None else None
         return SimpleNamespace(network=network, temperature=float(checkpoint.get("temperature", 1.0)),
                                prototypes=on_device(checkpoint.get("prototypes")),
                                prototype_bank=on_device(checkpoint.get("prototype_bank")),
@@ -147,6 +149,7 @@ class VisionEngine:
         try:
             import torch
             from ultralytics import YOLO
+
             from .transforms import classifier_transform
             self.torch = torch
             self.device = ("cuda:0" if torch.cuda.is_available() else "cpu") if self.device_request == "auto" else str(self.device_request)
@@ -240,7 +243,7 @@ class VisionEngine:
         output = self.ledger.update(observations, frame_id, timestamp, run_id, frame_size)
         # Report each detection as the camera saw it: real image box plus what the ledger decided.
         detections = []
-        for decided, boxes in zip(output["detections"], members):
+        for decided, boxes in zip(output["detections"], members, strict=False):
             for box in boxes:
                 detections.append({**decided, "bbox": list(box.bbox), "camera": box.camera,
                                    "detector_confidence": box.confidence})
@@ -261,6 +264,7 @@ class VisionEngine:
     def _read_barcodes(self, scans: dict) -> list[dict]:
         """Decode every Code 128 label visible to the scan cameras and place it on the lane map."""
         import re
+
         import zxingcpp
         found = []
         for camera, image in scans.items():

@@ -5,6 +5,7 @@ this example does not establish general rejection of arbitrary unseen products.
 """
 import json
 from pathlib import Path
+
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]

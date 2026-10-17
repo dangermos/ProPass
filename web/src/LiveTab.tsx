@@ -55,6 +55,8 @@ function VideoCanvas({snapshot,config,camera,showTracks,worldMode}:{snapshot:Sna
     // Decode off-screen first, then draw in one step.
     image.decode().then(draw,()=>{if(!cancelled&&image.complete&&image.naturalWidth)draw();else if(!cancelled)setFailedFrame(frameKey);});
     return()=>{cancelled=true;image.onerror=null;};
+  // Redraw only when the processed group changes; depending on the whole snapshot would redraw (and flash) on every message.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[frame?.url,frameKey,snapshot?.detections,snapshot?.barcodes,config,camera,showTracks,worldMode]); // image and boxes come from the same processed group
   // Keep showing whatever was drawn last for this camera and run; the placeholder is only for "nothing yet".
   const hasImage=!!displayedFrame&&!!frame&&shownRun.current===`${camera}:${frame.run_id}`;

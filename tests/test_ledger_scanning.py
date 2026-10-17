@@ -2,7 +2,6 @@
 
 Synthetic observations only: these check ledger rules, not barcode-reader accuracy.
 """
-from dataclasses import replace
 
 from vision.ledger import LedgerConfig, Observation, PhysicalLedger
 

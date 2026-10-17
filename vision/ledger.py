@@ -6,11 +6,11 @@ Unity ground truth is neither an argument nor a runtime data source.
 """
 from __future__ import annotations
 
+import uuid
 from collections import deque
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 from math import hypot, sqrt
-from typing import Sequence
-import uuid
 
 
 @dataclass(frozen=True)
@@ -114,7 +114,7 @@ class PhysicalObject:
 
 def inside_polygon(x: float, y: float, polygon) -> bool:
     inside = False
-    for (x1, y1), (x2, y2) in zip(polygon, polygon[1:] + polygon[:1]):
+    for (x1, y1), (x2, y2) in zip(polygon, polygon[1:] + polygon[:1], strict=False):
         if (y1 > y) != (y2 > y) and x < x1 + (y - y1) * (x2 - x1) / (y2 - y1):
             inside = not inside
     return inside
@@ -134,7 +134,7 @@ def cosine_distance(a: Sequence[float], b: Sequence[float]) -> float:
     if not a or not b or len(a) != len(b):
         return 1.0
     denom = sqrt(sum(x*x for x in a) * sum(y*y for y in b))
-    return 1.0 - sum(x*y for x, y in zip(a, b)) / denom if denom else 1.0
+    return 1.0 - sum(x*y for x, y in zip(a, b, strict=False)) / denom if denom else 1.0
 
 
 class PhysicalLedger:

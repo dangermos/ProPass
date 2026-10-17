@@ -5,9 +5,9 @@ test assertions; they are never sent to the vision pipeline.
 """
 import argparse
 import json
-from pathlib import Path
 import time
 import urllib.request
+from pathlib import Path
 
 BASE = "http://127.0.0.1:8000"
 ROOT = Path(__file__).resolve().parents[1]
