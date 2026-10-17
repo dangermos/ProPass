@@ -4,11 +4,12 @@ Only metadata frame_id/timestamp/run_id is passed into VisionEngine. The
 ground_truth field is read later by expected_cart(), never by inference.
 """
 from __future__ import annotations
+
 import argparse
-from collections import Counter
 import json
-from pathlib import Path
 import time
+from collections import Counter
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -35,6 +36,7 @@ def expected_cart(records, known_skus):
 def main():
     import cv2
     import numpy as np
+
     from vision.engine import VisionEngine
     parser = argparse.ArgumentParser()
     parser.add_argument("--root",type=Path,default=ROOT/"artifacts"/"replays")

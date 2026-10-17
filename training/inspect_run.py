@@ -4,8 +4,8 @@ Ground truth is not passed into the engine. This tool refuses held-out benchmark
 roots so diagnostic tuning stays separate from final scoring.
 """
 import argparse
-from dataclasses import asdict
 import json
+from dataclasses import asdict
 from pathlib import Path
 
 from .benchmark import ROOT
@@ -14,6 +14,7 @@ from .benchmark import ROOT
 def main():
     import cv2
     import torch
+
     from vision.engine import VisionEngine
     parser = argparse.ArgumentParser()
     parser.add_argument("run", type=Path)

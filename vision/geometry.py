@@ -10,8 +10,9 @@ top-down map of the lane: u grows with x, v grows toward the entry (like the lan
 where the entry is at the bottom of the image).
 """
 from __future__ import annotations
-from dataclasses import dataclass
+
 import json
+from dataclasses import dataclass
 from math import isfinite
 from pathlib import Path
 

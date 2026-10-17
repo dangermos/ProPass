@@ -4,14 +4,14 @@ Run from propass/: .venv/bin/python -m training.train detector
 Then: .venv/bin/python -m training.train classifier
 """
 from __future__ import annotations
+
 import argparse
 import hashlib
 import json
 import os
-from pathlib import Path
 import shutil
 import time
-
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 os.environ.setdefault("YOLO_CONFIG_DIR",str(ROOT/"training"/".ultralytics"))
@@ -112,12 +112,12 @@ def detector(args):
 
 
 def classifier(args):
-    import numpy as np
     import torch
     from torch import nn
     from torch.utils.data import DataLoader
     from torchvision.datasets import ImageFolder
-    from torchvision.models import efficientnet_b0, EfficientNet_B0_Weights
+    from torchvision.models import EfficientNet_B0_Weights, efficientnet_b0
+
     from vision.transforms import classifier_transform
     torch.manual_seed(42)
     torch.set_num_threads(4)
@@ -240,7 +240,7 @@ def classifier(args):
     max_distance = min(0.95,max(0.08,float(torch.quantile(known_distance,0.99))+0.05))
     test_metrics,test_logits,test_labels,test_embeddings = evaluate(loaders["test"],True)
     confusion = torch.zeros(len(class_labels),len(class_labels),dtype=torch.int64)
-    for label,pred in zip(test_labels,test_logits.argmax(1)):
+    for label,pred in zip(test_labels,test_logits.argmax(1), strict=False):
         confusion[label,pred] += 1
     probabilities = (test_logits/temperature).softmax(1)
     test_distance = 1-(test_embeddings*prototypes[probabilities.argmax(1)]).sum(1)

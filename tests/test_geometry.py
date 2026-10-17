@@ -1,13 +1,12 @@
 """Calibration contracts at the exported carry-height plane; no model loading."""
-from copy import deepcopy
 import json
+from copy import deepcopy
 from pathlib import Path
 
 import numpy as np
 import pytest
 
 from vision.geometry import Calibration, Camera, from_map, to_map
-
 
 CALIBRATION_PATH = Path(__file__).parents[1] / "vision" / "cameras.json"
 

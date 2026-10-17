@@ -12,7 +12,6 @@ from vision import geometry
 from vision.engine import CameraObservation, VisionEngine
 from vision.ledger import LedgerConfig, Observation, PhysicalLedger
 
-
 SKUS = [f"PEX-00{index + 1}" for index in range(5)]
 RUN = "world-recovery"
 

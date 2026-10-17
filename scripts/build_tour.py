@@ -76,11 +76,11 @@ def cart_lines(objects, names):
         line = lines.setdefault(o["sku"], {"sku": o["sku"], "name": names.get(o["sku"], o["sku"]), "quantity": 0,
                                            "rating": o.get("rating"), "source": o.get("sku_source")})
         line["quantity"] += 1
-    return sorted(lines.values(), key=lambda l: l["sku"])
+    return sorted(lines.values(), key=lambda line: line["sku"])
 
 
 def lerp(a, b, f):
-    return [x + (y - x)*f for x, y in zip(a, b)]
+    return [x + (y - x)*f for x, y in zip(a, b, strict=False)]
 
 
 def build(engine, scenario, names):
@@ -179,8 +179,8 @@ def build(engine, scenario, names):
     writer.release()
     for video in angles.values():
         video.release()
-    expected = {l["sku"]: l["quantity"] for l in info.get("expected_cart", [])}
-    final = {l["sku"]: l["quantity"] for l in (last or {"lines": []})["lines"]}
+    expected = {line["sku"]: line["quantity"] for line in info.get("expected_cart", [])}
+    final = {line["sku"]: line["quantity"] for line in (last or {"lines": []})["lines"]}
     exact = final == expected
     result = {"scenario": scenario, "seed": SEED, "description": info["description"], "duration": info["duration"],
               "frame_rate": rate,

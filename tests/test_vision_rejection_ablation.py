@@ -14,7 +14,6 @@ import torch
 from vision.engine import VisionEngine
 from vision.ledger import LedgerConfig, Observation, PhysicalLedger
 
-
 SKUS = [f"PEX-00{index + 1}" for index in range(5)]
 ROOT = Path(__file__).resolve().parents[1]
 IMAGE = np.zeros((64, 96, 3), dtype=np.uint8)

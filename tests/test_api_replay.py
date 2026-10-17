@@ -11,6 +11,7 @@ from tests.test_api_assist import AssistVision
 
 def _jpeg():
     import io
+
     from PIL import Image
     buffer = io.BytesIO()
     Image.new("RGB", (64, 36), "white").save(buffer, format="JPEG")

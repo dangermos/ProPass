@@ -93,7 +93,9 @@ def icon(draw, kind, cx, cy, r, color, ground):
                 b = a + (.28 if kind == "blade" else .2)
                 draw.polygon([(cx + math.cos(a) * r * .7, cy + math.sin(a) * r * .7), (cx + math.cos((a + b) / 2) * r * 1.05, cy + math.sin((a + b) / 2) * r * 1.05),
                               (cx + math.cos(b) * r * .7, cy + math.sin(b) * r * .7)], fill=color)
-        ring(.78, color); ring(.42, ground); ring(.14, color)
+        ring(.78, color)
+        ring(.42, ground)
+        ring(.14, color)
     elif kind == "drill":
         draw.rounded_rectangle((cx - r, cy - r * .5, cx + r * .35, cy), r * .12, fill=color)
         draw.rectangle((cx + r * .35, cy - r * .33, cx + r, cy - r * .17), fill=color)

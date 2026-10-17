@@ -3,11 +3,11 @@
 Ground-truth manifests enter this offline evaluator only. Runtime imports none
 of them. Report both classification on perfect crops and detected-crop results.
 """
-from pathlib import Path
 import argparse
 import hashlib
 import json
 import time
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -23,6 +23,7 @@ def main():
     import cv2
     import numpy as np
     from PIL import Image
+
     from vision.engine import VisionEngine
     from vision.rejection import prototype_distance
     parser = argparse.ArgumentParser()
@@ -60,7 +61,7 @@ def main():
         return [{"sku":engine.skus[int(index)] if int(index)<len(engine.skus) else None,"confidence":float(score),
                  "distance":float(distance),"accepted":bool(accept)}
                 for index,score,distance,accept in zip(indices[:,0].cpu(),scores[:,0].cpu(),
-                                                     distances.cpu(),accepted.cpu())]
+                                                     distances.cpu(),accepted.cpu(), strict=False)]
 
     totals = {"images":0,"gt_merchandise":0,"predicted_merchandise":0,
               "matched_iou50":0,"known_gt_crops":0,"known_gt_top1_correct":0,
@@ -92,7 +93,7 @@ def main():
         if not objects:
             totals["empty_scenes"] += 1
             totals["empty_scenes_with_false_detections"] += int(bool(pred_boxes))
-        for obj,pred in zip(objects,gt_prediction):
+        for obj,pred in zip(objects,gt_prediction, strict=False):
             if obj["sku"] == "UNKNOWN":
                 totals["unknown_gt_crops"] += 1
                 totals["unknown_gt_rejected"] += int(not pred["accepted"])
@@ -111,7 +112,8 @@ def main():
                 break
             if i in matched_pred or j in matched_gt:
                 continue
-            matched_pred.add(i); matched_gt.add(j)
+            matched_pred.add(i)
+            matched_gt.add(j)
             totals["matched_iou50"] += 1
             obj,pred = objects[j],prediction[i]
             if obj["sku"]=="UNKNOWN":

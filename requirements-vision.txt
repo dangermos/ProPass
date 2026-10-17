@@ -8,12 +8,14 @@ Pillow==12.3.0
 numpy==2.5.3
 scipy==1.18.1
 lap
+zxing-cpp==3.1.1
+# Shared with requirements-api.txt, pinned to the versions this environment was tested with.
+# The API file keeps ranges so the server and tests install light; keep these pins inside them.
 fastapi==0.142.2
 uvicorn==0.54.0
-websockets
+websockets==17.1
 SQLAlchemy==2.1.3
+psycopg[binary]==3.3.6
 httpx==0.28.1
 pytest==9.1.1
 python-multipart
-psycopg[binary]
-zxing-cpp==3.1.1

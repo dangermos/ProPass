@@ -4,9 +4,9 @@ Nothing here starts or controls work. It only reads the files those steps alread
 dashboard's Training tab can show where a run is.
 """
 import json
-from pathlib import Path
 import re
 import time
+from pathlib import Path
 
 STAGES = [("lane", "detector"), ("lane", "classifier"), ("overhead", "detector"), ("overhead", "classifier")]
 DETECTOR_DONE, CLASSIFIER_DONE = '"architecture"', "Unity synthetic crop splits"

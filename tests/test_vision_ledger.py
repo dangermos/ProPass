@@ -7,7 +7,6 @@ import pytest
 
 from vision.ledger import LedgerConfig, Observation, PhysicalLedger
 
-
 SKUS = ["PEX-001", "PEX-002", "PEX-003", "PEX-004", "PEX-005"]
 
 

@@ -1,20 +1,20 @@
 """Local simulation API. Pixel-only input; no simulator labels enter inference."""
 import asyncio
 import json
-from contextlib import asynccontextmanager
-from dataclasses import dataclass, field
 import math
 import os
-from pathlib import Path
 import time
-from typing import Callable
+from collections.abc import Callable
+from contextlib import asynccontextmanager
+from dataclasses import dataclass, field
+from pathlib import Path
 from urllib.parse import urlencode
 
 from fastapi import FastAPI, HTTPException, Request, Response, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel, Field
 
 from .progress import progress
-from .store import CheckoutConflict, SCENARIOS, Store
+from .store import SCENARIOS, CheckoutConflict, Store
 
 ROOT = Path(__file__).resolve().parents[1]
 # Recorded runs that /api/replay plays through the live pipeline: one seed of every scenario.
@@ -94,7 +94,8 @@ class Runtime:
     def vision_status(self):
         if self.vision is not None:
             return self.vision.status()
-        return {"ready": False, "mode": "loading" if self.loading else "awaiting_frames", "cameras": list(self.camera_ids), "message": self.error or "Waiting for Unity frames. Recognition initializes on the first image."}
+        return {"ready": False, "mode": "loading" if self.loading else "awaiting_frames", "cameras": list(self.camera_ids),
+                "message": self.error or "Waiting for Unity frames. Recognition initializes on the first image."}
 
     def geometry(self):
         if self.vision is not None and hasattr(self.vision, "geometry"):
@@ -364,7 +365,7 @@ def create_app(database_url=None, vision_factory: Callable | None = None, camera
 
     async def reset_run(scenario):
         async with runtime.lock:
-            run_id = runtime.store.reset(scenario)
+            runtime.store.reset(scenario)
             runtime.paused = False
             runtime.result, runtime.frames, runtime.frame = {}, {}, None
             runtime.camera_frames = {}
@@ -483,7 +484,7 @@ def create_app(database_url=None, vision_factory: Callable | None = None, camera
         await runtime.publish()
         try:
             await asyncio.wait_for(runtime.queue.join(), timeout=30)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             return Response(status_code=202, content='{"pending":true,"message":"Draining accepted camera frames"}', media_type="application/json")
         async with runtime.lock:
             conflict = None
