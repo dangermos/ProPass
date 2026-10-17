@@ -154,7 +154,7 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
     <section className="project-section">
       <div className="section-head"><div className="eyebrow">BUILT WITH</div><h2>Stack and how to run it</h2></div>
       <div className="stack">{['Unity 6.6 · URP','PyTorch','YOLO26n','EfficientNet-B0','BoT-SORT','zxing-cpp','FastAPI','React + Vite','pytest'].map(t=><span key={t}>{t}</span>)}</div>
-      <pre className="code">{`git clone https://github.com/dangermos/ProPass && cd ProPass/web   # private for now: ask for access
+      <pre className="code">{`git clone https://github.com/dangermos/ProPass && cd ProPass/web
 npm ci && npm run dev        # this site and the recorded tour: no GPU, no Unity
 
 bash scripts/get_weights.sh     # trained weights
