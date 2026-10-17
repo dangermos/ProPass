@@ -220,7 +220,7 @@ Both camera model pairs were retrained on 2,640 scenes (1,728 earlier + 912 with
 | Runs passed (cart exactly right, associate called only when needed) | 68 | **60** | 71 |
 | of which closed automatically, no associate | 58 | **50** | 61 |
 | of which correctly sent to an associate (unknown product, locked tool) | 10 | 10 | 10 |
-| Runs sent to an associate unnecessarily | 17 | 25 | 14 |
+| Runs sent to an associate as a precaution | 17 | 25 | 14 |
 | Carts closed automatically with a wrong item | 0 | **0** | 0 |
 | Wrong lines inside carts handed to an associate | 0 | 2 | 0 |
 | Items missed | 9 | 16 | 2 |
@@ -250,7 +250,7 @@ Danny asked for everything to be fictional and far more varied, better-looking v
 - **Store:** stocked pallet racking, walls, signage, an associate station. The crossing flatbed now rolls at walking pace with an associate pushing it.
 - **Pipeline:** `scripts/round.sh` runs export, training, recording and scoring unattended in about 40 minutes; scoring uses four processes.
 - **First pass, 58 of 85 on development runs, one wrong close.** Two causes, both fixed on development runs: package tops that repeated the front's dark brand bar made one box look like two to the detector (redrawn as plain panels: 67 of 85), and a pail standing on a box took the box's barcode (a barcode that disagrees with how a package looks now goes to an associate).
-- **Held-out seeds 15–19, scored once: 68 of 85 pass.** 58 close automatically, 10 are correct hand-offs, 17 are unnecessary hand-offs, none closed wrong. The same table for the previous 8-product cart round was 60, 50, 10, 25, 0.
+- **Held-out seeds 15–19, scored once: 68 of 85 pass.** 58 close automatically, 10 are correct hand-offs, 17 went to an associate as a precaution (8 of them already right), none closed wrong. The same table for the previous 8-product cart round was 60, 50, 10, 25, 0.
 - Weights: `models/v8/` and release `weights-v8-fictional`. Reports: `models/benchmark-dev.json`, `models/benchmark-test.json`.
 
 ### Earlier rounds

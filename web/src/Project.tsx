@@ -7,7 +7,7 @@ import { endingOf } from './tourRun';
 // The project's front page. Measured numbers come from /results.json, which scripts/publish_results.py writes
 // from the reports in models/, so the page cannot drift from the data. The earlier rounds below are history.
 // auto: closed with no person and exactly right. held: unknown-product and locked-tool runs, right only when handed off.
-// extra: handed to an associate although the cart could have closed. wrong: closed automatically with a wrong or missing item.
+// extra: handed to an associate as a precaution although it was not one of the by-design cases. wrong: closed automatically with a wrong or missing item.
 type Split={runs:number;seeds:number[];passed:number;auto:number;held:number;extra:number;extra_incomplete:number;wrong:number;missed:number;false_adds:number;barcode:number;charged:number;scenes:Record<string,number>;top_reasons:[string,number][]};
 type Net={map50:number;map50_95:number;accuracy:number;crops:number;train_scenes:number|null};
 type Results={dev:Split;test:Split;models:{lane:Net;overhead:Net};tests:number|null;products:number};
@@ -66,8 +66,8 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
 
     <header className="project-hero">
       <div><div className="eyebrow">COMPUTER VISION PROJECT · SIMULATED STORE LANE · TRAINED MODELS</div>
-        <h1>The cart counts itself.<br/><span>And knows when to ask for help.</span></h1>
-        <p>A contractor pushes a cart down the lane. Three cameras watch. Trained models find every box, read its barcode or recognize it by look, and build the cart with a reason for every line. When the system is not sure, it hands the cart to an associate instead of guessing.</p>
+        <h1>The lane rings up the cart.<br/><span>When it isn't sure, it calls an associate.</span></h1>
+        <p>I built a simulated store lane where a contractor pushes a cart past three cameras. Models I trained find each box, read its barcode or recognize it by look, and add it to the cart with a reason for every line. When the lane isn't sure about an item, it hands the cart to an associate instead of guessing.</p>
         <div className="title-actions"><button className="primary-button" onClick={()=>onTour('single')}><Icon name="play" size={17}/> Watch the 17 scenes</button>
           <a className="secondary-button" href="#results"><Icon name="chart" size={16}/> See the measured results</a></div></div>
       <video className="hero-video" src={asset('angles/mixed-show.webm')} autoPlay muted loop playsInline onClick={()=>onTour('mixed')} title="Open this scene in the tour" aria-label="A customer pushes a flat cart with three boxes down a store checkout lane" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')onTour('mixed');}}/>
@@ -77,8 +77,8 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
 
     <section className="why">
       {[['The problem','A contractor with a loaded cart waits in line while every box is found, turned and scanned by hand.'],
-        ['The idea','Cameras over the lane ring the cart up as it rolls through. The customer keeps walking.'],
-        ['The safeguard','When the system is not sure, it never guesses. It keeps what it scanned and calls an associate for the rest.']]
+        ['The idea','Cameras over the lane ring up the cart as it rolls through, so the customer doesn\'t have to stop.'],
+        ['The safeguard','If the lane isn\'t sure about an item, it doesn\'t guess. It keeps what it scanned and calls an associate for the rest.']]
         .map(([name,text])=><div key={name}><h3>{name}</h3><p>{text}</p></div>)}
     </section>
 
@@ -86,30 +86,30 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
       {(t?[[`${t.auto} of ${t.runs}`,'carts closed with no one stepping in, exactly right','current scene, runs never tuned on'],
         [`${t.held} of ${t.held}`,'carts that needed a person were sent to one','unknown product and locked-cage tool'],
         [`${t.wrong} of ${t.runs}`,'carts closed with a wrong or missing item',`with ${t.runs} runs the true rate could still be up to about 3.5%`],
-        [`${t.extra}`,'carts sent to an associate that did not need to be',`the open work: ${t.extra_incomplete} of them had an item the cameras lost or misread`],
+        [`${t.extra} of ${t.runs}`,'carts sent to an associate as a precaution',`${t.extra-t.extra_incomplete} were already right; in ${t.extra_incomplete} the cameras had lost or misread an item`],
         ['36 ms','to process one moment from all cameras','median, models only, recorded frames, RTX 4070 Super; measured on the previous 8-product round']]:[])
         .map(([value,label,note])=><div key={label}><strong>{value}</strong><span>{label}</span><small>{note}</small></div>)}
     </section>
 
     <section id="results" className="project-section">
-      <div className="section-head"><div className="eyebrow">MEASURED, NOT CLAIMED</div><h2>Results on runs set aside for testing</h2>
+      <div className="section-head"><div className="eyebrow">RESULTS</div><h2>Results on runs set aside for testing</h2>
         <p>17 scenarios × 5 random variations (seeds) = 85 recorded runs. Settings are tuned on development runs only. The held-out runs were recorded after tuning was finished and scored once.</p></div>
       {t&&d&&<><div className="rounds">{([['Held-out runs',`Seeds ${t.seeds[0]}–${t.seeds[t.seeds.length-1]} · never tuned on · scored once`,t,true],['Development runs',`Seeds ${d.seeds[0]}–${d.seeds[d.seeds.length-1]} · the runs settings were tuned on`,d,false]] as [string,string,Split,boolean][]).map(([name,note,r,current])=><div key={name} className={`round ${current?'current':''}`}>
         <div className="round-head"><h3>{name}</h3>{current&&<span className="pill verified">the number that counts</span>}</div><small>{note}</small>
-        <div className="round-bar" role="img" aria-label={`${r.auto} closed automatically, ${r.held} correctly handed off, ${r.extra} handed off unnecessarily, ${r.wrong} closed wrong`}>
+        <div className="round-bar" role="img" aria-label={`${r.auto} closed automatically, ${r.held} correctly handed off, ${r.extra} sent to an associate as a precaution, ${r.wrong} closed wrong`}>
           <span className="auto" style={{width:`${r.auto/r.runs*100}%`}}/><span className="held" style={{width:`${r.held/r.runs*100}%`}}/><span className="extra" style={{width:`${r.extra/r.runs*100}%`}}/><span className="short" style={{width:`${r.wrong/r.runs*100}%`}}/></div>
         <div className="round-numbers"><div><strong>{r.auto}</strong><span>closed automatically, exactly right</span></div><div><strong className="held">{r.held}</strong><span>correctly sent to an associate</span></div>
-          <div><strong className="extra">{r.extra}</strong><span>sent to an associate unnecessarily</span></div><div><strong className={r.wrong?'short':'zero'}>{r.wrong}</strong><span>closed with a wrong or missing item</span></div></div></div>)}</div>
-      <p className="fine"><b>How to read this.</b> A run passes when the cart is exactly right and an associate is called only when one should be: {t.passed} of {t.runs} held-out runs passed. Of the {t.extra} unnecessary hand-offs, {t.extra_incomplete} had an incomplete or wrong cart ({t.missed} items the cameras lost, {t.false_adds} wrong {t.false_adds===1?'line':'lines'}), which is why the system did not close them. The most common reason was: {(t.top_reasons[0]?.[0]??'').toLowerCase()}. With 5 runs per scenario, read the per-scene scores below as signals, not rates.</p>
+          <div><strong className="extra">{r.extra}</strong><span>sent to an associate as a precaution</span></div><div><strong className={r.wrong?'short':'zero'}>{r.wrong}</strong><span>closed with a wrong or missing item</span></div></div></div>)}</div>
+      <p className="fine"><b>How to read this.</b> A run passes when the cart is exactly right and an associate is called only when one should be: {t.passed} of {t.runs} held-out runs passed. When the lane isn't sure, it sends the cart to an associate rather than risk a wrong charge or a missed item. That happened to {t.extra} held-out carts that were not by-design hand-offs. {t.extra-t.extra_incomplete} of them were already right, so a person checked them only as a precaution. The other {t.extra_incomplete} were incomplete or wrong ({t.missed} items the cameras lost, {t.false_adds} wrong {t.false_adds===1?'line':'lines'}), so closing them would have charged the wrong amount. The most common reason was: {(t.top_reasons[0]?.[0]??'').toLowerCase()}. With 5 runs per scenario, read the per-scene scores below as signals, not rates.</p>
       <div className="by-scene"><h3>By scene, held-out runs handled correctly out of 5</h3>
         <div className="by-scene-grid">{scenarios.map(s=><button key={s.id} onClick={()=>onTour(s.id)} title="Watch a recorded run"><span>{s.name}</span>
           <div className="dots">{[0,1,2,3,4].map(i=><i key={i} style={{background:i<(t.scenes[s.id]??0)?rate(t.scenes[s.id]??0):'#1c2a3c'}}/>)}</div><b style={{color:rate(t.scenes[s.id]??0)}}>{t.scenes[s.id]??0}/5</b></button>)}</div></div></>}
-      <p className="fine"><b>Earlier rounds</b> used 8 products and simpler scenes, each on its own 85 test runs: {earlier.map(e=>`${e.name}: ${e.passed} passed, ${e.auto} automatic, ${e.extra} unnecessary hand-offs, ${e.wrong} closed wrong`).join('. ')}. The one wrong close was a lumber cart that closed a board short.</p>
+      <p className="fine"><b>Earlier rounds</b> used 8 products and simpler scenes, each on its own 85 test runs: {earlier.map(e=>`${e.name}: ${e.passed} passed, ${e.auto} automatic, ${e.extra} precautionary hand-offs, ${e.wrong} closed wrong`).join('. ')}. The one wrong close was a lumber cart that closed a board short.</p>
       <div className="story-grid">
         <article><div className="eyebrow">A BUG THE DEVELOPMENT SET CAUGHT</div><h3>The barcode that landed on the wrong box</h3>
           <p>In an earlier round, nine development runs were charged the wrong product. The cause: a label on a low cart sits below the calibration plane, so it projects toward the barcode camera and lands on the neighboring box. Giving each label to the first box behind it took development runs from 56 to 68 of 85 with nothing wrongly charged. The held-out set was scored once, after the fix.</p></article>
         <article><div className="eyebrow">MODELS</div><h3>Small models, one pair per camera</h3>
-          <p>{res?`Detector: YOLO26n, ${res.models.lane.train_scenes??''} training scenes per camera. Test mAP50-95 ${res.models.lane.map50_95} on the gate camera and ${res.models.overhead.map50_95} overhead. Classifier: EfficientNet-B0 over ${res.products} products plus an unknown class, ${(res.models.lane.accuracy*100).toFixed(1)}% and ${(res.models.overhead.accuracy*100).toFixed(1)}% on test crops. `:''}One shared pair for both views scored far worse, so each camera has its own. Model hashes are stored with every benchmark report.</p></article>
+          <p>{res?`Detector: YOLO26n, ${res.models.lane.train_scenes??''} training scenes per camera. Test mAP50-95 ${res.models.lane.map50_95} on the gate camera and ${res.models.overhead.map50_95} overhead. Classifier: EfficientNet-B0 over ${res.products} products plus an unknown class, ${(res.models.lane.accuracy*100).toFixed(1)}% and ${(res.models.overhead.accuracy*100).toFixed(1)}% on test crops. `:''}I first tried one shared pair for both views. It scored far worse, so each camera has its own. Model hashes are stored with every benchmark report.</p></article>
       </div>
     </section>
 
@@ -129,7 +129,7 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
 
     <section id="cameras" className="project-section">
       <div className="section-head"><div className="eyebrow">ONE MOMENT, EVERY ANGLE</div><h2>What each camera sees</h2>
-        <p>The same run from every camera, played in step. Pick a scene and press play. Three cameras feed the system; the fourth is only for you.</p></div>
+        <p>The same run from every camera, played in step. Pick a scene and press play. Three cameras feed the system. The fourth is only for viewers.</p></div>
       <Angles/>
     </section>
 
@@ -141,11 +141,11 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
     </section>
 
     <section id="limits" className="project-section">
-      <div className="section-head"><div className="eyebrow">WHAT IT DOES NOT DO YET</div><h2>Honest limits</h2></div>
+      <div className="section-head"><div className="eyebrow">WHAT IT DOES NOT DO YET</div><h2>Limits</h2></div>
       <div className="limits">{[['Synthetic only','Every number here comes from Unity renders. Nothing has been tested on a real camera.'],
         ['Touching packages are hard',t?`Two packages stacked or pressed together can read as one: ${t.scenes.stacked??0} of 5 held-out runs handled correctly. The cart goes to an associate rather than being charged short.`:'Two packages stacked or pressed together can read as one.'],
         ['Carts hide labels',t?`A package behind another package is not scanned. Barcodes settled ${t.barcode} of ${t.charged} charged items; the rest were recognized by look.`:'A package behind another package is not scanned and falls back to recognition by look.'],
-        ['Too many hand-offs',t?`${t.extra} of ${t.runs} held-out carts were sent to an associate without needing it. That would not work in a store, and cutting it is the main open problem.`:'Carts are sent to an associate more often than a store could accept. Cutting that is the main open problem.'],
+        ['Cautious hand-offs',t?`${t.extra} of ${t.runs} held-out carts went to an associate as a precaution, and ${t.extra-t.extra_incomplete} of those were already right. A store would want fewer. Cutting that number without risking wrong charges is the main open problem.`:'Carts go to an associate as a precaution more often than a store would want. Cutting that without risking wrong charges is the main open problem.'],
         ['Small test','85 runs and 15 products. Enough to find failures, not enough to promise a rate.'],
         ['Next step to make it real','Point one real camera at one real cart with real packages, and measure what breaks first: detection, barcode reading under motion blur, or calibration.']]
         .map(([name,text])=><div key={name}><h3>{name}</h3><p>{text}</p></div>)}</div>
