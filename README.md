@@ -125,7 +125,7 @@ tail -f artifacts/logs/round.log
 ## Project layout
 
 ```text
-api/          FastAPI app: frame ingress, replay, cart and session persistence, checkout
+api/          FastAPI app (routes/, runtime.py, ws.py): frame ingress, replay, cart and session persistence, checkout
 vision/       Inference engine, camera calibration, barcode reading, the physical-object ledger
 web/          React + TypeScript dashboard: project site, recorded tour, live lab
 unity/        The Unity 6.6 project; code, scene and generated label art in unity/Assets/ProPass

@@ -1,6 +1,6 @@
 # 🔌 API reference
 
-The FastAPI server runs on **http://127.0.0.1:8000**. Interactive docs, generated from the code, are at **[/docs](http://127.0.0.1:8000/docs)**. All of the code is in [api/app.py](../api/app.py).
+The FastAPI server runs on **http://127.0.0.1:8000**. Interactive docs, generated from the code, are at **[/docs](http://127.0.0.1:8000/docs)**. [api/app.py](../api/app.py) builds the app; the endpoints are in [api/routes/](../api/routes) (status, frames, session, replay, assist) and [api/ws.py](../api/ws.py), and the session runtime is in [api/runtime.py](../api/runtime.py).
 
 ## 🗺️ Endpoints at a glance
 
