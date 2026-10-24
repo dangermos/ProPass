@@ -314,6 +314,7 @@ html{scroll-behavior:smooth}
 .project-hero h1 span{background:linear-gradient(90deg,#38d6bf,#6aa8ff 50%,#ff985e);-webkit-background-clip:text;background-clip:text;color:transparent}
 .project-hero p{font-size:16px;line-height:1.65;color:#9fb0c4;max-width:600px;margin:0 0 28px}
 .project-hero a.secondary-button{text-decoration:none;display:inline-flex;align-items:center}
+.static-lab{grid-template-columns:minmax(0,760px);min-height:80vh}
 .hero-video{width:100%;aspect-ratio:1280/450;border-radius:16px;border:1px solid #24364c;box-shadow:0 30px 80px #000a,0 0 0 1px #38d6bf22;cursor:pointer;background:#05090f}
 .project-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:#1a2738;border:1px solid #1a2738;border-radius:16px;overflow:hidden}
 .project-stats div{background:#0c1522;padding:20px 18px;display:grid;gap:4px}

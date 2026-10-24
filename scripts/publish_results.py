@@ -76,7 +76,18 @@ def main():
                  f"{test['extra'] - test['extra_incomplete']} of them were already right. The other {test['extra_incomplete']} were incomplete or wrong "
                  f"({test['missed']} items the cameras lost, {test["false_adds"]} wrong line{"" if test["false_adds"] == 1 else "s"}), so closing them would have charged the wrong amount. "
                  "Most common reasons: " + "; ".join(f"{reason.lower()} ({count})" for reason, count in test["top_reasons"]) + ".")
-    fill = {"TESTS": results["tests"], "RESULT_NOTES": "\n".join(notes), "WEAK_SPOTS": "\n".join(weak_spots(test)),
+    # The optional decision model, scored on development runs only (training/decision_eval.py).
+    second = json.loads((ROOT / "models/decision-subq-dev.json").read_text())["summary"]
+    alone = json.loads((ROOT / "models/decision-subq-only-dev.json").read_text())["summary"]["with_decision"]
+    closed = second["with_decision"]["auto"] - second["rules"]["auto"]
+    notes_decision = (f"**An optional second opinion.** A decision model ({second['model']}, SubQ's Decisions API) can review the carts the rules would hand off "
+                      "for a soft reason. Locked tools, unknown barcodes and barcode mismatches never reach it, and a failed call keeps the rules' decision. "
+                      f"On development runs it closed {closed} of the {second['model_calls']} carts it was asked about "
+                      f"({second['rules']['passed']} → {second['with_decision']['passed']} runs passed, "
+                      f"{second['with_decision']['wrong_close']} wrong closes). Deciding every cart on its own, without the rules, it passed {alone['passed']}. "
+                      "It is off by default and has not been scored on held-out runs. Code: [vision/decision.py](vision/decision.py); "
+                      "scoring: [training/decision_eval.py](training/decision_eval.py).")
+    fill = {"TESTS": results["tests"], "DECISION_NOTE": notes_decision, "RESULT_NOTES": "\n".join(notes), "WEAK_SPOTS": "\n".join(weak_spots(test)),
             "LANE_MAP": nets["lane"]["map50_95"], "LANE_ACC": f"{nets['lane']['accuracy']:.1%}",
             "OVER_MAP": nets["overhead"]["map50_95"], "OVER_ACC": f"{nets['overhead']['accuracy']:.1%}"}
     for name, s in (("DEV", dev), ("TEST", test)):

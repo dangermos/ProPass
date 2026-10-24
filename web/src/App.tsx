@@ -76,6 +76,15 @@ export default function App(){
   if(route.view==='title') return <TitleScreen snapshot={snapshot} connected={connected} live={live} reports={reports} busy={busy}
     onStart={start} onReplay={id=>void replay(id)} onWatch={id=>go('tour',id)} onResume={()=>go('lab','live')} onOpen={tab=>go('lab',tab)} onHome={()=>go('project')}/>;
 
+  // The lab needs the local API. On the static site, say so instead of showing empty tabs.
+  if(STATIC) return <div className="project"><section className="project-hero static-lab"><div>
+    <div className="eyebrow">LIVE LAB · RUNS ON YOUR MACHINE</div>
+    <h1>The lab needs the <span>local API</span>.</h1>
+    <p>This page is a static copy: the project page and the 17 recorded scenes. The live lab plays recorded frames through the trained models, which needs Python, the weights and ideally a GPU. To run it, clone the repository and follow the README quickstart.</p>
+    <div className="title-actions"><button className="primary-button" onClick={()=>go('tour','single')}><Icon name="play" size={17}/> Watch the 17 scenes</button>
+      <button className="secondary-button" onClick={()=>go('project')}><Icon name="back" size={16}/> Project page</button>
+      <a className="secondary-button" href="https://github.com/dangermos/ProPass#2-run-the-models-live-without-unity">How to run it</a></div></div></section></div>;
+
   const tab=route.tab;
   return <div className="app-shell">
     <aside className="rail"><button className="brand-mark" aria-label="Back to scenarios" title="Scenarios" onClick={()=>go('title')}>P<span/></button><div className="rail-divider"/>

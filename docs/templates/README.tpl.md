@@ -59,6 +59,8 @@ Models (test split of the training data): gate camera detector mAP50-95 @LANE_MA
 
 **Read these numbers with care.** 85 runs can find failures but cannot promise a rate: zero wrong closes in 85 runs still allows a true rate of up to about 3.5%. Five runs per scenario are signals, not percentages.
 
+@DECISION_NOTE@
+
 ## Quickstart
 
 ### 1. Watch it: two minutes, Node.js only
@@ -70,7 +72,7 @@ npm ci && npm run dev          # open http://127.0.0.1:5173
 
 ![The project site](docs/images/site.jpg)
 
-The front page explains the project. **Watch the 17 scenes** opens the recorded tour: every scenario from four camera angles at 60 fps, with the cart the system built and what it decided beside the video, and a **Sound** button. No GPU, Unity or model weights are needed, because the videos are in the repository. Each tour scene is development seed 2 of its scenario, pass or not. The same pages can be published as a static site on GitHub Pages; it is off until it is switched on ([docs/static-demo.md](docs/static-demo.md)).
+The front page explains the project. **Watch the 17 scenes** opens the recorded tour: every scenario from four camera angles at 60 fps, with the cart the system built and what it decided beside the video, and a **Sound** button. No GPU, Unity or model weights are needed, because the videos are in the repository. Each tour scene is development seed 2 of its scenario, pass or not. The same pages are published as a static site at [dangermos.github.io/ProPass](https://dangermos.github.io/ProPass/) ([docs/static-demo.md](docs/static-demo.md)).
 
 ### 2. Run the models live, without Unity
 

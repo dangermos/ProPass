@@ -3,7 +3,7 @@
 The project page and the recorded tour of all 17 scenes need no API, GPU or Unity: they read only the files in `web/public/` (tour videos, decision logs, thumbnails, `results.json`). `npm run build:static` builds just that, and [`.github/workflows/pages.yml`](../.github/workflows/pages.yml) can publish it to GitHub Pages.
 
 > [!IMPORTANT]
-> **It is off.** The workflow only runs when someone starts it by hand, and nothing is published until then. A Pages site is public even when the repository is private, and Pages for a private repository needs a paid GitHub plan.
+> **It is on** at [dangermos.github.io/ProPass](https://dangermos.github.io/ProPass/). The workflow only runs when someone starts it by hand, so republish after the site changes. A Pages site is public even when the repository is private, and Pages for a private repository needs a paid GitHub plan.
 
 ## What is in it
 
