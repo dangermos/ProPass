@@ -3,12 +3,12 @@ import { scenarios } from './scenarios';
 import { Icon } from './ui';
 import { asset } from './assets';
 import { endingOf } from './tourRun';
+import { precaution, type Split } from './results';
 
 // The project's front page. Measured numbers come from /results.json, which scripts/publish_results.py writes
 // from the reports in models/, so the page cannot drift from the data. The earlier rounds below are history.
 // auto: closed with no person and exactly right. held: unknown-product and locked-tool runs, right only when handed off.
 // extra: handed to an associate as a precaution although it was not one of the by-design cases. wrong: closed automatically with a wrong or missing item.
-type Split={runs:number;seeds:number[];passed:number;auto:number;held:number;extra:number;extra_incomplete:number;wrong:number;missed:number;false_adds:number;barcode:number;charged:number;scenes:Record<string,number>;top_reasons:[string,number][]};
 type Net={map50:number;map50_95:number;accuracy:number;crops:number;train_scenes:number|null};
 type Results={dev:Split;test:Split;models:{lane:Net;overhead:Net};tests:number|null;products:number};
 const earlier=[
@@ -86,7 +86,7 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
       {(t?[[`${t.auto} of ${t.runs}`,'carts closed with no one stepping in, exactly right','current scene, runs never tuned on'],
         [`${t.held} of ${t.held}`,'carts that needed a person were sent to one','unknown product and locked-cage tool'],
         [`${t.wrong} of ${t.runs}`,'carts closed with a wrong or missing item',`with ${t.runs} runs the true rate could still be up to about 3.5%`],
-        [`${t.extra} of ${t.runs}`,'carts sent to an associate as a precaution',`${t.extra-t.extra_incomplete} were already right; in ${t.extra_incomplete} the cameras had lost or misread an item`],
+        [`${t.extra} of ${t.runs}`,'carts sent to an associate as a precaution, in scenes the lane could have closed',`${t.extra-t.extra_incomplete} were already right; the other ${t.extra_incomplete} would have closed short or over`],
         ['36 ms','to process one moment from all cameras','median, models only, recorded frames, RTX 4070 Super; measured on the previous 8-product round']]:[])
         .map(([value,label,note])=><div key={label}><strong>{value}</strong><span>{label}</span><small>{note}</small></div>)}
     </section>
@@ -100,7 +100,7 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
           <span className="auto" style={{width:`${r.auto/r.runs*100}%`}}/><span className="held" style={{width:`${r.held/r.runs*100}%`}}/><span className="extra" style={{width:`${r.extra/r.runs*100}%`}}/><span className="short" style={{width:`${r.wrong/r.runs*100}%`}}/></div>
         <div className="round-numbers"><div><strong>{r.auto}</strong><span>closed automatically, exactly right</span></div><div><strong className="held">{r.held}</strong><span>correctly sent to an associate</span></div>
           <div><strong className="extra">{r.extra}</strong><span>sent to an associate as a precaution</span></div><div><strong className={r.wrong?'short':'zero'}>{r.wrong}</strong><span>closed with a wrong or missing item</span></div></div></div>)}</div>
-      <p className="fine"><b>How to read this.</b> A run passes when the cart is exactly right and an associate is called only when one should be: {t.passed} of {t.runs} held-out runs passed. When the lane isn't sure, it sends the cart to an associate rather than risk a wrong charge or a missed item. That happened to {t.extra} held-out carts that were not by-design hand-offs. {t.extra-t.extra_incomplete} of them were already right, so a person checked them only as a precaution. The other {t.extra_incomplete} were incomplete or wrong ({t.missed} items the cameras lost, {t.false_adds} wrong {t.false_adds===1?'line':'lines'}), so closing them would have charged the wrong amount. The most common reason was: {(t.top_reasons[0]?.[0]??'').toLowerCase()}. With 5 runs per scenario, read the per-scene scores below as signals, not rates.</p>
+      <p className="fine"><b>How to read this.</b> A run passes when the cart is exactly right and an associate is called only when one should be: {t.passed} of {t.runs} held-out runs passed. The {t.by_design??t.held} carts built to need a person (unknown product, locked tool) all went to one. In the other {t.runs-(t.by_design??t.held)}, the lane closed {t.auto} on its own and sent {t.extra} to an associate rather than guess. {precaution(t)} The most common reason was: {(t.top_reasons[0]?.[0]??'').toLowerCase()}. With 5 runs per scenario, read the per-scene scores below as signals, not rates.</p>
       <div className="by-scene"><h3>By scene, held-out runs handled correctly out of 5</h3>
         <div className="by-scene-grid">{scenarios.map(s=><button key={s.id} onClick={()=>onTour(s.id)} title="Watch a recorded run"><span>{s.name}</span>
           <div className="dots">{[0,1,2,3,4].map(i=><i key={i} style={{background:i<(t.scenes[s.id]??0)?rate(t.scenes[s.id]??0):'#1c2a3c'}}/>)}</div><b style={{color:rate(t.scenes[s.id]??0)}}>{t.scenes[s.id]??0}/5</b></button>)}</div></div></>}
@@ -145,7 +145,7 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
       <div className="limits">{[['Synthetic only','Every number here comes from Unity renders. Nothing has been tested on a real camera.'],
         ['Touching packages are hard',t?`Two packages stacked or pressed together can read as one: ${t.scenes.stacked??0} of 5 held-out runs handled correctly. The cart goes to an associate rather than being charged short.`:'Two packages stacked or pressed together can read as one.'],
         ['Carts hide labels',t?`A package behind another package is not scanned. Barcodes settled ${t.barcode} of ${t.charged} charged items; the rest were recognized by look.`:'A package behind another package is not scanned and falls back to recognition by look.'],
-        ['Cautious hand-offs',t?`${t.extra} of ${t.runs} held-out carts went to an associate as a precaution, and ${t.extra-t.extra_incomplete} of those were already right. A store would want fewer. Cutting that number without risking wrong charges is the main open problem.`:'Carts go to an associate as a precaution more often than a store would want. Cutting that without risking wrong charges is the main open problem.'],
+        ['Cautious hand-offs',t?`${t.extra} of ${t.runs} held-out carts went to an associate as a precaution, in scenes the lane could have closed, and ${t.extra-t.extra_incomplete} of those were already right. A store would want fewer. Cutting that number without risking wrong charges is the main open problem.`:'Carts go to an associate as a precaution more often than a store would want. Cutting that without risking wrong charges is the main open problem.'],
         ['Small test','85 runs and 15 products. Enough to find failures, not enough to promise a rate.'],
         ['Next step to make it real','Point one real camera at one real cart with real packages, and measure what breaks first: detection, barcode reading under motion blur, or calibration.']]
         .map(([name,text])=><div key={name}><h3>{name}</h3><p>{text}</p></div>)}</div>
