@@ -5,10 +5,9 @@ hands the cart off. Many of those hand-offs are precautionary (a tracking flicke
 box that is already charged), so an optional decision model can look at the per-item
 evidence and close those carts instead.
 
-Two decision models are supported: SubQ, a general LLM with an OpenAI-style chat API
-(https://api.subq.ai, key in SUBQ_API_KEY), asked for a JSON verdict; and Jev, TypeSafe's
-System One decision model (https://docs.typesafe.ai, key in TYPESAFE_API_KEY), asked one
-typed Choice question. Either is off unless asked for, and only ever consulted about soft flags: a locked item, an
+Two decision models are supported, both asked one typed Choice question through the same
+Decisions (System One) API: SubQ Snap (https://docs.subq.ai, key in SUBQ_API_KEY) and Jev,
+TypeSafe's model (https://docs.typesafe.ai, key in TYPESAFE_API_KEY). Either is off unless asked for, and only ever consulted about soft flags: a locked item, an
 unknown product, a barcode that disagrees with the product, or an item that crossed
 checkout without a SKU always goes to an associate, whatever the model says. If the call
 fails for any reason the rules decision stands.
@@ -28,7 +27,7 @@ from pathlib import Path
 CLOSE, HAND_OFF = "close", "needs_associate"
 PROVIDERS = {
     # name: (default base URL, default model, API key variable)
-    "subq": ("https://api.subq.ai/v1", "subq-preview", "SUBQ_API_KEY"),
+    "subq": ("https://api.subq.ai/v1", "subq-snap-1.1", "SUBQ_API_KEY"),
     "jev": ("https://api.typesafe.ai/v1", "jev-latest", "TYPESAFE_API_KEY"),
 }
 ROOT = Path(__file__).resolve().parents[1]
@@ -141,40 +140,16 @@ def _post(url: str, body: dict, api_key: str, timeout: float) -> dict:
         return json.loads(response.read())
 
 
-def call_jev(state: dict, api_key: str, model: str, base_url: str, timeout: float = 15.0) -> dict:
-    """One System One request with one Choice question."""
+def call_systemone(state: dict, api_key: str, model: str, base_url: str, timeout: float = 30.0) -> dict:
+    """One Decisions (System One) request with one Choice question. SubQ Snap and Jev share this contract."""
     body = {"model": model, "state": state, "questions": {"checkout": QUESTION}}
     answer = _post(f"{base_url}/systemone", body, api_key, timeout)["answers"]["checkout"]
     if answer.get("type") != "choice" or answer.get("choice") not in (CLOSE, HAND_OFF):
-        raise ValueError(f"Unexpected Jev answer: {answer}")
+        raise ValueError(f"Unexpected decision answer: {answer}")
     return {"choice": answer["choice"], "probability": float(answer["probabilities"][CLOSE]),
-            "confidence": answer.get("confidence"), "reason": None}
+            "confidence": answer.get("confidence")}
 
 
-SYSTEM_PROMPT = (
-    "You decide whether a self-checkout cart can close or must go to a store associate. "
-    f"{INSTRUCTIONS}\n\n"
-    f"{CLOSE}: {CRITERIA[CLOSE]}\n{HAND_OFF}: {CRITERIA[HAND_OFF]}\n\n"
-    'Reply with JSON only: {"decision": "close" or "needs_associate", '
-    '"probability_close": number from 0 to 1, "reason": one short sentence}.')
-
-
-def call_subq(state: dict, api_key: str, model: str, base_url: str, timeout: float = 30.0) -> dict:
-    """One OpenAI-style chat completion asking for a JSON verdict."""
-    body = {"model": model, "temperature": 0, "max_tokens": 200,
-            "messages": [{"role": "system", "content": SYSTEM_PROMPT},
-                         {"role": "user", "content": json.dumps(state, indent=1)}]}
-    text = _post(f"{base_url}/chat/completions", body, api_key, timeout)["choices"][0]["message"]["content"]
-    start, end = text.find("{"), text.rfind("}")
-    verdict = json.loads(text[start:end + 1])
-    if verdict.get("decision") not in (CLOSE, HAND_OFF):
-        raise ValueError(f"Unexpected SubQ answer: {text[:200]}")
-    probability = float(verdict.get("probability_close", 1.0 if verdict["decision"] == CLOSE else 0.0))
-    return {"choice": verdict["decision"], "probability": probability, "confidence": None,
-            "reason": str(verdict.get("reason", ""))[:200] or None}
-
-
-CALLS: dict[str, Callable[..., dict]] = {"jev": call_jev, "subq": call_subq}
 
 
 def load_dotenv(path: Path = ROOT / ".env") -> None:
@@ -206,7 +181,7 @@ class ModelDecider:
         self.api_key = api_key if api_key is not None else os.environ.get(key_name)
         self.model = model or os.environ.get(f"{prefix}_MODEL") or default_model
         self.base_url = (base_url or os.environ.get(f"{prefix}_BASE_URL") or default_url).rstrip("/")
-        self.threshold, self.call = threshold, call or CALLS[provider]
+        self.threshold, self.call = threshold, call or call_systemone
         self.names = names if names is not None else catalog_names()
 
     def decide(self, evidence: dict) -> Decision:
@@ -224,11 +199,10 @@ class ModelDecider:
             return Decision(HAND_OFF, rules.reason, f"rules ({self.provider} unavailable: {type(error).__name__})",
                             flagged=rules.flagged)
         probability, confidence = answer["probability"], answer["confidence"]
-        note = f" ({answer['reason']})" if answer.get("reason") else ""
         if answer["choice"] == CLOSE and probability >= self.threshold:
-            return Decision(CLOSE, f"{self.provider} judged the flags precautionary{note}: {rules.reason}",
+            return Decision(CLOSE, f"{self.provider} judged the flags precautionary (p={probability:.2f}): {rules.reason}",
                             self.provider, probability, confidence, rules.flagged)
-        return Decision(HAND_OFF, f"{self.provider} kept the hand-off{note}: {rules.reason}",
+        return Decision(HAND_OFF, f"{self.provider} kept the hand-off (p={probability:.2f}): {rules.reason}",
                         self.provider, probability, confidence, rules.flagged)
 
 

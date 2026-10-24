@@ -1,11 +1,10 @@
 """The optional checkout decision layer: rules first, hard reasons never overridden, rules on failure."""
-import json
 import urllib.error
 
 import pytest
 
 from training.decision_eval import outcome, tally
-from vision.decision import CLOSE, HAND_OFF, ModelDecider, call_subq, decision_state, rules_decision
+from vision.decision import CLOSE, HAND_OFF, ModelDecider, call_systemone, decision_state, rules_decision
 from vision.ledger import Observation, PhysicalLedger
 
 NAMES = {"PEX-001": "Drill", "PEX-002": "Driver"}
@@ -51,7 +50,7 @@ def test_clean_cart_closes_without_a_model_call():
 
 
 def test_model_can_close_a_soft_flag():
-    call = Recorder({"choice": CLOSE, "probability": 0.93, "confidence": None, "reason": "duplicate track"})
+    call = Recorder({"choice": CLOSE, "probability": 0.93, "confidence": 0.9})
     made = decider(call).decide(evidence(item(), SOFT))
     assert made.decision == CLOSE and made.source == "subq" and made.probability == 0.93
     state = call.states[0]
@@ -60,7 +59,7 @@ def test_model_can_close_a_soft_flag():
 
 
 def test_low_probability_close_still_hands_off():
-    call = Recorder({"choice": CLOSE, "probability": 0.6, "confidence": None, "reason": None})
+    call = Recorder({"choice": CLOSE, "probability": 0.6, "confidence": None})
     assert decider(call).decide(evidence(item(), SOFT)).decision == HAND_OFF
 
 
@@ -73,12 +72,12 @@ def test_low_probability_close_still_hands_off():
          review_reason="Product first observed beyond checkout boundary"),
 ])
 def test_hard_reasons_are_never_sent_to_the_model(hard):
-    call = Recorder({"choice": CLOSE, "probability": 1.0, "confidence": None, "reason": None})
+    call = Recorder({"choice": CLOSE, "probability": 1.0, "confidence": None})
     made = decider(call).decide(evidence(item(), SOFT, hard))
     assert made.decision == HAND_OFF and made.source == "rules" and not call.states
 
 
-@pytest.mark.parametrize("error", [urllib.error.URLError("down"), TimeoutError(), ValueError("bad json"), KeyError("choices")])
+@pytest.mark.parametrize("error", [urllib.error.URLError("down"), TimeoutError(), ValueError("bad json"), KeyError("answers")])
 def test_failures_fall_back_to_the_rules(error):
     made = decider(Recorder(error=error)).decide(evidence(item(), SOFT))
     assert made.decision == HAND_OFF and made.source.startswith("rules (subq unavailable")
@@ -91,24 +90,25 @@ def test_no_key_falls_back_to_the_rules(monkeypatch):
     assert made.decision == HAND_OFF and not call.states
 
 
-def test_subq_reply_is_parsed_from_json_in_the_text(monkeypatch):
-    reply = {"choices": [{"message": {"content": 'Sure:\n{"decision": "close", "probability_close": 0.9, "reason": "ok"}'}}]}
+def test_systemone_request_and_answer(monkeypatch):
+    reply = {"answers": {"checkout": {"type": "choice", "choice": "close", "confidence": 0.8,
+                                      "probabilities": {"close": 0.9, "needs_associate": 0.1}}}}
     sent = {}
 
     def fake_post(url, body, api_key, timeout):
         sent.update(url=url, body=body)
         return reply
     monkeypatch.setattr("vision.decision._post", fake_post)
-    answer = call_subq({"x": 1}, "k", "subq-preview", "https://api.subq.ai/v1")
-    assert answer == {"choice": CLOSE, "probability": 0.9, "confidence": None, "reason": "ok"}
-    assert sent["url"].endswith("/chat/completions") and sent["body"]["model"] == "subq-preview"
-    assert json.loads(sent["body"]["messages"][1]["content"]) == {"x": 1}
+    answer = call_systemone({"x": 1}, "k", "subq-snap-1.1", "https://api.subq.ai/v1")
+    assert answer == {"choice": CLOSE, "probability": 0.9, "confidence": 0.8}
+    assert sent["url"] == "https://api.subq.ai/v1/systemone" and sent["body"]["model"] == "subq-snap-1.1"
+    assert sent["body"]["state"] == {"x": 1} and set(sent["body"]["questions"]["checkout"]["criteria"]) == {CLOSE, HAND_OFF}
 
 
-def test_unknown_subq_decision_is_an_error(monkeypatch):
-    monkeypatch.setattr("vision.decision._post", lambda *a: {"choices": [{"message": {"content": '{"decision": "maybe"}'}}]})
+def test_unexpected_answer_is_an_error(monkeypatch):
+    monkeypatch.setattr("vision.decision._post", lambda *a: {"answers": {"checkout": {"type": "noul", "noul": 0.5}}})
     with pytest.raises(ValueError):
-        call_subq({}, "k", "m", "u")
+        call_systemone({}, "k", "m", "u")
 
 
 def test_rules_decision_matches_the_ledger_flag():
