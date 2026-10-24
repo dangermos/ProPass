@@ -68,7 +68,7 @@ def main():
     summary = {"evidence": str(args.evidence), "label": data["label"], "runs": len(runs), "decision": args.decision,
                "threshold": args.threshold, "model": decider.model if decider else None,
                "rules": baseline, "with_decision": result, "fallbacks_to_rules": fallbacks,
-               "model_calls": sum(d["source"] == args.decision for d in decisions)}
+               "model_calls": sum(d["source"] == args.decision for d in decisions) if decider else 0}
     output = args.output or ROOT / "models" / f"decision-{args.decision}-dev.json"
     output.write_text(json.dumps({"summary": summary, "decisions": decisions}, indent=1))
     print(json.dumps(summary, indent=2))
