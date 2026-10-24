@@ -6,7 +6,7 @@ The project page and a recorded tour of all 17 scenes, in the browser. Nothing t
 
 [![15 seconds of the locked-tool scene: four camera views, the boxes the system draws, and its decisions, including the associate hand-off. Click to open the live demo.](docs/media/demo.gif)](https://dangermos.github.io/ProPass/)
 
-**A checkout lane that rings up the cart as it rolls through, and calls an associate when it isn't sure.** I built it as a student project: a simulated store lane in Unity, three cameras, vision models I trained, and a ledger that gives every physical item one identity. By **Danny Germosen** (SUNY Oswego).
+**A checkout lane that rings up the cart as it rolls through, and calls an associate when it isn't sure.** A simulated store lane in Unity, three cameras, vision models I trained, and a ledger that gives every physical item one identity.
 
 [![CI](https://github.com/dangermos/ProPass/actions/workflows/ci.yml/badge.svg)](https://github.com/dangermos/ProPass/actions/workflows/ci.yml)
 ![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue)
@@ -20,7 +20,7 @@ The project page and a recorded tour of all 17 scenes, in the browser. Nothing t
 ![Tests](https://img.shields.io/badge/tests-@TESTS@%20passing-2EA043)
 
 > [!NOTE]
-> An independent student project inspired by contractor checkout. It is **not affiliated with or endorsed by The Home Depot**. Every brand, product, price and customer in it is invented, and no payment is taken. Every number below was measured on **simulated images rendered by Unity**. Nothing has been tested on a real camera.
+> Every brand, product, price and customer in this project is invented, and no payment is taken. Every number below was measured on **simulated images rendered by Unity**. Nothing has been tested on a real camera.
 
 ## Known weak spots and next steps
 
@@ -133,7 +133,6 @@ tail -f artifacts/logs/round.log
 | [Extending](docs/extending.md) | Add a product, scenario, camera or model |
 | [Project log](docs/pro-express-v2.md) | Earlier rounds, what changed and why |
 | [Static demo](docs/static-demo.md) | Publish the project page and tour on GitHub Pages |
-| [Engineering logs](docs/engineering-logs/HANDOFF.md) | Working notes for whoever picks this up next |
 
 ## Project layout
 

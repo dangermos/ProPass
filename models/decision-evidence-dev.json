@@ -1,6 +1,6 @@
 {
  "label": "dev",
- "recording_root": "/home/dangermos/Home Depot Internship Project/propass/artifacts/benchmark",
+ "recording_root": "artifacts/benchmark",
  "runs": [
   {
    "scenario": "bystander",

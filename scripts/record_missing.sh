@@ -1,6 +1,6 @@
 #!/bin/bash
 # Records the held-out runs the interrupted recording did not finish. One Unity at a time.
-cd "/home/dangermos/Home Depot Internship Project/propass"
+cd "$(dirname "$0")/.."
 U=~/Unity/Hub/Editor/6000.6.4f1/Editor/Unity
 OUT="$PWD/artifacts/benchmark-test"
 nice -n 10 ionice -c2 -n7 "$U" -batchmode -quit -projectPath unity -logFile artifacts/logs/unity-record-locked.log -executeMethod ProPass.Editor.ProPassBenchmarkRecorder.RunFromCommandLine -benchmarkOut "$OUT" -benchmarkScenarios locked -benchmarkSeedStart 13 -benchmarkSeeds 2

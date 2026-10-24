@@ -1,6 +1,6 @@
 {
  "summary": {
-  "evidence": "/home/dangermos/Home Depot Internship Project/propass/models/decision-evidence-dev.json",
+  "evidence": "models/decision-evidence-dev.json",
   "label": "dev",
   "runs": 85,
   "decision": "subq",

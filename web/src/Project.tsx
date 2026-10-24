@@ -75,7 +75,7 @@ export default function Project({local,onTour,onScenarios,onLab}:{local:boolean;
       <video className="hero-video" src={asset('angles/mixed-show.webm')} autoPlay muted loop playsInline onClick={()=>onTour('mixed')} title="Open this scene in the tour" aria-label="A customer pushes a flat cart with three boxes down a store checkout lane" tabIndex={0} onKeyDown={e=>{if(e.key==='Enter')onTour('mixed');}}/>
     </header>
 
-    <p className="byline">Built by <b>Danny Germosen</b>, SUNY Oswego (<a href="https://github.com/dangermos">github.com/dangermos</a>), as an independent student project. Not affiliated with or endorsed by The Home Depot. Everything shown is a simulation: fictional prices, no payment, no real store or camera.</p>
+    <p className="byline">Everything shown is a simulation: invented products and prices, no payment, no real store or camera.</p>
 
     <section className="why">
       {[['The problem','A contractor with a loaded cart waits in line while every box is found, turned and scanned by hand.'],
@@ -167,6 +167,6 @@ bash scripts/start.sh           # API + dashboard: any scene runs live through t
           <button className="secondary-button" onClick={()=>onLab('benchmark')}><Icon name="chart" size={16}/> Full benchmark</button></>
           :<a className="secondary-button" href="#results"><Icon name="chart" size={16}/> Measured results</a>}</div>
     </section>
-    <footer className="title-foot">Independent student project by Danny Germosen, SUNY Oswego (github.com/dangermos), inspired by contractor checkout. Not affiliated with or endorsed by The Home Depot. Fictional prices, no payment, simulated data only.</footer>
+    <footer className="title-foot">ProPass · <a href="https://github.com/dangermos/ProPass">source on GitHub</a> · invented products and prices, no payment, simulated data only.</footer>
   </div>;
 }

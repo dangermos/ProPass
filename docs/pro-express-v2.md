@@ -5,11 +5,11 @@
 
 
 > [!NOTE]
-> **Status: in progress on the `pro-express-v2` branch.** Written on 2026-10-06 from Danny's brief, before any code, so the work can be picked up by anyone. Progress is tracked in the checklist at the bottom.
+> **Status: in progress on the `pro-express-v2` branch.** Written on 2026-10-06 from the project brief, before any code, so the work can be picked up by anyone. Progress is tracked in the checklist at the bottom.
 
-## 🎯 The brief, in Danny's words (condensed)
+## 🎯 The brief (condensed)
 
-- Use **real assets**: an animated character pack from the Unity Asset Store for people, and products that look like real boxed Home Depot merchandise.
+- Use **real assets**: an animated character pack from the Unity Asset Store for people, and products that look like real boxed home-improvement merchandise.
 - Every boxed product carries a **barcode**. **The cameras' job is to scan the barcode.** That is as close to real life as it gets.
 - It should also handle **partials**, and things with no barcode: for lumber, the size and whether it's pressure-treated (PT) can be read from how it looks.
 - It needs a **rating system**.
@@ -64,12 +64,12 @@ Everything that already works stays: physical-object identity, lane zones, two-c
 - **Catalog** grows from 5 to about 12 products across categories a pro buys: power tools, fasteners, measuring, safety gear, adhesives, electrical. Each entry's `sku` becomes the 10-digit store SKU, and it gains `category`, `restricted` (bool) and `barcoded` (bool).
 - **Boxes** are textured: a front panel with product art and name, and a **barcode label on at least two faces** (like real retail packaging), sized so it can be read at lane distance.
 - **Lumber** has no barcode. Variants: 2×4 and 2×6, each untreated (pale) or pressure-treated (green-brown), in a couple of lengths. Recognized by the classifier from proportions and color.
-- **Barcodes** follow the sample Danny supplied: a **Code 128** label encoding the store SKU (for example `1015765383`), as on a shelf or box tag. Supplied barcode images are used as they are. For products without one, the same format is generated from the catalog SKU, so every code in the simulation decodes to a catalog entry.
+- **Barcodes** follow the supplied sample: a **Code 128** label encoding the store SKU (for example `1015765383`), as on a shelf or box tag. Supplied barcode images are used as they are. For products without one, the same format is generated from the catalog SKU, so every code in the simulation decodes to a catalog entry.
 
-**Product asset folder.** Danny started a `Barcodes/` folder with one product: `1015765383.png` (the product photo) and `1015765383.gif` (its barcode). That's the convention: **two files per product, named by SKU**. The scene builder makes one box per SKU found there: photo on the front panel, barcode label on two faces.
+**Product asset folder.** The `Barcodes/` folder started with one product: `1015765383.png` (the product photo) and `1015765383.gif` (its barcode). That's the convention: **two files per product, named by SKU**. The scene builder makes one box per SKU found there: photo on the front panel, barcode label on two faces.
 
 > [!IMPORTANT]
-> **Whose images.** Product photos from homedepot.com belong to Home Depot and the manufacturers. Claude won't copy them from the site. Danny adds the ones he wants to the product folder himself. The folder is **kept out of git by default**, so the repository never redistributes them and can be made public later. Any SKU without a photo gets original placeholder art made for this project, so the simulation always runs. The "independent portfolio project, not affiliated with Home Depot" notice stays on the README and the dashboard.
+> **Whose images.** Real product photos belong to their retailers and manufacturers and are never copied into the project. The folder is **kept out of git**, so the repository never redistributes them. Any SKU without a photo gets original placeholder art made for this project, so the simulation always runs.
 
 ### 2. Scan cameras and the barcode reader
 
@@ -80,11 +80,11 @@ A barcode label on a box is only a few pixels wide in today's 960×540 frames, s
 - **Pipeline per tracked object:** crop the object from each scan camera → locate and decode the barcode with **zxing-cpp** (OpenCV's built-in reader only handles UPC/EAN, and it could not read the Code 128 sample) → look the SKU up in the catalog → attach the SKU to the physical object with source `barcode`.
 - **Fallback:** if no barcode has been read by the time the object commits, use the visual classifier (source `visual`). If neither is confident, the item is `unscanned`.
 - A barcode that decodes to a SKU **not in the catalog** is an unknown product, also `unscanned`.
-- New dependency: `zxing-cpp` (pip). It needs Danny's OK before it's installed.
+- New dependency: `zxing-cpp` (pip).
 
 ### 3. Rating system
 
-Assumption (to confirm with Danny): "rating" means **how sure the system is about each line**, shown to the customer and the associate.
+Assumption: "rating" means **how sure the system is about each line**, shown to the customer and the associate.
 
 | Rating | Meaning | Source |
 |---|---|---|
@@ -118,8 +118,8 @@ The cart gets a third outcome beside "confirmed" and "blocked":
 
 | Asset | Source | Notes |
 |---|---|---|
-| Characters | [Creative Characters FREE – Animated Pack](https://assetstore.unity.com/packages/3d/characters/humanoids/creative-characters-free-animated-pack-304841) | Danny must add it to his Unity account (it's tied to the account and its license terms). Asset Store content may not be redistributed, so the imported folder is **git-ignored** and the repo documents how to re-import it. Scenes fall back to the capsule people when it's missing. |
-| Product photos | Supplied by Danny in the product folder, git-ignored | Placeholder art for any SKU without one |
+| Characters | [Creative Characters FREE – Animated Pack](https://assetstore.unity.com/packages/3d/characters/humanoids/creative-characters-free-animated-pack-304841) | It has to be added to the developer's own Unity account (it's tied to the account and its license terms). Asset Store content may not be redistributed, so the imported folder is **git-ignored** and the repo documents how to re-import it. Scenes fall back to the capsule people when it's missing. |
+| Product photos | Supplied locally in the product folder, git-ignored | Placeholder art for any SKU without one |
 | Barcodes | Supplied per SKU, or generated as Code 128 from the catalog SKU | Same folder and naming |
 
 ## 🧪 How it gets measured
@@ -145,7 +145,7 @@ Same discipline as before: seeded scenarios, tune on seeds 0–4, report once on
 | E6 | **Characters:** import the pack, animate the customer and other shoppers, retrain the person class if needed | Scenes run with characters, and with capsules when the pack is absent |
 | E7 | **Benchmark, docs, demo recording** | Held-out results published; docs match the code |
 
-## ❓ Open questions for Danny
+## ❓ Open questions
 
 1. **Rating:** is it the per-item confidence rating described above, or something else (for example, the customer rating their trip)?
 2. **Product folder:** keep it local-only and out of git (default), or commit it to the private repo?
@@ -195,7 +195,7 @@ The capsule people were replaced by animated characters, both camera model pairs
 
 ### Carts (measured, 2026-10-11)
 
-Danny asked for the three carts a Home Depot customer uses, pushed by the customer.
+The scene uses the three cart types a contractor uses, pushed by the customer.
 
 ![The three carts](images/carts.jpg)
 
@@ -242,7 +242,7 @@ Both camera model pairs were retrained on 2,640 scenes (1,728 earlier + 912 with
 
 ### Fictional catalog and a stocked store (measured, 2026-10-12)
 
-Danny asked for everything to be fictional and far more varied, better-looking videos, and a faster pipeline.
+Goals for this round: everything fictional and far more varied, better-looking videos, and a faster pipeline.
 
 ![The new store, products and follow camera](images/new-store-preview.jpg)
 
@@ -264,7 +264,7 @@ Danny asked for everything to be fictional and far more varied, better-looking v
   - [x] `barcode` field in `catalog.json`; `scripts/prepare_products.py` builds label and photo textures from `Barcodes/`
   - [x] Scene builder puts a Code 128 label (and the photo, when supplied) on every product prefab
   - [x] A restricted locked-cage tool (PEX-006) and two lumber variants (PEX-007, PEX-008), with `locked` and `lumber` scenarios
-  - [ ] More boxed products (needs photos and barcodes from Danny)
+  - [ ] More boxed products (needs more product photos and barcodes)
 - [x] **E2 Scan cameras and reader**
   - [x] 3840×1080 scan camera over the lane entrance (`ProPassCameras.cs`), streamed and recorded with the others
   - [x] `VisionEngine._read_barcodes` / `_attach_barcodes` with zxing-cpp; text must match `SKU=<10 digits>`

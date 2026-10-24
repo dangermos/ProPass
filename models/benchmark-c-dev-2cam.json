@@ -67,7 +67,7 @@
       4
     ],
     "provenance": {
-      "recording_root": "/home/dangermos/Home Depot Internship Project/propass/artifacts/benchmark",
+      "recording_root": "artifacts/benchmark",
       "weights_sha256": {
         "detector.pt": "c944da1eff64e31b4863b9654f510bf478d3e860070799cbb0bdcd94da70dd13",
         "classifier.pt": "2780ed6664f4bc79b73d0813d4875e3d1fcce232956d0117b95e299b375f50c5"
@@ -80,7 +80,7 @@
         "vision/config.json": "321c15051524789b299384d25efac1b3e6a163f47292c4ed6b51bf837c9fbc1b",
         "vision/cameras.json": "4b059801a82326f30b86bece080ede30da29747cb266a1a55a0a089865075893"
       },
-      "config_path": "/tmp/claude-1000/-home-dangermos-Home-Depot-Internship-Project/578a6205-5ace-4062-a2c3-6cf52efda87a/scratchpad/cfg-proto.json",
+      "config_path": "cfg-proto.json (temporary config)",
       "config_sha256": "14259549bf6112e3183575ac3d20ee32c6776a6522e27214c1dbe016d8b48053"
     }
   },

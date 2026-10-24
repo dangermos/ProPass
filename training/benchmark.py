@@ -220,6 +220,12 @@ def _worker_score(run_dir):
     return score_run(_worker_engine, run_dir)
 
 
+def relative(path: Path) -> str:
+    """Paths in reports are relative to the repository, so they don't record whose machine ran them."""
+    path = path.resolve()
+    return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else path.name
+
+
 def main():
     from vision.engine import VisionEngine
     parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
@@ -238,14 +244,14 @@ def main():
                         help="score this many runs at once, each in its own process (about 0.5 GB of GPU memory each); "
                              "results are identical, but per-frame latency is only meaningful with 1")
     args = parser.parse_args()
-    provenance = {"recording_root": str(args.root.resolve()),
+    provenance = {"recording_root": relative(args.root),
                   "weights_sha256": {name: hashlib.sha256((ROOT / "models" / name).read_bytes()).hexdigest()
                                      for name in ("detector.pt", "classifier.pt")},
                   "source_sha256": {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
                                     for name in ("vision/engine.py", "vision/ledger.py", "vision/geometry.py", "vision/rejection.py",
                                                  "vision/config.json", "vision/cameras.json")
                                     if (ROOT / name).exists()},
-                  "config_path": str(args.config.resolve()),
+                  "config_path": relative(args.config),
                   "config_sha256": hashlib.sha256(args.config.read_bytes()).hexdigest()}
     cameras = ["lane"] if args.image_mode else args.cameras.split(",") if args.cameras else None
     engine = VisionEngine(ROOT / "catalog.json", args.models, args.config, cameras,
@@ -272,7 +278,7 @@ def main():
     else:
         runs = [report(score_run(engine, run_dir)) for run_dir in run_dirs]
     if args.evidence:
-        args.evidence.write_text(json.dumps({"label": args.label, "recording_root": str(args.root.resolve()),
+        args.evidence.write_text(json.dumps({"label": args.label, "recording_root": relative(args.root),
                                              "runs": runs}, indent=1))
     for r in runs:
         r.pop("evidence")

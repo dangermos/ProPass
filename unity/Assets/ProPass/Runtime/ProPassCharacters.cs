@@ -44,7 +44,7 @@ namespace ProPass
         // Slots every character wears, and slots that only some do (with how often, out of 8).
         static readonly string[] Always = { "T_Shirt", "Pants", "Shoes", "Hairstyle", "Faces" };
         // Hats are left out on purpose: from the lane camera a straw hat showing above a carried
-        // box is read as a small yellow product. See "Open problems" in docs/engineering-logs/HANDOFF.md.
+        // box is read as a small yellow product. See "Hats are left out of the cast" in docs/pro-express-v2.md.
         static readonly string[] Sometimes = { "Outerwear", "Glasses", "Mustache", "Gloves" };
         static readonly int[] Odds = { 4, 2, 2, 1 };
         static readonly string[] Tinted = { "T_Shirt", "Outerwear", "Pants" };
