@@ -51,7 +51,8 @@ function Angles(){
   </div>;
 }
 
-export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>void;onScenarios:()=>void;onLab:(tab:string)=>void}){
+// local: the dashboard is served next to the API, so the lab links work. The static site has no lab.
+export default function Project({local,onTour,onScenarios,onLab}:{local:boolean;onTour:(id:string)=>void;onScenarios:()=>void;onLab:(tab:string)=>void}){
   // How each recorded tour run ended, shown on its card so the result is visible before pressing play.
   const [res,setRes]=useState<Results|null>(null);
   useEffect(()=>{fetch(asset('results.json')).then(r=>r.ok?r.json():Promise.reject()).then(setRes).catch(()=>{});},[]);
@@ -62,7 +63,8 @@ export default function Project({onTour,onScenarios,onLab}:{onTour:(id:string)=>
   return <div className="project">
     <nav className="project-nav"><div className="wordmark">Pro<span>Pass</span><small>VISION CHECKOUT LAB</small></div>
       <div className="project-links"><a href="#results">Results</a><a href="#how">How it works</a><a href="#cameras">Cameras</a><a href="#scenes">Scenes</a><a href="#limits">Limits</a>
-        <button className="secondary-button" onClick={onScenarios}>Open the lab</button></div></nav>
+        {local?<button className="secondary-button" onClick={onScenarios}>Open the lab</button>
+          :<button className="secondary-button" onClick={()=>onTour('single')}>Watch the 17 scenes</button>}</div></nav>
 
     <header className="project-hero">
       <div><div className="eyebrow">COMPUTER VISION PROJECT · SIMULATED STORE LANE · TRAINED MODELS</div>
@@ -161,8 +163,9 @@ bash scripts/get_weights.sh     # trained weights
 bash scripts/get_recordings.sh  # frames Unity already rendered, one run per scene
 bash scripts/start.sh           # API + dashboard: any scene runs live through the models, no Unity`}</pre>
       <div className="title-actions"><button className="primary-button" onClick={()=>onTour('single')}><Icon name="play" size={17}/> Start the tour</button>
-        <button className="secondary-button" onClick={onScenarios}><Icon name="camera" size={16}/> Live lab</button>
-        <button className="secondary-button" onClick={()=>onLab('benchmark')}><Icon name="chart" size={16}/> Full benchmark</button></div>
+        {local?<><button className="secondary-button" onClick={onScenarios}><Icon name="camera" size={16}/> Live lab</button>
+          <button className="secondary-button" onClick={()=>onLab('benchmark')}><Icon name="chart" size={16}/> Full benchmark</button></>
+          :<a className="secondary-button" href="#results"><Icon name="chart" size={16}/> Measured results</a>}</div>
     </section>
     <footer className="title-foot">Independent student project by Danny Germosen, SUNY Oswego (github.com/dangermos), inspired by contractor checkout. Not affiliated with or endorsed by The Home Depot. Fictional prices, no payment, simulated data only.</footer>
   </div>;

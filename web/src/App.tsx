@@ -36,6 +36,8 @@ export default function App(){
   const [busy,setBusy]=useState<string|null>(null);
   const [error,setError]=useState<string|null>(null);
   const [route,setRoute]=useState(readRoute);
+  // The static site has only the project page and the recorded tour: any lab or scenario-picker link lands on the project page.
+  const view=STATIC&&(route.view==='lab'||route.view==='title')?'project':route.view;
   const [now,setNow]=useState(Date.now());
   const lastUpdate=useRef(Date.now());
   const confirmationKey=useRef<{cart:string;version:number;key:string}|null>(null);
@@ -71,19 +73,10 @@ export default function App(){
   const statusText=confirmed?'Confirmed':reviewing?'Ready to confirm':snapshot?.simulator.paused?'Capture paused':live?(snapshot?.simulator.replay?'Playing recorded frames':'Observing lane'):'Awaiting camera';
   function confirm(){if(!cart)return;if(!confirmationKey.current||confirmationKey.current.cart!==cart.id||confirmationKey.current.version!==cart.version)confirmationKey.current={cart:cart.id,version:cart.version,key:crypto.randomUUID()};void action('cart/confirm',{version:cart.version,idempotency_key:confirmationKey.current.key});}
 
-  if(route.view==='project') return <Project onTour={id=>go('tour',id)} onScenarios={()=>go('title')} onLab={tab=>go('lab',tab)}/>;
-  if(route.view==='tour') return <Tour id={route.tab} onPick={id=>go('tour',id)} onBack={()=>go('title')}/>;
-  if(route.view==='title') return <TitleScreen snapshot={snapshot} connected={connected} live={live} reports={reports} busy={busy}
+  if(view==='project') return <Project local={!STATIC} onTour={id=>go('tour',id)} onScenarios={()=>go('title')} onLab={tab=>go('lab',tab)}/>;
+  if(view==='tour') return <Tour id={route.tab} onPick={id=>go('tour',id)} backLabel={STATIC?'Project':'Scenarios'} onBack={()=>go(STATIC?'project':'title')}/>;
+  if(view==='title') return <TitleScreen snapshot={snapshot} connected={connected} live={live} reports={reports} busy={busy}
     onStart={start} onReplay={id=>void replay(id)} onWatch={id=>go('tour',id)} onResume={()=>go('lab','live')} onOpen={tab=>go('lab',tab)} onHome={()=>go('project')}/>;
-
-  // The lab needs the local API. On the static site, say so instead of showing empty tabs.
-  if(STATIC) return <div className="project"><section className="project-hero static-lab"><div>
-    <div className="eyebrow">LIVE LAB · RUNS ON YOUR MACHINE</div>
-    <h1>The lab needs the <span>local API</span>.</h1>
-    <p>This page is a static copy: the project page and the 17 recorded scenes. The live lab plays recorded frames through the trained models, which needs Python, the weights and ideally a GPU. To run it, clone the repository and follow the README quickstart.</p>
-    <div className="title-actions"><button className="primary-button" onClick={()=>go('tour','single')}><Icon name="play" size={17}/> Watch the 17 scenes</button>
-      <button className="secondary-button" onClick={()=>go('project')}><Icon name="back" size={16}/> Project page</button>
-      <a className="secondary-button" href="https://github.com/dangermos/ProPass#2-run-the-models-live-without-unity">How to run it</a></div></div></section></div>;
 
   const tab=route.tab;
   return <div className="app-shell">

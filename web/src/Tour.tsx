@@ -10,7 +10,7 @@ import { asset } from './assets';
 
 const ratingText:Record<string,string>={verified:'Verified by barcode',high:'High: one barcode read',medium:'Recognized by look',low:'Low confidence',needs_associate:'Held for an associate'};
 
-export default function Tour({id,onPick,onBack}:{id:string;onPick:(id:string)=>void;onBack:()=>void}){
+export default function Tour({id,onPick,onBack,backLabel='Scenarios'}:{id:string;onPick:(id:string)=>void;onBack:()=>void;backLabel?:string}){
   const [run,setRun]=useState<Run|null>(null);
   const [missing,setMissing]=useState(false);
   const [time,setTime]=useState(0);
@@ -39,7 +39,7 @@ export default function Tour({id,onPick,onBack}:{id:string;onPick:(id:string)=>v
   const move=(by:number)=>onPick(scenarios[(index+by+scenarios.length)%scenarios.length].id);
   return <div className="tour">
     <header className="tour-top">
-      <button className="back-button" onClick={onBack}><Icon name="back" size={16}/> Scenarios</button>
+      <button className="back-button" onClick={onBack}><Icon name="back" size={16}/> {backLabel}</button>
       <div><span className="eyebrow">RECORDED RUN {String(index+1).padStart(2,'0')} OF {scenarios.length} · DEVELOPMENT SEED {run?.seed??2} · DECISIONS BY THE TRAINED MODELS</span><h1>{info.name}</h1></div>
       <div className="tour-nav"><button className={`back-button sound-toggle ${sound?'on':''}`} onClick={toggleSound} aria-pressed={sound} title="Lane ambience and a sound for each decision">{sound?'🔊 Sound on':'🔈 Sound off'}</button><button className="back-button" onClick={()=>move(-1)}>‹ Previous</button><button className="back-button" onClick={()=>move(1)}>Next ›</button></div>
     </header>
