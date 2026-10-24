@@ -1,0 +1,6312 @@
+{
+ "label": "dev",
+ "recording_root": "/home/dangermos/Home Depot Internship Project/propass/artifacts/benchmark",
+ "runs": [
+  {
+   "scenario": "bystander",
+   "seed": 0,
+   "run_id": "bystander-seed00",
+   "description": "A shopper in the next aisle carries a product past the lane; it must not be charged",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-003": 1
+   },
+   "predicted_cart": {
+    "PEX-003": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 1,
+   "detection_recall": 0.855,
+   "review_reasons": [],
+   "latency_ms_median": 40.64,
+   "evidence": {
+    "run_id": "bystander-seed00",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "bystande-obj-0002",
+      "sku": "PEX-003",
+      "sku_source": "barcode",
+      "barcode_reads": 8,
+      "rating": "verified",
+      "accepted_confidence": 0.9978049095883419,
+      "confidence": 0.995,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "bystande-obj-0003",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": null,
+      "accepted_confidence": null,
+      "confidence": 0.94,
+      "views": 1,
+      "state": "TRACKED",
+      "zone": "MIDDLE",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": false,
+      "crossed_checkout": false,
+      "seen_seconds": 0.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "bystander",
+   "seed": 1,
+   "run_id": "bystander-seed01",
+   "description": "A shopper in the next aisle carries a product past the lane; it must not be charged",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-005": 1
+   },
+   "predicted_cart": {
+    "PEX-005": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 40.24,
+   "evidence": {
+    "run_id": "bystander-seed01",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "bystande-obj-0001",
+      "sku": "PEX-005",
+      "sku_source": "barcode",
+      "barcode_reads": 10,
+      "rating": "verified",
+      "accepted_confidence": 0.9756950689224787,
+      "confidence": 0.81,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "bystander",
+   "seed": 2,
+   "run_id": "bystander-seed02",
+   "description": "A shopper in the next aisle carries a product past the lane; it must not be charged",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-010": 1
+   },
+   "predicted_cart": {
+    "PEX-010": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 1,
+   "detection_recall": 0.9,
+   "review_reasons": [],
+   "latency_ms_median": 40.85,
+   "evidence": {
+    "run_id": "bystander-seed02",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "bystande-obj-0001",
+      "sku": "PEX-010",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9868310420896792,
+      "confidence": 0.982,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "bystander",
+   "seed": 3,
+   "run_id": "bystander-seed03",
+   "description": "A shopper in the next aisle carries a product past the lane; it must not be charged",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-012": 1
+   },
+   "predicted_cart": {
+    "PEX-012": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.948,
+   "review_reasons": [],
+   "latency_ms_median": 41.16,
+   "evidence": {
+    "run_id": "bystander-seed03",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "bystande-obj-0001",
+      "sku": "PEX-012",
+      "sku_source": "barcode",
+      "barcode_reads": 6,
+      "rating": "verified",
+      "accepted_confidence": 0.914658312930774,
+      "confidence": 0.994,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "bystander",
+   "seed": 4,
+   "run_id": "bystander-seed04",
+   "description": "A shopper in the next aisle carries a product past the lane; it must not be charged",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-014": 1
+   },
+   "predicted_cart": {
+    "PEX-014": 1
+   },
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 1,
+   "id_switches": 0,
+   "phantom_objects": 1,
+   "detection_recall": 0.928,
+   "review_reasons": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal"
+   ],
+   "latency_ms_median": 42.76,
+   "evidence": {
+    "run_id": "bystander-seed04",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "bystande-obj-0001",
+      "sku": "PEX-014",
+      "sku_source": "barcode",
+      "barcode_reads": 9,
+      "rating": "verified",
+      "accepted_confidence": 0.9156895226729508,
+      "confidence": 0.997,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "bystande-obj-0003",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.258,
+      "views": 5,
+      "state": "ENTERING",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 1.25,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Entered merchandise disappeared before an observed checkout or reverse removal"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "distractors",
+   "seed": 0,
+   "run_id": "distractors-seed00",
+   "description": "A phone, a coffee cup and a bag travel through the lane with the products",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-005": 1
+   },
+   "predicted_cart": {
+    "PEX-005": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 42.68,
+   "evidence": {
+    "run_id": "distractors-seed00",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "distract-obj-0001",
+      "sku": "PEX-005",
+      "sku_source": "barcode",
+      "barcode_reads": 11,
+      "rating": "verified",
+      "accepted_confidence": 0.9605105726016099,
+      "confidence": 0.862,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "distractors",
+   "seed": 1,
+   "run_id": "distractors-seed01",
+   "description": "A phone, a coffee cup and a bag travel through the lane with the products",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-003": 1
+   },
+   "predicted_cart": {
+    "PEX-003": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 42.9,
+   "evidence": {
+    "run_id": "distractors-seed01",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "distract-obj-0001",
+      "sku": "PEX-003",
+      "sku_source": "barcode",
+      "barcode_reads": 7,
+      "rating": "verified",
+      "accepted_confidence": 0.9985308516485064,
+      "confidence": 0.999,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "distractors",
+   "seed": 2,
+   "run_id": "distractors-seed02",
+   "description": "A phone, a coffee cup and a bag travel through the lane with the products",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 42.5,
+   "evidence": {
+    "run_id": "distractors-seed02",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "distract-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 2,
+      "rating": "verified",
+      "accepted_confidence": 0.9949823718472718,
+      "confidence": 0.99,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "distractors",
+   "seed": 3,
+   "run_id": "distractors-seed03",
+   "description": "A phone, a coffee cup and a bag travel through the lane with the products",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-014": 1,
+    "PEX-003": 1
+   },
+   "predicted_cart": {
+    "PEX-014": 1,
+    "PEX-003": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 2
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 41.23,
+   "evidence": {
+    "run_id": "distractors-seed03",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "distract-obj-0001",
+      "sku": "PEX-014",
+      "sku_source": "barcode",
+      "barcode_reads": 5,
+      "rating": "verified",
+      "accepted_confidence": 0.9935996353073624,
+      "confidence": 0.991,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "distract-obj-0002",
+      "sku": "PEX-003",
+      "sku_source": "barcode",
+      "barcode_reads": 4,
+      "rating": "verified",
+      "accepted_confidence": 0.9983627802540284,
+      "confidence": 0.995,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "distractors",
+   "seed": 4,
+   "run_id": "distractors-seed04",
+   "description": "A phone, a coffee cup and a bag travel through the lane with the products",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-012": 1,
+    "PEX-014": 1
+   },
+   "predicted_cart": {
+    "PEX-012": 1,
+    "PEX-014": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 2
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 41.91,
+   "evidence": {
+    "run_id": "distractors-seed04",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "distract-obj-0001",
+      "sku": "PEX-012",
+      "sku_source": "barcode",
+      "barcode_reads": 8,
+      "rating": "verified",
+      "accepted_confidence": 0.8791532186735947,
+      "confidence": 0.99,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "distract-obj-0002",
+      "sku": "PEX-014",
+      "sku_source": "barcode",
+      "barcode_reads": 2,
+      "rating": "verified",
+      "accepted_confidence": 0.9389358106052547,
+      "confidence": 0.769,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "duplicate",
+   "seed": 0,
+   "run_id": "duplicate-seed00",
+   "description": "Two identical drill kits side by side",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 2
+   },
+   "predicted_cart": {
+    "PEX-001": 2
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1,
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 42.12,
+   "evidence": {
+    "run_id": "duplicate-seed00",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "duplicat-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.8778191121127863,
+      "confidence": 0.781,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "duplicat-obj-0002",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 8,
+      "rating": "verified",
+      "accepted_confidence": 0.8580365739728677,
+      "confidence": 0.967,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "duplicate",
+   "seed": 1,
+   "run_id": "duplicate-seed01",
+   "description": "Two identical drill kits side by side",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 2
+   },
+   "predicted_cart": {
+    "PEX-001": 2
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1,
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 41.86,
+   "evidence": {
+    "run_id": "duplicate-seed01",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "duplicat-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.932343270886347,
+      "confidence": 0.94,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "duplicat-obj-0002",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 9,
+      "rating": "verified",
+      "accepted_confidence": 0.9681690810949725,
+      "confidence": 0.973,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "duplicate",
+   "seed": 2,
+   "run_id": "duplicate-seed02",
+   "description": "Two identical drill kits side by side",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 2
+   },
+   "predicted_cart": {
+    "PEX-001": 2
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1,
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 1,
+   "detection_recall": 0.997,
+   "review_reasons": [],
+   "latency_ms_median": 44.53,
+   "evidence": {
+    "run_id": "duplicate-seed02",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "duplicat-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9605781492681608,
+      "confidence": 0.978,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "duplicat-obj-0002",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 6,
+      "rating": "verified",
+      "accepted_confidence": 0.9824304285827775,
+      "confidence": 0.993,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "duplicat-obj-0003",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": null,
+      "accepted_confidence": null,
+      "confidence": 0.998,
+      "views": 1,
+      "state": "TRACKED",
+      "zone": "MIDDLE",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": false,
+      "crossed_checkout": false,
+      "seen_seconds": 0.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "duplicate",
+   "seed": 3,
+   "run_id": "duplicate-seed03",
+   "description": "Two identical drill kits side by side",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 2
+   },
+   "predicted_cart": {
+    "PEX-001": 2
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1,
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 44.41,
+   "evidence": {
+    "run_id": "duplicate-seed03",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "duplicat-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.8880955711902813,
+      "confidence": 0.898,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "duplicat-obj-0002",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 10,
+      "rating": "verified",
+      "accepted_confidence": 0.8758521240070073,
+      "confidence": 0.967,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "duplicate",
+   "seed": 4,
+   "run_id": "duplicate-seed04",
+   "description": "Two identical drill kits side by side",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 2
+   },
+   "predicted_cart": {
+    "PEX-001": 2
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1,
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 44.46,
+   "evidence": {
+    "run_id": "duplicate-seed04",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "duplicat-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.9393843283326987,
+      "confidence": 0.898,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "duplicat-obj-0002",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 9,
+      "rating": "verified",
+      "accepted_confidence": 0.8781162025572815,
+      "confidence": 0.933,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "edge",
+   "seed": 0,
+   "run_id": "edge-seed00",
+   "description": "Products are carried by hand from the far end of the frame, hugging the lane rail",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-002": 1,
+    "PEX-011": 1
+   },
+   "predicted_cart": {
+    "PEX-002": 1,
+    "PEX-011": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 2
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.779,
+   "review_reasons": [],
+   "latency_ms_median": 44.7,
+   "evidence": {
+    "run_id": "edge-seed00",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "edge-see-obj-0001",
+      "sku": "PEX-002",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.8582964953657862,
+      "confidence": 0.857,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "edge-see-obj-0002",
+      "sku": "PEX-011",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.8659330830229592,
+      "confidence": 0.816,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 14.25,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "edge",
+   "seed": 1,
+   "run_id": "edge-seed01",
+   "description": "Products are carried by hand from the far end of the frame, hugging the lane rail",
+   "frames": 149,
+   "expected_cart": {
+    "PEX-015": 1,
+    "PEX-003": 1
+   },
+   "predicted_cart": {
+    "PEX-015": 1
+   },
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": false,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 1,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 1,
+   "id_switches": 4,
+   "phantom_objects": 1,
+   "detection_recall": 0.56,
+   "review_reasons": [
+    "Product first observed beyond checkout boundary"
+   ],
+   "latency_ms_median": 42.29,
+   "evidence": {
+    "run_id": "edge-seed01",
+    "timestamp": 18.5,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "edge-see-obj-0001",
+      "sku": "PEX-015",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.9129673310081596,
+      "confidence": 0.831,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 14.88,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "edge-see-obj-0003",
+      "sku": "PEX-003",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.9988082667115111,
+      "confidence": 0.601,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": false,
+      "crossed_checkout": false,
+      "seen_seconds": 9.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Product first observed beyond checkout boundary"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "edge",
+   "seed": 2,
+   "run_id": "edge-seed02",
+   "description": "Products are carried by hand from the far end of the frame, hugging the lane rail",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-013": 1
+   },
+   "predicted_cart": {
+    "PEX-013": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 42.53,
+   "evidence": {
+    "run_id": "edge-seed02",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "edge-see-obj-0001",
+      "sku": "PEX-013",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.894227470288151,
+      "confidence": 0.996,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "edge",
+   "seed": 3,
+   "run_id": "edge-seed03",
+   "description": "Products are carried by hand from the far end of the frame, hugging the lane rail",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-011": 1
+   },
+   "predicted_cart": {
+    "PEX-011": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 42.36,
+   "evidence": {
+    "run_id": "edge-seed03",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "edge-see-obj-0001",
+      "sku": "PEX-011",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.8785568226208712,
+      "confidence": 0.985,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "edge",
+   "seed": 4,
+   "run_id": "edge-seed04",
+   "description": "Products are carried by hand from the far end of the frame, hugging the lane rail",
+   "frames": 147,
+   "expected_cart": {
+    "PEX-009": 1
+   },
+   "predicted_cart": {
+    "PEX-009": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 1,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 42.5,
+   "evidence": {
+    "run_id": "edge-seed04",
+    "timestamp": 18.25,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "edge-see-obj-0001",
+      "sku": "PEX-009",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.8685928010005043,
+      "confidence": 0.922,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.25,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "flatbed",
+   "seed": 0,
+   "run_id": "flatbed-seed00",
+   "description": "A flatbed of lumber rolls across just ahead of the cart for several seconds",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-014": 1
+   },
+   "predicted_cart": {
+    "PEX-014": 1
+   },
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 1,
+   "id_switches": 0,
+   "phantom_objects": 1,
+   "detection_recall": 0.959,
+   "review_reasons": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal"
+   ],
+   "latency_ms_median": 44.01,
+   "evidence": {
+    "run_id": "flatbed-seed00",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "flatbed--obj-0001",
+      "sku": "PEX-014",
+      "sku_source": "barcode",
+      "barcode_reads": 2,
+      "rating": "verified",
+      "accepted_confidence": 0.9692044734377064,
+      "confidence": 0.999,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "flatbed--obj-0002",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.0,
+      "views": 0,
+      "state": "ENTERING",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 2.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Entered merchandise disappeared before an observed checkout or reverse removal"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "flatbed",
+   "seed": 1,
+   "run_id": "flatbed-seed01",
+   "description": "A flatbed of lumber rolls across just ahead of the cart for several seconds",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-012": 1,
+    "PEX-014": 1
+   },
+   "predicted_cart": {},
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": false,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 2,
+   "sku_sources": {},
+   "assist_items": 2,
+   "id_switches": 2,
+   "phantom_objects": 0,
+   "detection_recall": 0.91,
+   "review_reasons": [
+    "Conflicting SKU evidence on the same physical object"
+   ],
+   "latency_ms_median": 45.34,
+   "evidence": {
+    "run_id": "flatbed-seed01",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "flatbed--obj-0001",
+      "sku": "PEX-012",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.8584041535520909,
+      "confidence": 0.96,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Conflicting SKU evidence on the same physical object"
+     },
+     {
+      "object_id": "flatbed--obj-0002",
+      "sku": "PEX-014",
+      "sku_source": "visual",
+      "barcode_reads": 2,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.9836020867029825,
+      "confidence": 0.936,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 16.38,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Conflicting SKU evidence on the same physical object"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "flatbed",
+   "seed": 2,
+   "run_id": "flatbed-seed02",
+   "description": "A flatbed of lumber rolls across just ahead of the cart for several seconds",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-010": 1,
+    "PEX-011": 1
+   },
+   "predicted_cart": {
+    "PEX-011": 1,
+    "PEX-010": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1,
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.948,
+   "review_reasons": [],
+   "latency_ms_median": 45.39,
+   "evidence": {
+    "run_id": "flatbed-seed02",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "flatbed--obj-0001",
+      "sku": "PEX-011",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9969635996630087,
+      "confidence": 0.988,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "flatbed--obj-0002",
+      "sku": "PEX-010",
+      "sku_source": "barcode",
+      "barcode_reads": 1,
+      "rating": "high",
+      "accepted_confidence": 0.8533886878204759,
+      "confidence": 0.563,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "flatbed",
+   "seed": 3,
+   "run_id": "flatbed-seed03",
+   "description": "A flatbed of lumber rolls across just ahead of the cart for several seconds",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-005": 1,
+    "PEX-004": 1
+   },
+   "predicted_cart": {
+    "PEX-005": 1,
+    "PEX-004": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1,
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.924,
+   "review_reasons": [],
+   "latency_ms_median": 45.1,
+   "evidence": {
+    "run_id": "flatbed-seed03",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "flatbed--obj-0001",
+      "sku": "PEX-005",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.9253681356573407,
+      "confidence": 0.799,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "flatbed--obj-0002",
+      "sku": "PEX-004",
+      "sku_source": "barcode",
+      "barcode_reads": 6,
+      "rating": "verified",
+      "accepted_confidence": 0.8547403813714891,
+      "confidence": 0.951,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "flatbed",
+   "seed": 4,
+   "run_id": "flatbed-seed04",
+   "description": "A flatbed of lumber rolls across just ahead of the cart for several seconds",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-003": 1,
+    "PEX-001": 1,
+    "PEX-002": 1
+   },
+   "predicted_cart": {
+    "PEX-002": 1,
+    "PEX-003": 1,
+    "PEX-001": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 3
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.975,
+   "review_reasons": [],
+   "latency_ms_median": 42.5,
+   "evidence": {
+    "run_id": "flatbed-seed04",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "flatbed--obj-0001",
+      "sku": "PEX-002",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.853810705158238,
+      "confidence": 0.663,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "flatbed--obj-0002",
+      "sku": "PEX-003",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9942699281539129,
+      "confidence": 0.998,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "flatbed--obj-0003",
+      "sku": "PEX-001",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.8513504633779451,
+      "confidence": 0.93,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "hands",
+   "seed": 0,
+   "run_id": "hands-seed00",
+   "description": "Hands repeatedly cover the products while they are carried",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-012": 1
+   },
+   "predicted_cart": {
+    "PEX-012": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.966,
+   "review_reasons": [],
+   "latency_ms_median": 42.37,
+   "evidence": {
+    "run_id": "hands-seed00",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "hands-se-obj-0001",
+      "sku": "PEX-012",
+      "sku_source": "barcode",
+      "barcode_reads": 4,
+      "rating": "verified",
+      "accepted_confidence": 0.9943645393257929,
+      "confidence": 0.997,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "hands",
+   "seed": 1,
+   "run_id": "hands-seed01",
+   "description": "Hands repeatedly cover the products while they are carried",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-010": 1
+   },
+   "predicted_cart": {
+    "PEX-010": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.986,
+   "review_reasons": [],
+   "latency_ms_median": 42.53,
+   "evidence": {
+    "run_id": "hands-seed01",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "hands-se-obj-0001",
+      "sku": "PEX-010",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9803499825557473,
+      "confidence": 0.989,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "hands",
+   "seed": 2,
+   "run_id": "hands-seed02",
+   "description": "Hands repeatedly cover the products while they are carried",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-005": 1
+   },
+   "predicted_cart": {
+    "PEX-005": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.945,
+   "review_reasons": [],
+   "latency_ms_median": 41.86,
+   "evidence": {
+    "run_id": "hands-seed02",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "hands-se-obj-0001",
+      "sku": "PEX-005",
+      "sku_source": "barcode",
+      "barcode_reads": 10,
+      "rating": "verified",
+      "accepted_confidence": 0.9960079954512574,
+      "confidence": 0.979,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "hands",
+   "seed": 3,
+   "run_id": "hands-seed03",
+   "description": "Hands repeatedly cover the products while they are carried",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-003": 1,
+    "PEX-001": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1,
+    "PEX-003": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 2
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.979,
+   "review_reasons": [],
+   "latency_ms_median": 43.55,
+   "evidence": {
+    "run_id": "hands-seed03",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "hands-se-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 8,
+      "rating": "verified",
+      "accepted_confidence": 0.8504382380131463,
+      "confidence": 0.909,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "hands-se-obj-0002",
+      "sku": "PEX-003",
+      "sku_source": "barcode",
+      "barcode_reads": 8,
+      "rating": "verified",
+      "accepted_confidence": 0.9559670772443528,
+      "confidence": 0.975,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "hands",
+   "seed": 4,
+   "run_id": "hands-seed04",
+   "description": "Hands repeatedly cover the products while they are carried",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1,
+    "PEX-013": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1,
+    "PEX-013": 1
+   },
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1,
+    "visual": 1
+   },
+   "assist_items": 1,
+   "id_switches": 1,
+   "phantom_objects": 0,
+   "detection_recall": 0.948,
+   "review_reasons": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal"
+   ],
+   "latency_ms_median": 43.82,
+   "evidence": {
+    "run_id": "hands-seed04",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "hands-se-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 9,
+      "rating": "verified",
+      "accepted_confidence": 0.8727069601591186,
+      "confidence": 0.941,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "hands-se-obj-0002",
+      "sku": "PEX-013",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.8770150047680789,
+      "confidence": 0.963,
+      "views": 8,
+      "state": "ENTERING",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 3.12,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Entered merchandise disappeared before an observed checkout or reverse removal"
+     },
+     {
+      "object_id": "hands-se-obj-0003",
+      "sku": "PEX-013",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.8563787476201641,
+      "confidence": 0.977,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 15.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "hesitate",
+   "seed": 0,
+   "run_id": "hesitate-seed00",
+   "description": "The customer pauses mid-lane, steps back, then either finishes or turns around",
+   "frames": 160,
+   "expected_cart": {
+    "PEX-012": 1
+   },
+   "predicted_cart": {
+    "PEX-012": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 43.83,
+   "evidence": {
+    "run_id": "hesitate-seed00",
+    "timestamp": 19.875,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "hesitate-obj-0001",
+      "sku": "PEX-012",
+      "sku_source": "barcode",
+      "barcode_reads": 5,
+      "rating": "verified",
+      "accepted_confidence": 0.8538976906664255,
+      "confidence": 0.923,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 19.88,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "hesitate",
+   "seed": 1,
+   "run_id": "hesitate-seed01",
+   "description": "The customer pauses mid-lane, steps back, then either finishes or turns around",
+   "frames": 165,
+   "expected_cart": {
+    "PEX-014": 1
+   },
+   "predicted_cart": {
+    "PEX-014": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 43.14,
+   "evidence": {
+    "run_id": "hesitate-seed01",
+    "timestamp": 20.5,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "hesitate-obj-0001",
+      "sku": "PEX-014",
+      "sku_source": "barcode",
+      "barcode_reads": 13,
+      "rating": "verified",
+      "accepted_confidence": 0.9987914703968347,
+      "confidence": 0.991,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 20.5,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "hesitate",
+   "seed": 2,
+   "run_id": "hesitate-seed02",
+   "description": "The customer pauses mid-lane, steps back, then either finishes or turns around",
+   "frames": 177,
+   "expected_cart": {
+    "PEX-001": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 41.83,
+   "evidence": {
+    "run_id": "hesitate-seed02",
+    "timestamp": 22.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "hesitate-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 31,
+      "rating": "verified",
+      "accepted_confidence": 0.9482016847402495,
+      "confidence": 0.929,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 22.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "hesitate",
+   "seed": 3,
+   "run_id": "hesitate-seed03",
+   "description": "The customer pauses mid-lane, steps back, then either finishes or turns around",
+   "frames": 169,
+   "expected_cart": {
+    "PEX-003": 1
+   },
+   "predicted_cart": {
+    "PEX-003": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 42.34,
+   "evidence": {
+    "run_id": "hesitate-seed03",
+    "timestamp": 21.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "hesitate-obj-0001",
+      "sku": "PEX-003",
+      "sku_source": "barcode",
+      "barcode_reads": 28,
+      "rating": "verified",
+      "accepted_confidence": 0.9968610278695577,
+      "confidence": 0.994,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 21.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "hesitate",
+   "seed": 4,
+   "run_id": "hesitate-seed04",
+   "description": "The customer pauses mid-lane, steps back, then either finishes or turns around",
+   "frames": 176,
+   "expected_cart": {},
+   "predicted_cart": {},
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {},
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 41.9,
+   "evidence": {
+    "run_id": "hesitate-seed04",
+    "timestamp": 21.875,
+    "review_required": true,
+    "in_progress": 1,
+    "items": [
+     {
+      "object_id": "hesitate-obj-0001",
+      "sku": "PEX-004",
+      "sku_source": "barcode",
+      "barcode_reads": 36,
+      "rating": "verified",
+      "accepted_confidence": 0.8840340290585192,
+      "confidence": 0.44,
+      "views": 8,
+      "state": "ENTERING",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 21.88,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "locked",
+   "seed": 0,
+   "run_id": "locked-seed00",
+   "description": "A locked-cage tool is carried through with an ordinary product",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1
+   },
+   "expected_review": true,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 2,
+   "id_switches": 0,
+   "phantom_objects": 1,
+   "detection_recall": 1.0,
+   "review_reasons": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal",
+    "Restricted item: an associate must release it"
+   ],
+   "latency_ms_median": 43.35,
+   "evidence": {
+    "run_id": "locked-seed00",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "locked-s-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 2,
+      "rating": "verified",
+      "accepted_confidence": 0.9319582241307812,
+      "confidence": 0.786,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "locked-s-obj-0002",
+      "sku": "PEX-006",
+      "sku_source": "barcode",
+      "barcode_reads": 9,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.9152293606642855,
+      "confidence": 0.98,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": true,
+      "review_reason": "Restricted item: an associate must release it"
+     },
+     {
+      "object_id": "locked-s-obj-0003",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.518,
+      "views": 7,
+      "state": "ENTERING",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 2.62,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Entered merchandise disappeared before an observed checkout or reverse removal"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "locked",
+   "seed": 1,
+   "run_id": "locked-seed01",
+   "description": "A locked-cage tool is carried through with an ordinary product",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-010": 1
+   },
+   "predicted_cart": {
+    "PEX-010": 1
+   },
+   "expected_review": true,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 3,
+   "id_switches": 6,
+   "phantom_objects": 1,
+   "detection_recall": 0.997,
+   "review_reasons": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal",
+    "Restricted item: an associate must release it"
+   ],
+   "latency_ms_median": 45.95,
+   "evidence": {
+    "run_id": "locked-seed01",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "locked-s-obj-0001",
+      "sku": "PEX-006",
+      "sku_source": "barcode",
+      "barcode_reads": 10,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.9354541571396201,
+      "confidence": 0.781,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": true,
+      "review_reason": "Restricted item: an associate must release it"
+     },
+     {
+      "object_id": "locked-s-obj-0002",
+      "sku": "PEX-010",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.9345964248728519,
+      "confidence": 0.913,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "locked-s-obj-0003",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.749,
+      "views": 8,
+      "state": "ENTERING",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 3.38,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Entered merchandise disappeared before an observed checkout or reverse removal"
+     },
+     {
+      "object_id": "locked-s-obj-0004",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.343,
+      "views": 1,
+      "state": "ENTERING",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 0.12,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Entered merchandise disappeared before an observed checkout or reverse removal"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "locked",
+   "seed": 2,
+   "run_id": "locked-seed02",
+   "description": "A locked-cage tool is carried through with an ordinary product",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-015": 1
+   },
+   "predicted_cart": {
+    "PEX-015": 1
+   },
+   "expected_review": true,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 1,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.79,
+   "review_reasons": [
+    "Restricted item: an associate must release it"
+   ],
+   "latency_ms_median": 45.86,
+   "evidence": {
+    "run_id": "locked-seed02",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "locked-s-obj-0001",
+      "sku": "PEX-006",
+      "sku_source": "barcode",
+      "barcode_reads": 6,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.96857048377629,
+      "confidence": 0.971,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": true,
+      "review_reason": "Restricted item: an associate must release it"
+     },
+     {
+      "object_id": "locked-s-obj-0002",
+      "sku": "PEX-015",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.8971582612560196,
+      "confidence": 0.991,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 15.62,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "locked",
+   "seed": 3,
+   "run_id": "locked-seed03",
+   "description": "A locked-cage tool is carried through with an ordinary product",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-009": 1
+   },
+   "predicted_cart": {
+    "PEX-009": 1
+   },
+   "expected_review": true,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 3,
+   "id_switches": 9,
+   "phantom_objects": 1,
+   "detection_recall": 1.0,
+   "review_reasons": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal",
+    "Product first observed beyond checkout boundary",
+    "Restricted item: an associate must release it"
+   ],
+   "latency_ms_median": 45.84,
+   "evidence": {
+    "run_id": "locked-seed03",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "locked-s-obj-0001",
+      "sku": "PEX-006",
+      "sku_source": "barcode",
+      "barcode_reads": 9,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.9348860181850962,
+      "confidence": 0.746,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": true,
+      "review_reason": "Restricted item: an associate must release it"
+     },
+     {
+      "object_id": "locked-s-obj-0002",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.734,
+      "views": 8,
+      "state": "ENTERING",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 4.25,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Entered merchandise disappeared before an observed checkout or reverse removal"
+     },
+     {
+      "object_id": "locked-s-obj-0003",
+      "sku": "PEX-009",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.8505561021521785,
+      "confidence": 0.925,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 16.5,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "locked-s-obj-0004",
+      "sku": "PEX-009",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.9550320307413737,
+      "confidence": 0.94,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": false,
+      "crossed_checkout": false,
+      "seen_seconds": 2.62,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Product first observed beyond checkout boundary"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "locked",
+   "seed": 4,
+   "run_id": "locked-seed04",
+   "description": "A locked-cage tool is carried through with an ordinary product",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-015": 1
+   },
+   "predicted_cart": {
+    "PEX-015": 1
+   },
+   "expected_review": true,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 1,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.855,
+   "review_reasons": [
+    "Restricted item: an associate must release it"
+   ],
+   "latency_ms_median": 45.69,
+   "evidence": {
+    "run_id": "locked-seed04",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "locked-s-obj-0001",
+      "sku": "PEX-006",
+      "sku_source": "barcode",
+      "barcode_reads": 8,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.8513230096501746,
+      "confidence": 0.994,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": true,
+      "review_reason": "Restricted item: an associate must release it"
+     },
+     {
+      "object_id": "locked-s-obj-0002",
+      "sku": "PEX-015",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9788128184456801,
+      "confidence": 0.932,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 15.75,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "lumber",
+   "seed": 0,
+   "run_id": "lumber-seed00",
+   "description": "Lumber with no barcode: plain and pressure-treated boards, sometimes with a box",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-007": 2,
+    "PEX-013": 1
+   },
+   "predicted_cart": {
+    "PEX-013": 1,
+    "PEX-007": 1
+   },
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": false,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 1,
+   "sku_sources": {
+    "barcode": 1,
+    "visual": 1
+   },
+   "assist_items": 3,
+   "id_switches": 18,
+   "phantom_objects": 0,
+   "detection_recall": 0.857,
+   "review_reasons": [
+    "Product first observed beyond checkout boundary",
+    "Unresolved product disappeared after a checkout crossing"
+   ],
+   "latency_ms_median": 42.72,
+   "evidence": {
+    "run_id": "lumber-seed00",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "lumber-s-obj-0001",
+      "sku": "PEX-013",
+      "sku_source": "barcode",
+      "barcode_reads": 7,
+      "rating": "verified",
+      "accepted_confidence": 0.9821860550537626,
+      "confidence": 0.981,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "lumber-s-obj-0002",
+      "sku": "PEX-007",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.8725930322324034,
+      "confidence": 0.486,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "lumber-s-obj-0003",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.278,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 15.75,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Unresolved product disappeared after a checkout crossing"
+     },
+     {
+      "object_id": "lumber-s-obj-0004",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.503,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": false,
+      "crossed_checkout": false,
+      "seen_seconds": 6.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Product first observed beyond checkout boundary"
+     },
+     {
+      "object_id": "lumber-s-obj-0005",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.503,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": false,
+      "crossed_checkout": false,
+      "seen_seconds": 3.25,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Product first observed beyond checkout boundary"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "lumber",
+   "seed": 1,
+   "run_id": "lumber-seed01",
+   "description": "Lumber with no barcode: plain and pressure-treated boards, sometimes with a box",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-007": 1,
+    "PEX-008": 1,
+    "PEX-003": 1
+   },
+   "predicted_cart": {
+    "PEX-003": 1,
+    "PEX-007": 1
+   },
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": false,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 1,
+   "sku_sources": {
+    "barcode": 1,
+    "visual": 1
+   },
+   "assist_items": 3,
+   "id_switches": 7,
+   "phantom_objects": 0,
+   "detection_recall": 0.782,
+   "review_reasons": [
+    "Product first observed beyond checkout boundary"
+   ],
+   "latency_ms_median": 42.77,
+   "evidence": {
+    "run_id": "lumber-seed01",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "lumber-s-obj-0001",
+      "sku": "PEX-003",
+      "sku_source": "barcode",
+      "barcode_reads": 1,
+      "rating": "high",
+      "accepted_confidence": 0.9856205047276418,
+      "confidence": 0.665,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "lumber-s-obj-0002",
+      "sku": "PEX-007",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.880975194051743,
+      "confidence": 0.853,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "lumber-s-obj-0003",
+      "sku": "PEX-008",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.9578449236787431,
+      "confidence": 0.994,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": false,
+      "crossed_checkout": false,
+      "seen_seconds": 12.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Product first observed beyond checkout boundary"
+     },
+     {
+      "object_id": "lumber-s-obj-0004",
+      "sku": "PEX-007",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.9002708646042095,
+      "confidence": 0.853,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": false,
+      "crossed_checkout": false,
+      "seen_seconds": 7.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Product first observed beyond checkout boundary"
+     },
+     {
+      "object_id": "lumber-s-obj-0007",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.554,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": false,
+      "crossed_checkout": false,
+      "seen_seconds": 1.12,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Product first observed beyond checkout boundary"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "lumber",
+   "seed": 2,
+   "run_id": "lumber-seed02",
+   "description": "Lumber with no barcode: plain and pressure-treated boards, sometimes with a box",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-007": 1
+   },
+   "predicted_cart": {
+    "PEX-007": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.51,
+   "review_reasons": [],
+   "latency_ms_median": 38.51,
+   "evidence": {
+    "run_id": "lumber-seed02",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "lumber-s-obj-0001",
+      "sku": "PEX-007",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9640102783069903,
+      "confidence": 0.945,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "lumber",
+   "seed": 3,
+   "run_id": "lumber-seed03",
+   "description": "Lumber with no barcode: plain and pressure-treated boards, sometimes with a box",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-008": 1
+   },
+   "predicted_cart": {
+    "PEX-008": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.779,
+   "review_reasons": [],
+   "latency_ms_median": 41.0,
+   "evidence": {
+    "run_id": "lumber-seed03",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "lumber-s-obj-0001",
+      "sku": "PEX-008",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9966149480231828,
+      "confidence": 0.989,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 17.88,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "lumber",
+   "seed": 4,
+   "run_id": "lumber-seed04",
+   "description": "Lumber with no barcode: plain and pressure-treated boards, sometimes with a box",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-008": 1
+   },
+   "predicted_cart": {
+    "PEX-008": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.634,
+   "review_reasons": [],
+   "latency_ms_median": 40.49,
+   "evidence": {
+    "run_id": "lumber-seed04",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "lumber-s-obj-0001",
+      "sku": "PEX-008",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9943062250472616,
+      "confidence": 0.996,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 17.62,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "mixed",
+   "seed": 0,
+   "run_id": "mixed-seed00",
+   "description": "Drill kit, measuring tape and work gloves",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1,
+    "PEX-003": 1,
+    "PEX-005": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1,
+    "PEX-005": 1,
+    "PEX-003": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 2,
+    "visual": 1
+   },
+   "assist_items": 0,
+   "id_switches": 2,
+   "phantom_objects": 0,
+   "detection_recall": 0.883,
+   "review_reasons": [],
+   "latency_ms_median": 43.01,
+   "evidence": {
+    "run_id": "mixed-seed00",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "mixed-se-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 8,
+      "rating": "verified",
+      "accepted_confidence": 0.9873805887180294,
+      "confidence": 0.982,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "mixed-se-obj-0002",
+      "sku": "PEX-005",
+      "sku_source": "barcode",
+      "barcode_reads": 5,
+      "rating": "verified",
+      "accepted_confidence": 0.9724587404294609,
+      "confidence": 0.753,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "mixed-se-obj-0003",
+      "sku": "PEX-003",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9901636970004247,
+      "confidence": 0.998,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 15.88,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "mixed",
+   "seed": 1,
+   "run_id": "mixed-seed01",
+   "description": "Drill kit, measuring tape and work gloves",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1,
+    "PEX-003": 1,
+    "PEX-005": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1,
+    "PEX-005": 1
+   },
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": false,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 1,
+   "sku_sources": {
+    "barcode": 2
+   },
+   "assist_items": 1,
+   "id_switches": 2,
+   "phantom_objects": 0,
+   "detection_recall": 0.915,
+   "review_reasons": [
+    "Conflicting SKU evidence on the same physical object"
+   ],
+   "latency_ms_median": 42.93,
+   "evidence": {
+    "run_id": "mixed-seed01",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "mixed-se-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 6,
+      "rating": "verified",
+      "accepted_confidence": 0.9690182616844876,
+      "confidence": 0.978,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "mixed-se-obj-0002",
+      "sku": "PEX-005",
+      "sku_source": "barcode",
+      "barcode_reads": 6,
+      "rating": "verified",
+      "accepted_confidence": 0.9845509185375038,
+      "confidence": 0.802,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "mixed-se-obj-0003",
+      "sku": "PEX-001",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.8964481949806213,
+      "confidence": 0.996,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Conflicting SKU evidence on the same physical object"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "mixed",
+   "seed": 2,
+   "run_id": "mixed-seed02",
+   "description": "Drill kit, measuring tape and work gloves",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1,
+    "PEX-003": 1,
+    "PEX-005": 1
+   },
+   "predicted_cart": {
+    "PEX-005": 1,
+    "PEX-001": 1
+   },
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": false,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 1,
+   "sku_sources": {
+    "barcode": 2
+   },
+   "assist_items": 1,
+   "id_switches": 2,
+   "phantom_objects": 0,
+   "detection_recall": 0.876,
+   "review_reasons": [
+    "Product first observed beyond checkout boundary"
+   ],
+   "latency_ms_median": 43.16,
+   "evidence": {
+    "run_id": "mixed-seed02",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "mixed-se-obj-0001",
+      "sku": "PEX-005",
+      "sku_source": "barcode",
+      "barcode_reads": 4,
+      "rating": "verified",
+      "accepted_confidence": 0.9896274608173464,
+      "confidence": 0.965,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "mixed-se-obj-0002",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 10,
+      "rating": "verified",
+      "accepted_confidence": 0.8836273936873017,
+      "confidence": 0.91,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "mixed-se-obj-0003",
+      "sku": "PEX-003",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.9872202623984875,
+      "confidence": 0.996,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": false,
+      "crossed_checkout": false,
+      "seen_seconds": 12.25,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Product first observed beyond checkout boundary"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "mixed",
+   "seed": 3,
+   "run_id": "mixed-seed03",
+   "description": "Drill kit, measuring tape and work gloves",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1,
+    "PEX-003": 1,
+    "PEX-005": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1,
+    "PEX-005": 1,
+    "PEX-003": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 2,
+    "visual": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.887,
+   "review_reasons": [],
+   "latency_ms_median": 42.6,
+   "evidence": {
+    "run_id": "mixed-seed03",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "mixed-se-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 10,
+      "rating": "verified",
+      "accepted_confidence": 0.9169816289071818,
+      "confidence": 0.937,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "mixed-se-obj-0002",
+      "sku": "PEX-005",
+      "sku_source": "barcode",
+      "barcode_reads": 3,
+      "rating": "verified",
+      "accepted_confidence": 0.9457414634925695,
+      "confidence": 0.974,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "mixed-se-obj-0003",
+      "sku": "PEX-003",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9723502424406057,
+      "confidence": 0.999,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 15.75,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "mixed",
+   "seed": 4,
+   "run_id": "mixed-seed04",
+   "description": "Drill kit, measuring tape and work gloves",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1,
+    "PEX-003": 1,
+    "PEX-005": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1,
+    "PEX-005": 1,
+    "PEX-003": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 2,
+    "visual": 1
+   },
+   "assist_items": 0,
+   "id_switches": 2,
+   "phantom_objects": 0,
+   "detection_recall": 0.883,
+   "review_reasons": [],
+   "latency_ms_median": 42.38,
+   "evidence": {
+    "run_id": "mixed-seed04",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "mixed-se-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 6,
+      "rating": "verified",
+      "accepted_confidence": 0.9700424116988114,
+      "confidence": 0.991,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "mixed-se-obj-0002",
+      "sku": "PEX-005",
+      "sku_source": "barcode",
+      "barcode_reads": 5,
+      "rating": "verified",
+      "accepted_confidence": 0.9829398393631285,
+      "confidence": 0.973,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "mixed-se-obj-0003",
+      "sku": "PEX-003",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9622094626685692,
+      "confidence": 0.993,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 15.75,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "occlusion",
+   "seed": 0,
+   "run_id": "occlusion-seed00",
+   "description": "A hand hides the drill kit for 0.6 s",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1
+   },
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 1,
+   "id_switches": 0,
+   "phantom_objects": 1,
+   "detection_recall": 0.966,
+   "review_reasons": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal"
+   ],
+   "latency_ms_median": 42.1,
+   "evidence": {
+    "run_id": "occlusion-seed00",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "occlusio-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 4,
+      "rating": "verified",
+      "accepted_confidence": 0.8890906804455213,
+      "confidence": 0.981,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "occlusio-obj-0002",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.0,
+      "views": 0,
+      "state": "ENTERING",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 1.62,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Entered merchandise disappeared before an observed checkout or reverse removal"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "occlusion",
+   "seed": 1,
+   "run_id": "occlusion-seed01",
+   "description": "A hand hides the drill kit for 0.6 s",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.966,
+   "review_reasons": [],
+   "latency_ms_median": 41.09,
+   "evidence": {
+    "run_id": "occlusion-seed01",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "occlusio-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 4,
+      "rating": "verified",
+      "accepted_confidence": 0.9445118349197809,
+      "confidence": 0.985,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "occlusion",
+   "seed": 2,
+   "run_id": "occlusion-seed02",
+   "description": "A hand hides the drill kit for 0.6 s",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.966,
+   "review_reasons": [],
+   "latency_ms_median": 38.7,
+   "evidence": {
+    "run_id": "occlusion-seed02",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "occlusio-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 4,
+      "rating": "verified",
+      "accepted_confidence": 0.8568255399843293,
+      "confidence": 0.972,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "occlusion",
+   "seed": 3,
+   "run_id": "occlusion-seed03",
+   "description": "A hand hides the drill kit for 0.6 s",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.966,
+   "review_reasons": [],
+   "latency_ms_median": 38.16,
+   "evidence": {
+    "run_id": "occlusion-seed03",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "occlusio-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 4,
+      "rating": "verified",
+      "accepted_confidence": 0.8541377415153653,
+      "confidence": 0.965,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "occlusion",
+   "seed": 4,
+   "run_id": "occlusion-seed04",
+   "description": "A hand hides the drill kit for 0.6 s",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.966,
+   "review_reasons": [],
+   "latency_ms_median": 37.72,
+   "evidence": {
+    "run_id": "occlusion-seed04",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "occlusio-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 2,
+      "rating": "verified",
+      "accepted_confidence": 0.8992471261543673,
+      "confidence": 0.98,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "parked",
+   "seed": 0,
+   "run_id": "parked-seed00",
+   "description": "A flatbed stays between the gate camera and the cart for most of the crossing",
+   "frames": 155,
+   "expected_cart": {
+    "PEX-004": 1
+   },
+   "predicted_cart": {
+    "PEX-004": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.871,
+   "review_reasons": [],
+   "latency_ms_median": 39.86,
+   "evidence": {
+    "run_id": "parked-seed00",
+    "timestamp": 19.25,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "parked-s-obj-0001",
+      "sku": "PEX-004",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.8578914552927017,
+      "confidence": 0.619,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 19.25,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "parked",
+   "seed": 1,
+   "run_id": "parked-seed01",
+   "description": "A flatbed stays between the gate camera and the cart for most of the crossing",
+   "frames": 155,
+   "expected_cart": {
+    "PEX-002": 1
+   },
+   "predicted_cart": {
+    "PEX-002": 1
+   },
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 1,
+   "id_switches": 0,
+   "phantom_objects": 1,
+   "detection_recall": 0.865,
+   "review_reasons": [
+    "Product first observed beyond checkout boundary"
+   ],
+   "latency_ms_median": 40.05,
+   "evidence": {
+    "run_id": "parked-seed01",
+    "timestamp": 19.25,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "parked-s-obj-0001",
+      "sku": "PEX-002",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.8717781603736288,
+      "confidence": 0.979,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 19.25,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "parked-s-obj-0002",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.719,
+      "views": 2,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": false,
+      "crossed_checkout": false,
+      "seen_seconds": 0.12,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Product first observed beyond checkout boundary"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "parked",
+   "seed": 2,
+   "run_id": "parked-seed02",
+   "description": "A flatbed stays between the gate camera and the cart for most of the crossing",
+   "frames": 158,
+   "expected_cart": {
+    "PEX-015": 1,
+    "PEX-013": 1
+   },
+   "predicted_cart": {
+    "PEX-015": 1,
+    "PEX-013": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1,
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.911,
+   "review_reasons": [],
+   "latency_ms_median": 40.95,
+   "evidence": {
+    "run_id": "parked-seed02",
+    "timestamp": 19.625,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "parked-s-obj-0001",
+      "sku": "PEX-015",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9884593752560521,
+      "confidence": 0.912,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 19.62,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "parked-s-obj-0002",
+      "sku": "PEX-013",
+      "sku_source": "barcode",
+      "barcode_reads": 4,
+      "rating": "verified",
+      "accepted_confidence": 0.9790846619686788,
+      "confidence": 0.985,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 19.62,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "parked",
+   "seed": 3,
+   "run_id": "parked-seed03",
+   "description": "A flatbed stays between the gate camera and the cart for most of the crossing",
+   "frames": 148,
+   "expected_cart": {
+    "PEX-013": 1,
+    "PEX-010": 1
+   },
+   "predicted_cart": {
+    "PEX-013": 1,
+    "PEX-010": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 2
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.885,
+   "review_reasons": [],
+   "latency_ms_median": 40.58,
+   "evidence": {
+    "run_id": "parked-seed03",
+    "timestamp": 18.375,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "parked-s-obj-0001",
+      "sku": "PEX-013",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9970727748542995,
+      "confidence": 0.993,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.38,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "parked-s-obj-0002",
+      "sku": "PEX-010",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9773894732242692,
+      "confidence": 0.996,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.38,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "parked",
+   "seed": 4,
+   "run_id": "parked-seed04",
+   "description": "A flatbed stays between the gate camera and the cart for most of the crossing",
+   "frames": 154,
+   "expected_cart": {
+    "PEX-011": 1,
+    "PEX-004": 1
+   },
+   "predicted_cart": {
+    "PEX-011": 1,
+    "PEX-004": 1
+   },
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1,
+    "barcode": 1
+   },
+   "assist_items": 1,
+   "id_switches": 2,
+   "phantom_objects": 1,
+   "detection_recall": 0.909,
+   "review_reasons": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal"
+   ],
+   "latency_ms_median": 41.4,
+   "evidence": {
+    "run_id": "parked-seed04",
+    "timestamp": 19.125,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "parked-s-obj-0001",
+      "sku": "PEX-011",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9964698868993028,
+      "confidence": 0.986,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 19.12,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "parked-s-obj-0002",
+      "sku": "PEX-004",
+      "sku_source": "barcode",
+      "barcode_reads": 2,
+      "rating": "verified",
+      "accepted_confidence": 0.8575158169130372,
+      "confidence": 0.653,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 19.12,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "parked-s-obj-0003",
+      "sku": "PEX-011",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.9917803406715393,
+      "confidence": 0.722,
+      "views": 6,
+      "state": "ENTERING",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 2.62,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Entered merchandise disappeared before an observed checkout or reverse removal"
+     },
+     {
+      "object_id": "parked-s-obj-0004",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": null,
+      "accepted_confidence": null,
+      "confidence": 0.513,
+      "views": 1,
+      "state": "TRACKED",
+      "zone": "MIDDLE",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": false,
+      "crossed_checkout": false,
+      "seen_seconds": 0.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "remove",
+   "seed": 0,
+   "run_id": "remove-seed00",
+   "description": "Driver kit carried in, then carried back out",
+   "frames": 245,
+   "expected_cart": {},
+   "predicted_cart": {},
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {},
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 41.3,
+   "evidence": {
+    "run_id": "remove-seed00",
+    "timestamp": 30.5,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "remove-s-obj-0001",
+      "sku": "PEX-002",
+      "sku_source": "barcode",
+      "barcode_reads": 18,
+      "rating": "verified",
+      "accepted_confidence": 0.9802798865483654,
+      "confidence": 0.98,
+      "views": 8,
+      "state": "REMOVED",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 30.5,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "remove",
+   "seed": 1,
+   "run_id": "remove-seed01",
+   "description": "Driver kit carried in, then carried back out",
+   "frames": 245,
+   "expected_cart": {},
+   "predicted_cart": {},
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {},
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 41.16,
+   "evidence": {
+    "run_id": "remove-seed01",
+    "timestamp": 30.5,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "remove-s-obj-0001",
+      "sku": "PEX-002",
+      "sku_source": "barcode",
+      "barcode_reads": 12,
+      "rating": "verified",
+      "accepted_confidence": 0.853505832531981,
+      "confidence": 0.765,
+      "views": 8,
+      "state": "REMOVED",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 30.5,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "remove",
+   "seed": 2,
+   "run_id": "remove-seed02",
+   "description": "Driver kit carried in, then carried back out",
+   "frames": 245,
+   "expected_cart": {},
+   "predicted_cart": {},
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {},
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 41.36,
+   "evidence": {
+    "run_id": "remove-seed02",
+    "timestamp": 30.5,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "remove-s-obj-0001",
+      "sku": "PEX-002",
+      "sku_source": "barcode",
+      "barcode_reads": 18,
+      "rating": "verified",
+      "accepted_confidence": 0.9191559892594533,
+      "confidence": 0.914,
+      "views": 8,
+      "state": "REMOVED",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 30.5,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "remove",
+   "seed": 3,
+   "run_id": "remove-seed03",
+   "description": "Driver kit carried in, then carried back out",
+   "frames": 245,
+   "expected_cart": {},
+   "predicted_cart": {},
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {},
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 41.36,
+   "evidence": {
+    "run_id": "remove-seed03",
+    "timestamp": 30.5,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "remove-s-obj-0001",
+      "sku": "PEX-002",
+      "sku_source": "barcode",
+      "barcode_reads": 18,
+      "rating": "verified",
+      "accepted_confidence": 0.9461570639046627,
+      "confidence": 0.946,
+      "views": 8,
+      "state": "REMOVED",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 30.5,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "remove",
+   "seed": 4,
+   "run_id": "remove-seed04",
+   "description": "Driver kit carried in, then carried back out",
+   "frames": 245,
+   "expected_cart": {},
+   "predicted_cart": {},
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {},
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 40.4,
+   "evidence": {
+    "run_id": "remove-seed04",
+    "timestamp": 30.5,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "remove-s-obj-0001",
+      "sku": "PEX-002",
+      "sku_source": "barcode",
+      "barcode_reads": 18,
+      "rating": "verified",
+      "accepted_confidence": 0.8618054656435463,
+      "confidence": 0.861,
+      "views": 8,
+      "state": "REMOVED",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 30.5,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "shopper",
+   "seed": 0,
+   "run_id": "shopper-seed00",
+   "description": "Another shopper walks across the lane just ahead of the cart",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1,
+    "PEX-003": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1
+   },
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": false,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 1,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 1,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.738,
+   "review_reasons": [
+    "Product first observed beyond checkout boundary"
+   ],
+   "latency_ms_median": 41.36,
+   "evidence": {
+    "run_id": "shopper-seed00",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "shopper--obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 7,
+      "rating": "verified",
+      "accepted_confidence": 0.8537636463868856,
+      "confidence": 0.905,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "shopper--obj-0002",
+      "sku": "PEX-003",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.98864052697771,
+      "confidence": 0.968,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": false,
+      "crossed_checkout": false,
+      "seen_seconds": 9.38,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Product first observed beyond checkout boundary"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "shopper",
+   "seed": 1,
+   "run_id": "shopper-seed01",
+   "description": "Another shopper walks across the lane just ahead of the cart",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-014": 1,
+    "PEX-013": 1
+   },
+   "predicted_cart": {
+    "PEX-014": 1,
+    "PEX-013": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1,
+    "visual": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.955,
+   "review_reasons": [],
+   "latency_ms_median": 41.27,
+   "evidence": {
+    "run_id": "shopper-seed01",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "shopper--obj-0001",
+      "sku": "PEX-014",
+      "sku_source": "barcode",
+      "barcode_reads": 9,
+      "rating": "verified",
+      "accepted_confidence": 0.9516558319456565,
+      "confidence": 0.997,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "shopper--obj-0002",
+      "sku": "PEX-013",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "medium",
+      "accepted_confidence": 0.9491313348236465,
+      "confidence": 0.998,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 17.88,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "shopper",
+   "seed": 2,
+   "run_id": "shopper-seed02",
+   "description": "Another shopper walks across the lane just ahead of the cart",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-012": 1
+   },
+   "predicted_cart": {
+    "PEX-012": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 40.98,
+   "evidence": {
+    "run_id": "shopper-seed02",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "shopper--obj-0001",
+      "sku": "PEX-012",
+      "sku_source": "barcode",
+      "barcode_reads": 10,
+      "rating": "verified",
+      "accepted_confidence": 0.8635081686672229,
+      "confidence": 0.993,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "shopper",
+   "seed": 3,
+   "run_id": "shopper-seed03",
+   "description": "Another shopper walks across the lane just ahead of the cart",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-010": 1
+   },
+   "predicted_cart": {
+    "PEX-010": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "visual": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 41.13,
+   "evidence": {
+    "run_id": "shopper-seed03",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "shopper--obj-0001",
+      "sku": "PEX-010",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "high",
+      "accepted_confidence": 0.9721024837363496,
+      "confidence": 0.996,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "shopper",
+   "seed": 4,
+   "run_id": "shopper-seed04",
+   "description": "Another shopper walks across the lane just ahead of the cart",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-005": 1
+   },
+   "predicted_cart": {
+    "PEX-005": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 40.94,
+   "evidence": {
+    "run_id": "shopper-seed04",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "shopper--obj-0001",
+      "sku": "PEX-005",
+      "sku_source": "barcode",
+      "barcode_reads": 6,
+      "rating": "verified",
+      "accepted_confidence": 0.9509974126252788,
+      "confidence": 0.901,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "single",
+   "seed": 0,
+   "run_id": "single-seed00",
+   "description": "One drill kit, one clean crossing",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.993,
+   "review_reasons": [],
+   "latency_ms_median": 40.41,
+   "evidence": {
+    "run_id": "single-seed00",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "single-s-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 8,
+      "rating": "verified",
+      "accepted_confidence": 0.9200361041699462,
+      "confidence": 0.985,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "single",
+   "seed": 1,
+   "run_id": "single-seed01",
+   "description": "One drill kit, one clean crossing",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 1,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 41.45,
+   "evidence": {
+    "run_id": "single-seed01",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "single-s-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 9,
+      "rating": "verified",
+      "accepted_confidence": 0.8789227088092421,
+      "confidence": 0.948,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "single",
+   "seed": 2,
+   "run_id": "single-seed02",
+   "description": "One drill kit, one clean crossing",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 41.79,
+   "evidence": {
+    "run_id": "single-seed02",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "single-s-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 9,
+      "rating": "verified",
+      "accepted_confidence": 0.8506496876429929,
+      "confidence": 0.98,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "single",
+   "seed": 3,
+   "run_id": "single-seed03",
+   "description": "One drill kit, one clean crossing",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 0,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [],
+   "latency_ms_median": 41.95,
+   "evidence": {
+    "run_id": "single-seed03",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "single-s-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 8,
+      "rating": "verified",
+      "accepted_confidence": 0.8973641075980096,
+      "confidence": 0.961,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "single",
+   "seed": 4,
+   "run_id": "single-seed04",
+   "description": "One drill kit, one clean crossing",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-001": 1
+   },
+   "predicted_cart": {
+    "PEX-001": 1
+   },
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 1,
+   "id_switches": 0,
+   "phantom_objects": 1,
+   "detection_recall": 1.0,
+   "review_reasons": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal"
+   ],
+   "latency_ms_median": 42.09,
+   "evidence": {
+    "run_id": "single-seed04",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "single-s-obj-0001",
+      "sku": "PEX-001",
+      "sku_source": "barcode",
+      "barcode_reads": 8,
+      "rating": "verified",
+      "accepted_confidence": 0.9130741233851389,
+      "confidence": 0.987,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "single-s-obj-0002",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.067,
+      "views": 8,
+      "state": "ENTERING",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 1.5,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Entered merchandise disappeared before an observed checkout or reverse removal"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "stacked",
+   "seed": 0,
+   "run_id": "stacked-seed00",
+   "description": "One package carried on top of another",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-003": 1,
+    "PEX-013": 1
+   },
+   "predicted_cart": {},
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": false,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 2,
+   "sku_sources": {},
+   "assist_items": 2,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 0.683,
+   "review_reasons": [
+    "Barcode disagrees with the product already recorded",
+    "Entered merchandise disappeared before an observed checkout or reverse removal"
+   ],
+   "latency_ms_median": 42.39,
+   "evidence": {
+    "run_id": "stacked-seed00",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "stacked--obj-0001",
+      "sku": "PEX-013",
+      "sku_source": "barcode",
+      "barcode_reads": 7,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.9929444376564027,
+      "confidence": 0.993,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Barcode disagrees with the product already recorded"
+     },
+     {
+      "object_id": "stacked--obj-0002",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.554,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "MIDDLE",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 6.62,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Entered merchandise disappeared before an observed checkout or reverse removal"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "stacked",
+   "seed": 1,
+   "run_id": "stacked-seed01",
+   "description": "One package carried on top of another",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-004": 1,
+    "PEX-010": 1
+   },
+   "predicted_cart": {
+    "PEX-004": 1
+   },
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": false,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 1,
+   "sku_sources": {
+    "barcode": 1
+   },
+   "assist_items": 1,
+   "id_switches": 1,
+   "phantom_objects": 0,
+   "detection_recall": 0.741,
+   "review_reasons": [
+    "Barcode disagrees with how the product looks"
+   ],
+   "latency_ms_median": 43.33,
+   "evidence": {
+    "run_id": "stacked-seed01",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "stacked--obj-0001",
+      "sku": "PEX-004",
+      "sku_source": "barcode",
+      "barcode_reads": 5,
+      "rating": "verified",
+      "accepted_confidence": 1.0,
+      "confidence": 0.897,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "stacked--obj-0002",
+      "sku": "PEX-010",
+      "sku_source": "visual",
+      "barcode_reads": 3,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.9477353626647794,
+      "confidence": 0.295,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Barcode disagrees with how the product looks"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "stacked",
+   "seed": 2,
+   "run_id": "stacked-seed02",
+   "description": "One package carried on top of another",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-009": 2
+   },
+   "predicted_cart": {},
+   "expected_review": false,
+   "review_required": true,
+   "exact_cart": false,
+   "passed": false,
+   "false_adds": 0,
+   "missed_items": 2,
+   "sku_sources": {},
+   "assist_items": 4,
+   "id_switches": 10,
+   "phantom_objects": 0,
+   "detection_recall": 0.793,
+   "review_reasons": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal",
+    "Multiple lost identical products match a reappearing observation",
+    "Product first observed beyond checkout boundary"
+   ],
+   "latency_ms_median": 42.49,
+   "evidence": {
+    "run_id": "stacked-seed02",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "stacked--obj-0001",
+      "sku": "PEX-009",
+      "sku_source": "barcode",
+      "barcode_reads": 1,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.9922738371005115,
+      "confidence": 0.994,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": true,
+      "restricted": false,
+      "review_reason": "Multiple lost identical products match a reappearing observation"
+     },
+     {
+      "object_id": "stacked--obj-0002",
+      "sku": "PEX-009",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.8908172519967033,
+      "confidence": 0.834,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "MIDDLE",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 10.88,
+      "seen_whole": true,
+      "ambiguous_identity": true,
+      "restricted": false,
+      "review_reason": "Entered merchandise disappeared before an observed checkout or reverse removal"
+     },
+     {
+      "object_id": "stacked--obj-0003",
+      "sku": "PEX-009",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.9973111947377523,
+      "confidence": 0.989,
+      "views": 8,
+      "state": "ENTERING",
+      "zone": "APPROACH",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": false,
+      "seen_seconds": 3.75,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Entered merchandise disappeared before an observed checkout or reverse removal"
+     },
+     {
+      "object_id": "stacked--obj-0004",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": null,
+      "accepted_confidence": null,
+      "confidence": 0.983,
+      "views": 1,
+      "state": "TRACKED",
+      "zone": "MIDDLE",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": false,
+      "crossed_checkout": false,
+      "seen_seconds": 0.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "stacked--obj-0005",
+      "sku": "PEX-009",
+      "sku_source": "visual",
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": 0.9868442219957637,
+      "confidence": 0.988,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": false,
+      "entered_lane": false,
+      "crossed_checkout": false,
+      "seen_seconds": 1.25,
+      "seen_whole": true,
+      "ambiguous_identity": true,
+      "restricted": false,
+      "review_reason": "Product first observed beyond checkout boundary"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "stacked",
+   "seed": 3,
+   "run_id": "stacked-seed03",
+   "description": "One package carried on top of another",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-011": 2
+   },
+   "predicted_cart": {
+    "PEX-011": 2
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 2
+   },
+   "assist_items": 0,
+   "id_switches": 5,
+   "phantom_objects": 0,
+   "detection_recall": 0.71,
+   "review_reasons": [],
+   "latency_ms_median": 41.38,
+   "evidence": {
+    "run_id": "stacked-seed03",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "stacked--obj-0001",
+      "sku": "PEX-011",
+      "sku_source": "barcode",
+      "barcode_reads": 8,
+      "rating": "verified",
+      "accepted_confidence": 0.9969034393628439,
+      "confidence": 0.996,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 9.25,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "stacked--obj-0002",
+      "sku": "PEX-011",
+      "sku_source": "barcode",
+      "barcode_reads": 7,
+      "rating": "verified",
+      "accepted_confidence": 0.9951748004014069,
+      "confidence": 0.982,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "stacked",
+   "seed": 4,
+   "run_id": "stacked-seed04",
+   "description": "One package carried on top of another",
+   "frames": 145,
+   "expected_cart": {
+    "PEX-013": 2
+   },
+   "predicted_cart": {
+    "PEX-013": 2
+   },
+   "expected_review": false,
+   "review_required": false,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {
+    "barcode": 2
+   },
+   "assist_items": 0,
+   "id_switches": 3,
+   "phantom_objects": 0,
+   "detection_recall": 0.793,
+   "review_reasons": [],
+   "latency_ms_median": 40.3,
+   "evidence": {
+    "run_id": "stacked-seed04",
+    "timestamp": 18.0,
+    "review_required": false,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "stacked--obj-0001",
+      "sku": "PEX-013",
+      "sku_source": "barcode",
+      "barcode_reads": 7,
+      "rating": "verified",
+      "accepted_confidence": 0.921179369584484,
+      "confidence": 0.936,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": false,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 13.12,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     },
+     {
+      "object_id": "stacked--obj-0002",
+      "sku": "PEX-013",
+      "sku_source": "barcode",
+      "barcode_reads": 9,
+      "rating": "verified",
+      "accepted_confidence": 0.9853809693270702,
+      "confidence": 0.918,
+      "views": 8,
+      "state": "ADDED",
+      "zone": "COMMIT",
+      "in_cart": true,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": null
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "unknown",
+   "seed": 0,
+   "run_id": "unknown-seed00",
+   "description": "An unenrolled gray package",
+   "frames": 145,
+   "expected_cart": {},
+   "predicted_cart": {},
+   "expected_review": true,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {},
+   "assist_items": 1,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [
+    "Barcode is not in the catalog"
+   ],
+   "latency_ms_median": 40.76,
+   "evidence": {
+    "run_id": "unknown-seed00",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "unknown--obj-0001",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.067,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Barcode is not in the catalog"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "unknown",
+   "seed": 1,
+   "run_id": "unknown-seed01",
+   "description": "An unenrolled gray package",
+   "frames": 145,
+   "expected_cart": {},
+   "predicted_cart": {},
+   "expected_review": true,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {},
+   "assist_items": 1,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [
+    "Barcode is not in the catalog"
+   ],
+   "latency_ms_median": 40.94,
+   "evidence": {
+    "run_id": "unknown-seed01",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "unknown--obj-0001",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.067,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Barcode is not in the catalog"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "unknown",
+   "seed": 2,
+   "run_id": "unknown-seed02",
+   "description": "An unenrolled gray package",
+   "frames": 145,
+   "expected_cart": {},
+   "predicted_cart": {},
+   "expected_review": true,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {},
+   "assist_items": 1,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [
+    "Barcode is not in the catalog"
+   ],
+   "latency_ms_median": 40.88,
+   "evidence": {
+    "run_id": "unknown-seed02",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "unknown--obj-0001",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.067,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Barcode is not in the catalog"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "unknown",
+   "seed": 3,
+   "run_id": "unknown-seed03",
+   "description": "An unenrolled gray package",
+   "frames": 145,
+   "expected_cart": {},
+   "predicted_cart": {},
+   "expected_review": true,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {},
+   "assist_items": 1,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [
+    "Barcode is not in the catalog"
+   ],
+   "latency_ms_median": 35.24,
+   "evidence": {
+    "run_id": "unknown-seed03",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "unknown--obj-0001",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.067,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Barcode is not in the catalog"
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "unknown",
+   "seed": 4,
+   "run_id": "unknown-seed04",
+   "description": "An unenrolled gray package",
+   "frames": 145,
+   "expected_cart": {},
+   "predicted_cart": {},
+   "expected_review": true,
+   "review_required": true,
+   "exact_cart": true,
+   "passed": true,
+   "false_adds": 0,
+   "missed_items": 0,
+   "sku_sources": {},
+   "assist_items": 1,
+   "id_switches": 0,
+   "phantom_objects": 0,
+   "detection_recall": 1.0,
+   "review_reasons": [
+    "Barcode is not in the catalog"
+   ],
+   "latency_ms_median": 29.24,
+   "evidence": {
+    "run_id": "unknown-seed04",
+    "timestamp": 18.0,
+    "review_required": true,
+    "in_progress": 0,
+    "items": [
+     {
+      "object_id": "unknown--obj-0001",
+      "sku": null,
+      "sku_source": null,
+      "barcode_reads": 0,
+      "rating": "needs_associate",
+      "accepted_confidence": null,
+      "confidence": 0.067,
+      "views": 8,
+      "state": "TRACKED",
+      "zone": "COMMIT",
+      "in_cart": false,
+      "visible_now": true,
+      "entered_lane": true,
+      "crossed_checkout": true,
+      "seen_seconds": 18.0,
+      "seen_whole": true,
+      "ambiguous_identity": false,
+      "restricted": false,
+      "review_reason": "Barcode is not in the catalog"
+     }
+    ]
+   }
+  }
+ ]
+}

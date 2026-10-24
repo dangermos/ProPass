@@ -92,6 +92,8 @@ def score_run(engine, run_dir):
         "detection_recall": round(sum(detected_frames.values()) / max(1, sum(seen_frames.values())), 3),
         "review_reasons": reasons,
         "latency_ms_median": round(statistics.median(times[1:]), 2) if len(times) > 1 else None,
+        # The per-item evidence behind the final checkout decision (scored by training/decision_eval.py).
+        "evidence": engine.ledger.evidence(),
     }
 
 
@@ -230,6 +232,7 @@ def main():
     parser.add_argument("--models", type=Path, default=ROOT / "models", help="directory holding detector.pt and classifier.pt")
     parser.add_argument("--cameras", help="comma-separated camera ids (default: from the config)")
     parser.add_argument("--image-mode", action="store_true", help="ignore calibration: lane camera, image-space zones")
+    parser.add_argument("--evidence", type=Path, help="also write each run's final per-item evidence here, for training/decision_eval.py")
     parser.add_argument("--compare", type=Path, help="earlier benchmark JSON to show alongside (docs only)")
     parser.add_argument("--workers", type=int, default=1,
                         help="score this many runs at once, each in its own process (about 0.5 GB of GPU memory each); "
@@ -268,6 +271,11 @@ def main():
         engine = VisionEngine(ROOT / "catalog.json", args.models, args.config, cameras, world_mode=False if args.image_mode else None)
     else:
         runs = [report(score_run(engine, run_dir)) for run_dir in run_dirs]
+    if args.evidence:
+        args.evidence.write_text(json.dumps({"label": args.label, "recording_root": str(args.root.resolve()),
+                                             "runs": runs}, indent=1))
+    for r in runs:
+        r.pop("evidence")
     rows = summarize(runs)
     latencies = [r["latency_ms_median"] for r in runs if r["latency_ms_median"] is not None]
     summary = {"label": args.label, "runs": len(runs), "passed": sum(r["passed"] for r in runs),

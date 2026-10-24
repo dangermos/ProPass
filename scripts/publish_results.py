@@ -30,6 +30,10 @@ def split(path):
             "auto": sum(r["passed"] and not r["review_required"] for r in runs),
             "held": sum(r["passed"] and r["review_required"] for r in runs),
             "extra": len(extra), "extra_incomplete": sum(not r["exact_cart"] for r in extra),
+            # Of those incomplete precautionary hand-offs: carts short an item (would undercharge) and carts with one too many (would overcharge).
+            "extra_short": sum(not r["exact_cart"] and r["missed_items"] > 0 for r in extra),
+            "extra_over": sum(not r["exact_cart"] and r["false_adds"] > 0 for r in extra),
+            "by_design": sum(bool(r["expected_review"]) for r in runs),
             "wrong": sum(not r["exact_cart"] and not r["review_required"] for r in runs),
             "missed": sum(r["missed_items"] for r in runs), "false_adds": sum(r["false_adds"] for r in runs),
             "barcode": barcode, "charged": charged, "scenes": dict(scenes), "top_reasons": reasons.most_common(3)}
@@ -45,6 +49,17 @@ def models():
     return out
 
 
+def precaution(test):
+    """What the precautionary hand-offs held: carts that were already right, and carts a close would have charged wrong."""
+    right, short, over = test["extra"] - test["extra_incomplete"], test["extra_short"], test["extra_over"]
+    parts = [f"{short} {'was' if short == 1 else 'were'} missing items ({test['missed']} in all), so closing {'it' if short == 1 else 'them'} would have undercharged"] if short else []
+    if over:
+        extra = "one item" if test["false_adds"] == 1 else f"{test['false_adds']} items"
+        parts.append(f"{over} had {extra} too many, so closing {'it' if over == 1 else 'them'} would have overcharged")
+    return (f"{right} of those {test['extra']} were already right." + (f" Of the other {test['extra_incomplete']}, " + "; ".join(parts) + "." if parts else "")
+            + " Because they went to a person, none of them closed with a wrong charge.")
+
+
 def weak_spots(test):
     """The README's short list of what still fails, from the held-out report."""
     low = min(test["scenes"].values())
@@ -55,7 +70,7 @@ def weak_spots(test):
     return [f"- **Weakest scenes:** {' and '.join(names) if len(names) < 3 else ', '.join(names)} pass {low} of {per_scene} held-out runs"
             f"{' each' if len(names) > 1 else ''}. The reasons per scene are in [docs/benchmark.md](docs/benchmark.md#-why-runs-fail).",
             f"- **Cautious hand-offs:** when the lane isn't sure, it sends the cart to an associate rather than risk a wrong charge. "
-            f"{test['extra']} of {test['runs']} held-out carts went to one as a precaution, and {test['extra'] - test['extra_incomplete']} of those were already right.",
+            f"{test['extra']} of {test['runs']} held-out carts, all in scenes it could have closed, went to one as a precaution. {precaution(test)}",
             f"- **Wrong charges:** {wrong}, but {test['runs']} runs cannot rule out a small rate. Earlier rounds did close wrong carts: "
             "one held-out lumber cart one board short, and development runs before two bug fixes ([project log](docs/pro-express-v2.md)).",
             "- **Next steps:** fewer precautionary hand-offs, then stacked and hidden packages; see [docs/roadmap.md](docs/roadmap.md)."]
@@ -72,11 +87,21 @@ def main():
     notes = [f"- **{test['auto']} of 85 held-out carts closed with nobody stepping in, and all {test['held']} carts that needed a person were sent to one.**"]
     notes.append(f"- **{'No cart' if not test['wrong'] else str(test['wrong']) + ' cart(s)'} closed with a wrong or missing item**"
                  + (" on the held-out runs." if not test["wrong"] else " on the held-out runs: that is the worst kind of error and it is listed in docs/benchmark.md."))
-    notes.append(f"- **{test['extra']} carts went to an associate as a precaution.** When the lane isn't sure, it hands the cart to a person rather than risk a wrong charge. "
-                 f"{test['extra'] - test['extra_incomplete']} of them were already right. The other {test['extra_incomplete']} were incomplete or wrong "
-                 f"({test['missed']} items the cameras lost, {test["false_adds"]} wrong line{"" if test["false_adds"] == 1 else "s"}), so closing them would have charged the wrong amount. "
+    notes.append(f"- **The {test['by_design']} carts built to need a person all went to one. In the other {test['runs'] - test['by_design']}, the lane closed {test['auto']} on its own "
+                 f"and sent {test['extra']} to an associate rather than guess.** {precaution(test)} "
                  "Most common reasons: " + "; ".join(f"{reason.lower()} ({count})" for reason, count in test["top_reasons"]) + ".")
-    fill = {"TESTS": results["tests"], "RESULT_NOTES": "\n".join(notes), "WEAK_SPOTS": "\n".join(weak_spots(test)),
+    # The optional decision model, scored on development runs only (training/decision_eval.py).
+    second = json.loads((ROOT / "models/decision-subq-dev.json").read_text())["summary"]
+    alone = json.loads((ROOT / "models/decision-subq-only-dev.json").read_text())["summary"]["with_decision"]
+    closed = second["with_decision"]["auto"] - second["rules"]["auto"]
+    notes_decision = (f"**An optional second opinion.** A decision model ({second['model']}, SubQ's Decisions API) can review the carts the rules would hand off "
+                      "for a soft reason. Locked tools, unknown barcodes and barcode mismatches never reach it, and a failed call keeps the rules' decision. "
+                      f"On development runs it closed {closed} of the {second['model_calls']} carts it was asked about "
+                      f"({second['rules']['passed']} → {second['with_decision']['passed']} runs passed, "
+                      f"{second['with_decision']['wrong_close']} wrong closes). Deciding every cart on its own, without the rules, it passed {alone['passed']}. "
+                      "It is off by default and has not been scored on held-out runs. Code: [vision/decision.py](vision/decision.py); "
+                      "scoring: [training/decision_eval.py](training/decision_eval.py).")
+    fill = {"TESTS": results["tests"], "DECISION_NOTE": notes_decision, "RESULT_NOTES": "\n".join(notes), "WEAK_SPOTS": "\n".join(weak_spots(test)),
             "LANE_MAP": nets["lane"]["map50_95"], "LANE_ACC": f"{nets['lane']['accuracy']:.1%}",
             "OVER_MAP": nets["overhead"]["map50_95"], "OVER_ACC": f"{nets['overhead']['accuracy']:.1%}"}
     for name, s in (("DEV", dev), ("TEST", test)):

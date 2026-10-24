@@ -17,7 +17,7 @@ The project page and a recorded tour of all 17 scenes, in the browser. Nothing t
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688?logo=fastapi&logoColor=white)
 ![React](https://img.shields.io/badge/UI-React%20%2B%20Vite-61DAFB?logo=react&logoColor=black)
 ![Unity 6](https://img.shields.io/badge/Sim-Unity%206.6%20URP-000000?logo=unity&logoColor=white)
-![Tests](https://img.shields.io/badge/tests-156%20passing-2EA043)
+![Tests](https://img.shields.io/badge/tests-174%20passing-2EA043)
 
 > [!NOTE]
 > An independent student project inspired by contractor checkout. It is **not affiliated with or endorsed by The Home Depot**. Every brand, product, price and customer in it is invented, and no payment is taken. Every number below was measured on **simulated images rendered by Unity**. Nothing has been tested on a real camera.
@@ -25,7 +25,7 @@ The project page and a recorded tour of all 17 scenes, in the browser. Nothing t
 ## Known weak spots and next steps
 
 - **Weakest scenes:** **lumber** and **stacked** pass 2 of 5 held-out runs each. The reasons per scene are in [docs/benchmark.md](docs/benchmark.md#-why-runs-fail).
-- **Cautious hand-offs:** when the lane isn't sure, it sends the cart to an associate rather than risk a wrong charge. 17 of 85 held-out carts went to one as a precaution, and 8 of those were already right.
+- **Cautious hand-offs:** when the lane isn't sure, it sends the cart to an associate rather than risk a wrong charge. 17 of 85 held-out carts, all in scenes it could have closed, went to one as a precaution. 8 of those 17 were already right. Of the other 9, 8 were missing items (13 in all), so closing them would have undercharged; 1 had one item too many, so closing it would have overcharged. Because they went to a person, none of them closed with a wrong charge.
 - **Wrong charges:** None of the held-out carts closed with a wrong or missing item, but 85 runs cannot rule out a small rate. Earlier rounds did close wrong carts: one held-out lumber cart one board short, and development runs before two bug fixes ([project log](docs/pro-express-v2.md)).
 - **Next steps:** fewer precautionary hand-offs, then stacked and hidden packages; see [docs/roadmap.md](docs/roadmap.md).
 
@@ -58,11 +58,13 @@ The current scene has 15 invented products (boxes, pails, a locked tool, bare lu
 
 - **58 of 85 held-out carts closed with nobody stepping in, and all 10 carts that needed a person were sent to one.**
 - **No cart closed with a wrong or missing item** on the held-out runs.
-- **17 carts went to an associate as a precaution.** When the lane isn't sure, it hands the cart to a person rather than risk a wrong charge. 8 of them were already right. The other 9 were incomplete or wrong (13 items the cameras lost, 1 wrong line), so closing them would have charged the wrong amount. Most common reasons: entered merchandise disappeared before an observed checkout or reverse removal (12); product first observed beyond checkout boundary (6); conflicting sku evidence on the same physical object (3).
+- **The 10 carts built to need a person all went to one. In the other 75, the lane closed 58 on its own and sent 17 to an associate rather than guess.** 8 of those 17 were already right. Of the other 9, 8 were missing items (13 in all), so closing them would have undercharged; 1 had one item too many, so closing it would have overcharged. Because they went to a person, none of them closed with a wrong charge. Most common reasons: entered merchandise disappeared before an observed checkout or reverse removal (12); product first observed beyond checkout boundary (6); conflicting sku evidence on the same physical object (3).
 
 Models (test split of the training data): gate camera detector mAP50-95 0.818, classifier 95.5%; overhead detector mAP50-95 0.867, classifier 94.6%. Per-scenario scores are in [docs/benchmark.md](docs/benchmark.md). Earlier rounds with 8 products are in [docs/pro-express-v2.md](docs/pro-express-v2.md).
 
 **Read these numbers with care.** 85 runs can find failures but cannot promise a rate: zero wrong closes in 85 runs still allows a true rate of up to about 3.5%. Five runs per scenario are signals, not percentages.
+
+**An optional second opinion.** A decision model (subq-snap-1.1, SubQ's Decisions API) can review the carts the rules would hand off for a soft reason. Locked tools, unknown barcodes and barcode mismatches never reach it, and a failed call keeps the rules' decision. On development runs it closed 1 of the 15 carts it was asked about (67 → 68 runs passed, 0 wrong closes). Deciding every cart on its own, without the rules, it passed 63. It is off by default and has not been scored on held-out runs. Code: [vision/decision.py](vision/decision.py); scoring: [training/decision_eval.py](training/decision_eval.py).
 
 ## Quickstart
 
@@ -75,7 +77,7 @@ npm ci && npm run dev          # open http://127.0.0.1:5173
 
 ![The project site](docs/images/site.jpg)
 
-The front page explains the project. **Watch the 17 scenes** opens the recorded tour: every scenario from four camera angles at 60 fps, with the cart the system built and what it decided beside the video, and a **Sound** button. No GPU, Unity or model weights are needed, because the videos are in the repository. Each tour scene is development seed 2 of its scenario, pass or not. The same pages can be published as a static site on GitHub Pages; it is off until it is switched on ([docs/static-demo.md](docs/static-demo.md)).
+The front page explains the project. **Watch the 17 scenes** opens the recorded tour: every scenario from four camera angles at 60 fps, with the cart the system built and what it decided beside the video, and a **Sound** button. No GPU, Unity or model weights are needed, because the videos are in the repository. Each tour scene is development seed 2 of its scenario, pass or not. The same pages are published as a static site at [dangermos.github.io/ProPass](https://dangermos.github.io/ProPass/) ([docs/static-demo.md](docs/static-demo.md)).
 
 ### 2. Run the models live, without Unity
 
@@ -86,7 +88,7 @@ python3 -m venv .venv
 .venv/bin/python -m pip install -r requirements-vision.txt -r requirements-api.txt
 bash scripts/get_weights.sh          # both camera model pairs, 42 MB
 bash scripts/get_recordings.sh       # frames Unity already rendered, about 500 MB
-.venv/bin/python -m pytest -q tests  # 156 tests
+.venv/bin/python -m pytest -q tests  # 174 tests
 (cd web && npm ci)
 bash scripts/start.sh                # API on :8000, dashboard on :5173
 ```
@@ -148,7 +150,7 @@ unity/        The Unity 6.6 project; code, scene and generated label art in unit
 training/     Model training and the benchmark scorer
 models/       Hash manifests and benchmark reports (weights are release assets)
 scripts/      round.sh (the whole pipeline), start.sh, weight and recording downloads, tour builder
-tests/        156 tests: ledger, fusion, calibration, barcodes, API, catalog consistency
+tests/        174 tests: ledger, fusion, calibration, barcodes, API, catalog consistency
 docs/         Documentation
 catalog.json  The 15 invented products: prices, barcodes, label art recipe
 ```
