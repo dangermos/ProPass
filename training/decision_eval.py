@@ -16,6 +16,7 @@ import argparse
 import json
 from pathlib import Path
 
+from training.benchmark import relative
 from vision.decision import CLOSE, PROVIDERS, ModelDecider, rules_decision
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -67,7 +68,7 @@ def main():
     baseline = tally(runs, [{"decision": d["rules"]} for d in decisions])
     result = tally(runs, decisions)
     fallbacks = sum("unavailable" in d["source"] for d in decisions)
-    summary = {"evidence": str(args.evidence), "label": data["label"], "runs": len(runs), "decision": args.decision,
+    summary = {"evidence": relative(args.evidence), "label": data["label"], "runs": len(runs), "decision": args.decision,
                "threshold": args.threshold, "model": decider.model if decider else None,
                "rules": baseline, "with_decision": result, "fallbacks_to_rules": fallbacks,
                "model_calls": sum(d["source"] == args.decision for d in decisions) if decider else 0}
