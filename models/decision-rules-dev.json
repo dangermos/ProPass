@@ -1,0 +1,1114 @@
+{
+ "summary": {
+  "evidence": "/home/dangermos/Home Depot Internship Project/propass/models/decision-evidence-dev.json",
+  "label": "dev",
+  "runs": 85,
+  "decision": "rules",
+  "threshold": 0.8,
+  "model": null,
+  "rules": {
+   "auto": 57,
+   "handoff": 10,
+   "precaution": 18,
+   "precaution_cart_right": 8,
+   "wrong_close": 0,
+   "passed": 67
+  },
+  "with_decision": {
+   "auto": 57,
+   "handoff": 10,
+   "precaution": 18,
+   "precaution_cart_right": 8,
+   "wrong_close": 0,
+   "passed": 67
+  },
+  "fallbacks_to_rules": 0,
+  "model_calls": 0
+ },
+ "decisions": [
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "bystander-seed00",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "bystander-seed01",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "bystander-seed02",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "bystander-seed03",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Entered merchandise disappeared before an observed checkout or reverse removal",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal"
+   ],
+   "run_id": "bystander-seed04",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "distractors-seed00",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "distractors-seed01",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "distractors-seed02",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "distractors-seed03",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "distractors-seed04",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "duplicate-seed00",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "duplicate-seed01",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "duplicate-seed02",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "duplicate-seed03",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "duplicate-seed04",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "edge-seed00",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Product first observed beyond checkout boundary",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Product first observed beyond checkout boundary"
+   ],
+   "run_id": "edge-seed01",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": false
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "edge-seed02",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "edge-seed03",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "edge-seed04",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Entered merchandise disappeared before an observed checkout or reverse removal",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal"
+   ],
+   "run_id": "flatbed-seed00",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Conflicting SKU evidence on the same physical object",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Conflicting SKU evidence on the same physical object"
+   ],
+   "run_id": "flatbed-seed01",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": false
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "flatbed-seed02",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "flatbed-seed03",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "flatbed-seed04",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "hands-seed00",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "hands-seed01",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "hands-seed02",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "hands-seed03",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Entered merchandise disappeared before an observed checkout or reverse removal",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal"
+   ],
+   "run_id": "hands-seed04",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "hesitate-seed00",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "hesitate-seed01",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "hesitate-seed02",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "hesitate-seed03",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "1 item(s) still in the lane",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "1 item(s) still in the lane"
+   ],
+   "run_id": "hesitate-seed04",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Entered merchandise disappeared before an observed checkout or reverse removal; Restricted item: an associate must release it",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal",
+    "Restricted item: an associate must release it"
+   ],
+   "run_id": "locked-seed00",
+   "rules": "needs_associate",
+   "outcome": "handoff",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Entered merchandise disappeared before an observed checkout or reverse removal; Restricted item: an associate must release it",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal",
+    "Restricted item: an associate must release it"
+   ],
+   "run_id": "locked-seed01",
+   "rules": "needs_associate",
+   "outcome": "handoff",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Restricted item: an associate must release it",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Restricted item: an associate must release it"
+   ],
+   "run_id": "locked-seed02",
+   "rules": "needs_associate",
+   "outcome": "handoff",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Entered merchandise disappeared before an observed checkout or reverse removal; Product first observed beyond checkout boundary; Restricted item: an associate must release it",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal",
+    "Product first observed beyond checkout boundary",
+    "Restricted item: an associate must release it"
+   ],
+   "run_id": "locked-seed03",
+   "rules": "needs_associate",
+   "outcome": "handoff",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Restricted item: an associate must release it",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Restricted item: an associate must release it"
+   ],
+   "run_id": "locked-seed04",
+   "rules": "needs_associate",
+   "outcome": "handoff",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Product first observed beyond checkout boundary; Unresolved product disappeared after a checkout crossing",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Product first observed beyond checkout boundary",
+    "Unresolved product disappeared after a checkout crossing"
+   ],
+   "run_id": "lumber-seed00",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": false
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Product first observed beyond checkout boundary",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Product first observed beyond checkout boundary"
+   ],
+   "run_id": "lumber-seed01",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": false
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "lumber-seed02",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "lumber-seed03",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "lumber-seed04",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "mixed-seed00",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Conflicting SKU evidence on the same physical object",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Conflicting SKU evidence on the same physical object"
+   ],
+   "run_id": "mixed-seed01",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": false
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Product first observed beyond checkout boundary",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Product first observed beyond checkout boundary"
+   ],
+   "run_id": "mixed-seed02",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": false
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "mixed-seed03",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "mixed-seed04",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Entered merchandise disappeared before an observed checkout or reverse removal",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal"
+   ],
+   "run_id": "occlusion-seed00",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "occlusion-seed01",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "occlusion-seed02",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "occlusion-seed03",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "occlusion-seed04",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "parked-seed00",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Product first observed beyond checkout boundary",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Product first observed beyond checkout boundary"
+   ],
+   "run_id": "parked-seed01",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "parked-seed02",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "parked-seed03",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Entered merchandise disappeared before an observed checkout or reverse removal",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal"
+   ],
+   "run_id": "parked-seed04",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "remove-seed00",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "remove-seed01",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "remove-seed02",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "remove-seed03",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "remove-seed04",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Product first observed beyond checkout boundary",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Product first observed beyond checkout boundary"
+   ],
+   "run_id": "shopper-seed00",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": false
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "shopper-seed01",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "shopper-seed02",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "shopper-seed03",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "shopper-seed04",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "single-seed00",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "single-seed01",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "single-seed02",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "single-seed03",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Entered merchandise disappeared before an observed checkout or reverse removal",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal"
+   ],
+   "run_id": "single-seed04",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Barcode disagrees with the product already recorded; Entered merchandise disappeared before an observed checkout or reverse removal",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Barcode disagrees with the product already recorded",
+    "Entered merchandise disappeared before an observed checkout or reverse removal"
+   ],
+   "run_id": "stacked-seed00",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": false
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Barcode disagrees with how the product looks",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Barcode disagrees with how the product looks"
+   ],
+   "run_id": "stacked-seed01",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": false
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Entered merchandise disappeared before an observed checkout or reverse removal; Multiple lost identical products match a reappearing observation; Product first observed beyond checkout boundary",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Entered merchandise disappeared before an observed checkout or reverse removal",
+    "Multiple lost identical products match a reappearing observation",
+    "Product first observed beyond checkout boundary"
+   ],
+   "run_id": "stacked-seed02",
+   "rules": "needs_associate",
+   "outcome": "precaution",
+   "exact_cart": false
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "stacked-seed03",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "close",
+   "reason": "Every item in the lane is charged",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [],
+   "run_id": "stacked-seed04",
+   "rules": "close",
+   "outcome": "auto",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Barcode is not in the catalog",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Barcode is not in the catalog"
+   ],
+   "run_id": "unknown-seed00",
+   "rules": "needs_associate",
+   "outcome": "handoff",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Barcode is not in the catalog",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Barcode is not in the catalog"
+   ],
+   "run_id": "unknown-seed01",
+   "rules": "needs_associate",
+   "outcome": "handoff",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Barcode is not in the catalog",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Barcode is not in the catalog"
+   ],
+   "run_id": "unknown-seed02",
+   "rules": "needs_associate",
+   "outcome": "handoff",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Barcode is not in the catalog",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Barcode is not in the catalog"
+   ],
+   "run_id": "unknown-seed03",
+   "rules": "needs_associate",
+   "outcome": "handoff",
+   "exact_cart": true
+  },
+  {
+   "decision": "needs_associate",
+   "reason": "Barcode is not in the catalog",
+   "source": "rules",
+   "probability": null,
+   "confidence": null,
+   "flagged": [
+    "Barcode is not in the catalog"
+   ],
+   "run_id": "unknown-seed04",
+   "rules": "needs_associate",
+   "outcome": "handoff",
+   "exact_cart": true
+  }
+ ]
+}
