@@ -530,6 +530,29 @@ class PhysicalLedger:
             return "verified" if obj.barcode_reads >= 2 else "high"
         return "high" if (obj.accepted_confidence or 0) >= self.config.high_rating else "medium"
 
+    def evidence(self) -> dict:
+        """Per-item evidence behind the current checkout decision, for a decision layer
+        (vision/decision.py). Items that left the lane or were never part of it are left out."""
+        last = self._last_output or {}
+        items = []
+        for obj in self.objects.values():
+            if obj.state in ("OUTSIDE", "LEFT", "FRAGMENT"):
+                continue
+            items.append({
+                "object_id": obj.object_id, "sku": obj.sku, "sku_source": obj.sku_source,
+                "barcode_reads": obj.barcode_reads, "rating": self._rating(obj),
+                "accepted_confidence": obj.accepted_confidence, "confidence": round(obj.confidence, 3),
+                "views": len(obj.probabilities), "state": obj.state, "zone": obj.zone,
+                "in_cart": obj.membership, "visible_now": obj.visible,
+                "entered_lane": obj.approach_observed, "crossed_checkout": obj.committed,
+                "seen_seconds": round(obj.last_seen - obj.first_seen, 2),
+                "seen_whole": obj.full_view_seen, "ambiguous_identity": obj.ambiguous_identity,
+                "restricted": obj.sku in self.config.restricted_skus,
+                "review_reason": obj.review_reason})
+        return {"run_id": self.run_id, "timestamp": self.last_timestamp,
+                "review_required": bool(last.get("review_required")),
+                "in_progress": last.get("in_progress", 0), "items": items}
+
     def _serialize(self, obj: PhysicalObject):
         return {"bbox": list(obj.bbox), "track_id": obj.track_id,
                 "sku_source": obj.sku_source, "barcode_reads": obj.barcode_reads,
