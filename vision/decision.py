@@ -184,13 +184,16 @@ class ModelDecider:
         self.threshold, self.call = threshold, call or call_systemone
         self.names = names if names is not None else catalog_names()
 
-    def decide(self, evidence: dict) -> Decision:
+    def decide(self, evidence: dict, model_only: bool = False) -> Decision:
+        """model_only skips the rules and the hard-reason guard, so the model decides every cart.
+        It is for measuring the model on its own (training.decision_eval --model-only), never for checkout."""
         rules = rules_decision(evidence)
-        if rules.decision == CLOSE:
-            return rules
-        hard = hard_reasons(evidence)
-        if hard:
-            return Decision(HAND_OFF, "; ".join(hard), "rules", flagged=hard)
+        if not model_only:
+            if rules.decision == CLOSE:
+                return rules
+            hard = hard_reasons(evidence)
+            if hard:
+                return Decision(HAND_OFF, "; ".join(hard), "rules", flagged=hard)
         if not self.api_key:
             return Decision(HAND_OFF, rules.reason, f"rules ({self.provider} unavailable: no API key)", flagged=rules.flagged)
         try:

@@ -47,6 +47,8 @@ def main():
     parser.add_argument("--decision", choices=["rules", *PROVIDERS], default="rules")
     parser.add_argument("--threshold", type=float, default=0.8, help="the model's probability needed to close")
     parser.add_argument("--output", type=Path, help="default: models/decision-<decision>-dev.json")
+    parser.add_argument("--model-only", action="store_true",
+                        help="experiment: the model decides every cart, with no rules and no hard-reason guard")
     parser.add_argument("--allow-held-out", action="store_true")
     args = parser.parse_args()
     data = json.loads(args.evidence.read_text())
@@ -57,7 +59,7 @@ def main():
     decisions = []
     for run in runs:
         rules = rules_decision(run["evidence"])
-        made = decider.decide(run["evidence"]) if decider else rules
+        made = decider.decide(run["evidence"], model_only=args.model_only) if decider else rules
         decisions.append(made.as_dict() | {"run_id": run["run_id"], "rules": rules.decision,
                                            "outcome": outcome(run, made.decision), "exact_cart": run["exact_cart"]})
         if made.source != "rules":
@@ -69,7 +71,8 @@ def main():
                "threshold": args.threshold, "model": decider.model if decider else None,
                "rules": baseline, "with_decision": result, "fallbacks_to_rules": fallbacks,
                "model_calls": sum(d["source"] == args.decision for d in decisions) if decider else 0}
-    output = args.output or ROOT / "models" / f"decision-{args.decision}-dev.json"
+    summary["model_only"] = args.model_only
+    output = args.output or ROOT / "models" / f"decision-{args.decision}{'-only' if args.model_only else ''}-dev.json"
     output.write_text(json.dumps({"summary": summary, "decisions": decisions}, indent=1))
     print(json.dumps(summary, indent=2))
 

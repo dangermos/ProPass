@@ -137,3 +137,12 @@ def test_outcomes_count_a_closed_incomplete_cart_as_wrong():
     assert outcome(locked, CLOSE) == "wrong_close" and outcome(locked, HAND_OFF) == "handoff"
     counts = tally([right, short, locked], [{"decision": HAND_OFF}] * 3)
     assert counts["precaution"] == 2 and counts["precaution_cart_right"] == 1 and counts["passed"] == 1
+
+
+def test_model_only_experiment_skips_the_rules_and_the_guard():
+    call = Recorder({"choice": CLOSE, "probability": 0.95, "confidence": 0.9})
+    hard = item(object_id="o3", sku="PEX-002", restricted=True, in_cart=False,
+                review_reason="Restricted item: an associate must release it")
+    assert decider(call).decide(evidence(item(), hard)).decision == HAND_OFF and not call.states
+    assert decider(call).decide(evidence(item(), hard), model_only=True).decision == CLOSE
+    assert decider(call).decide(evidence(item(), review=False), model_only=True).source == "subq"
