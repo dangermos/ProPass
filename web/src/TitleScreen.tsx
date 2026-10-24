@@ -22,12 +22,10 @@ function Card({s,index,score,active,disabled,live,onStart}:{s:ScenarioInfo;index
 }
 
 export default function TitleScreen({snapshot,connected,live,reports,busy,onStart,onReplay,onWatch,onResume,onOpen,onHome}:Props){
-  // A live scene is Unity (Editor or browser build) streaming now. Recorded frames played by the API do not count.
+  // A live scene is the Unity Editor streaming now. Recorded frames played by the API do not count.
   const streaming=live&&!snapshot?.simulator.replay;
   const score=(id:string)=>reports?.benchmark?.scenarios.find(r=>r.scenario===id)?.pass_rate;
   const bench=reports?.benchmark?.summary;
-  // The WebGL build of the scene (unity/ → web/public/unity). It streams frames to the local API like the Editor does.
-  const openScene=()=>{onStart(snapshot?.simulator.scenario??'single');window.open(asset('unity/index.html'),'propass-scene','width=1000,height=660');};  // onStart ends any replay so the scene's frames are accepted
   const groups:[string,string,'classic'|'messy'][]=[
     ['Classic demos','Clean runs that show each core idea on its own.','classic'],
     ['Messy lanes','Real-world clutter: occlusion, partial views, distractors, other shoppers.','messy']];
@@ -47,13 +45,12 @@ export default function TitleScreen({snapshot,connected,live,reports,busy,onStar
       <p>Unity renders the lane, a YOLO detector and an EfficientNet classifier read the pixels, and a physical-object ledger builds the cart. Every decision can be inspected.</p>
       <div className="title-actions">
         <button className="primary-button" onClick={()=>onWatch('single')}><Icon name="play" size={17}/> Watch the recorded tour <span className="muted">· 17 scenes, no setup</span></button>
-        {!streaming&&<button className="secondary-button" onClick={openScene} title="Opens the Unity scene in a small window. Keep it visible: browsers pause hidden pages."><Icon name="camera" size={16}/> Render the scene in this browser (slow)</button>}
         {snapshot&&live&&<button className="secondary-button" onClick={onResume}><Icon name="camera" size={17}/> Resume live lane <span className="muted">· {scenarioName(snapshot.simulator.scenario)}</span></button>}
         <button className="secondary-button" onClick={()=>onOpen('benchmark')}><Icon name="chart" size={16}/> Benchmark{bench?` · ${bench.passed}/${bench.runs} runs pass`:''}</button>
         <button className="secondary-button" onClick={()=>onOpen('models')}><Icon name="chip" size={16}/> Models</button>
         <button className="secondary-button" onClick={()=>onOpen('training')}><Icon name="pulse" size={16}/> Training</button>
       </div>
-      {!streaming&&<p className="title-hint"><Icon name="alert" size={14}/> No scene is rendering right now, and none is needed: each card plays the frames Unity <b>already rendered</b> through the trained models at full speed, with the live cart, decisions and checkout. Without the API it plays the recorded tour instead. To render fresh frames, press <b>Play</b> on <code>Checkout.unity</code> in Unity, or use the slower in-browser scene.</p>}
+      {!streaming&&<p className="title-hint"><Icon name="alert" size={14}/> No scene is rendering right now, and none is needed: each card plays the frames Unity <b>already rendered</b> through the trained models at full speed, with the live cart, decisions and checkout. Without the API it plays the recorded tour instead. To render fresh frames, press <b>Play</b> on <code>Checkout.unity</code> in Unity.</p>}
     </section>
     {groups.map(([title,blurb,group])=><section className="title-group" key={group}>
       <div className="title-group-head"><h2>{title}</h2><p>{blurb}</p></div>

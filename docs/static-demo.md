@@ -9,10 +9,10 @@ The project page and the recorded tour of all 17 scenes need no API, GPU or Unit
 
 | Works | Does not work (needs the local API) |
 |---|---|
-| Project page, measured results, camera angles | **Open the lab**: live lane, decisions, models, benchmark and training tabs |
-| **Watch the 17 scenes**: every recorded tour run, with its cart and decisions | Replaying recorded frames through the models, the WebGL scene |
+| Project page, measured results, camera angles | The lab (live lane, decisions, models, benchmark, training): its buttons are left out of this build, and lab links open the project page |
+| **Watch the 17 scenes**: every recorded tour run, with its cart and decisions | Replaying recorded frames through the models |
 
-The static build skips the API connection entirely, so there are no failing requests in the browser console. The site is about 90 MB, all of it files already in `web/public/`; nothing new is committed or downloaded.
+The static build skips the API connection entirely, so there are no failing requests in the browser console. The site is about 75 MB, all of it files already in `web/public/`; nothing new is committed or downloaded.
 
 ## Switch it on
 
